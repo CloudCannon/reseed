@@ -1,0 +1,23 @@
+{
+  "name": "dist",
+  "version": "1.0.0",
+  "description": "Allows you to make a clone of your site with a different baseurl.",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "CloudCannon",
+    "Cloud",
+    "Cannon",
+    "dist"
+  ],
+  "author": "Nathan Kennedy",
+  "license": "ISC",
+  "bin": {
+    "dist": "./cli.js"
+  },
+  "dependencies": {
+    "@cloudcannon/suite": "^2.0.0-rc6"
+  }
+}
