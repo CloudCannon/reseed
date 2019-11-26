@@ -18,6 +18,8 @@
     "dist": "./cli.js"
   },
   "dependencies": {
-    "@cloudcannon/suite": "^2.0.0-rc6"
+    "@cloudcannon/suite": "^2.0.0-rc6",
+    "meow": "^5.0.0",
+    "ncp": "^2.0.0"
   }
 }
