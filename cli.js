@@ -49,11 +49,15 @@ if (!baseurl) {
 // $ dist serve 
 // $ dist watch 
 
-let date = new Date()
-let startTime = date.getTime();
+async function run() {
+    let date = new Date()
+    let startTime = date.getTime();
+    
+    await runner.build(source, destination, baseurl, options);
+    
+    let end = new Date();
+    let elapsedTime = end.getTime() - startTime;
+    console.log(elapsedTime);
+}
 
-runner.build(source, destination, baseurl, options);
-
-let end = new Date();
-let elapsedTime = end.getTime() - startTime;
-console.log(elapsedTime);
+run();
