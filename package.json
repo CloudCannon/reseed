@@ -18,6 +18,7 @@
     "dist": "./cli.js"
   },
   "dependencies": {
-    "@cloudcannon/suite": "^2.0.0-rc6"
+    "@cloudcannon/suite": "^2.0.0-rc6",
+    "cheerio": "^1.0.0-rc.3"
   }
 }
