@@ -57,7 +57,7 @@ async function run() {
     
     let end = new Date();
     let elapsedTime = end.getTime() - startTime;
-    console.log(elapsedTime);
+    console.log("process completed in " + elapsedTime + " ms");
 }
 
 run();
