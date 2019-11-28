@@ -4,7 +4,7 @@
   "description": "Allows you to make a clone of your site with a different baseurl.",
   "main": "cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "CloudCannon",
@@ -20,5 +20,9 @@
   "dependencies": {
     "@cloudcannon/suite": "^2.0.0-rc6",
     "cheerio": "^1.0.0-rc.3"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
   }
 }
