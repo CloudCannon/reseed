@@ -27,14 +27,17 @@ const cli = meow(
 	}
 });
 
-function checkRequiredFlags(requiredFlags) {
-    for (let flag in requiredFlags){
-        if ( !(flag in requiredFlags) ){
-            console.log(requiredFlags);
-            process.exit(1);
-        }
-    }
-    return true;
+/**
+ * Checks if the required flags for a command were given by the user.
+ * 
+ * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
+ */
+function checkRequiredFlags( requiredFlags ) {
+    if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return true;
+
+    console.log("required flags:")
+    console.log( requiredFlags );
+    process.exit(1);
 }
 
 let source = cli.flags["s"] || "dist/site"
@@ -55,6 +58,7 @@ let options = {
         path: "/"
     }
 };
+runner.setOptions(options);
 
 let command = cli.input[0] || "dist";
 
@@ -62,17 +66,37 @@ async function run() {
     let date = new Date()
     let startTime = date.getTime();
     
+    
     switch (command) {
+
+        case "build":
+            if ( checkRequiredFlags([]) ){
+                runner.build()
+            }
+
         case "clean":
-            if (checkRequiredFlags(["dist"])){
+            if ( checkRequiredFlags(["dist"]) ){
                 runner.clean(cli.flags["dist"]);
             }
             break;
+
         case "dist":
-            if (checkRequiredFlags(["baseurl"])){
-                runner.dist( options );
+            if ( checkRequiredFlags(["baseurl"]) ){
+                runner.dist();
             }
             break;
+
+        case "serve":
+            if ( checkRequiredFlags([]) ) {
+                runner.serve();
+            }
+            break;
+
+        case "watch":
+            if ( checkRequiredFlags([]) ) {
+                runner.watch();
+            }
+
         default:
             console.log("command not recognized")
     }
