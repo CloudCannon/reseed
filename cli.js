@@ -2,12 +2,17 @@
 const meow = require("meow");
 const path = require("path");
 const runner = require("./lib/runner");
+const defaults = require("defaults");
+
+const helpString = `
+usage: dist -b | --baseurl <baseurl> [-d | --dest <destination>] [-s]
+`
 
 const cli = meow(
     "Try --help", 
     {
     flags: {
-		source: {
+		source: { 
 			type: 'string',
 			alias: 's'
         },
@@ -22,42 +27,58 @@ const cli = meow(
 	}
 });
 
-let source = cli.flags["s"] || process.cwd();
-let destination = cli.flags["d"] || path.join(process.cwd(), "_dist");
+function checkRequiredFlags(requiredFlags) {
+    for (let flag in requiredFlags){
+        if ( !(flag in requiredFlags) ){
+            console.log(requiredFlags);
+            process.exit(1);
+        }
+    }
+    return true;
+}
+
+let source = cli.flags["s"] || "dist/site"
+let destination = cli.flags["d"] || "dist/prod"
 let baseurl = cli.flags["b"];
+
 let options = {
-    cwd: process.cwd()
+    cwd: process.cwd(),
+
+    dist: {
+        src: source,
+        dest: destination,
+        baseurl: baseurl
+    },
+    serve: {
+        port: 9000,
+        open: true,
+        path: "/"
+    }
 };
 
-if (!source) {
-    console.log("No source directory specified. Type dist --help for more information.");
-    process.exit(1);
-}
-
-if (!destination) {
-    console.log("No destination directory specified. Type dist --help for more information.");
-    process.exit(1);
-}
-
-if (!baseurl) {
-    console.log("No baseurl specified. Type dist --help for more information.");
-    process.exit(1);
-}
-
-// TODO handle the following:
-// $ dist build 
-// $ dist serve 
-// $ dist watch 
+let command = cli.input[0] || "dist";
 
 async function run() {
     let date = new Date()
     let startTime = date.getTime();
     
-    await runner.build(source, destination, baseurl, options);
+    switch (command) {
+        case "clean":
+            if (checkRequiredFlags(["dist"])){
+                runner.clean(cli.flags["dist"]);
+            }
+            break;
+        case "dist":
+            if (checkRequiredFlags(["baseurl"])){
+                runner.dist( options );
+            }
+            break;
+        default:
+            console.log("command not recognized")
+    }
     
     let end = new Date();
     let elapsedTime = end.getTime() - startTime;
     console.log("process completed in " + elapsedTime + " ms");
 }
-
 run();
