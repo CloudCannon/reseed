@@ -8,6 +8,10 @@ const helpString = `
 usage: dist -b | --baseurl <baseurl> [-d | --dest <destination>] [-s]
 `
 
+const defaultSrc = "dist/site"
+const defaultDest = "dist/prod";
+const defaultPort = 9000;
+
 const cli = meow(
     "Try --help", 
     {
@@ -23,6 +27,10 @@ const cli = meow(
         baseurl: {
             type: 'string',
             alias: 'b'
+        },
+        port: {
+            type: 'string',
+            alias: 'p'
         }
 	}
 });
@@ -40,9 +48,31 @@ function checkRequiredFlags( requiredFlags ) {
     process.exit(1);
 }
 
-let source = cli.flags["s"] || "dist/site"
-let destination = cli.flags["d"] || "dist/prod"
+function checkPortNumber( portString ) {
+    let port = parseInt(portString);
+    let defaultString = "Reverting to default port (" + defaultPort + ").";
+
+    if ( !port ){
+        console.log(portString + "is not a valid port number.");
+        console.log(defaultString)
+        return defaultPort;
+    }
+
+    if ( port < 1024 || port > 65535 ) {
+        console.log("Port number outside of allowed range. (1024 - 65535).");
+        console.log(defaultString);
+        return defaultPort;
+    }
+
+    return port;
+}
+
+let source = cli.flags["s"] || defaultSrc;
+let destination = cli.flags["d"] || defaultDest;
 let baseurl = cli.flags["b"] || "";
+let port = checkPortNumber(cli.flags["p"]) || 9000;
+
+
 
 let options = {
     cwd: process.cwd(),
@@ -53,7 +83,7 @@ let options = {
         baseurl: baseurl
     },
     serve: {
-        port: 9000,
+        port: port,
         open: true,
         path: "/"
     }
