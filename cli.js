@@ -42,7 +42,7 @@ function checkRequiredFlags( requiredFlags ) {
 
 let source = cli.flags["s"] || "dist/site"
 let destination = cli.flags["d"] || "dist/prod"
-let baseurl = cli.flags["b"];
+let baseurl = cli.flags["b"] || "";
 
 let options = {
     cwd: process.cwd(),
@@ -76,15 +76,33 @@ async function run() {
 
         case "clean":
             if ( checkRequiredFlags(["dist"]) ){
-                runner.clean(cli.flags["dist"]);
+                runner.clean();
             }
             break;
 
+        case "clone-assets":
+            if ( checkRequiredFlags(["baseurl"]) ){
+                runner.clone_assets();
+            }
+            break; 
+        
         case "dist":
             if ( checkRequiredFlags(["baseurl"]) ){
                 runner.dist();
             }
             break;
+
+        case "rewrite-css":
+            if ( checkRequiredFlags(["baseurl"]) ){
+                runner.rewrite_css();
+            }
+            break;
+
+        case "rewrite-html":
+            if ( checkRequiredFlags(["baseurl"]) ){
+                runner.rewrite_html();
+            }
+            break;    
 
         case "serve":
             if ( checkRequiredFlags([]) ) {
