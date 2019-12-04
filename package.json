@@ -2,7 +2,7 @@
   "name": "dist",
   "version": "1.0.0",
   "description": "Allows you to make a clone of your site with a different baseurl.",
-  "main": "cli.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
@@ -15,7 +15,7 @@
   "author": "Nathan Kennedy",
   "license": "ISC",
   "bin": {
-    "dist": "./cli.js"
+    "dist": "./index.js"
   },
   "dependencies": {
     "@cloudcannon/suite": "^2.0.0-rc6",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "rewire": "^4.0.1"
   }
 }

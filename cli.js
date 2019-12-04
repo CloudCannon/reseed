@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const meow = require("meow");
 const runner = require("./lib/runner");
 
@@ -31,9 +30,9 @@ const cli = meow(
     helpString, 
     {
     flags: {
-		source: { 
-			type: 'string',
-			alias: 's'
+        source: { 
+            type: 'string',
+            alias: 's'
         },
         dest: {
             type: 'string',
@@ -47,125 +46,133 @@ const cli = meow(
             type: 'string',
             alias: 'p'
         }
-	}
+    }
 });
 
-/**
- * Checks if the required flags for a command were given by the user.
- * 
- * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
- */
-function checkRequiredFlags( requiredFlags ) {
-    if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return true;
+module.exports = {
+    
+    /**
+     * Checks if the required flags for a command were given by the user.
+     * 
+     * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
+     */
+    checkRequiredFlags: function ( requiredFlags ) {
+        if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return true;
 
-    console.log("required flags:")
-    console.log( requiredFlags );
-    process.exit(1);
-}
-
-function checkPortNumber( portString ) {
-    if ( !portString ) return NaN;
-
-    let port = parseInt(portString);
-    let defaultString = "Reverting to default port (" + defaultPort + ").";
-
-    if ( !port ){
-        console.log(portString + " is not a valid port number.");
-        console.log(defaultString)
-        return NaN;
-    }
-
-    if ( port < 1024 || port > 65535 ) {
-        console.log("Port number outside of allowed range. (1024 - 65535).");
-        console.log(defaultString);
-        return NaN;
-    }
-
-    return port;
-}
-
-let source = cli.flags["s"] || defaultSrc;
-let destination = cli.flags["d"] || defaultDest;
-let baseurl = cli.flags["b"] || "";
-let port = checkPortNumber(cli.flags["p"]) || defaultPort;
-
-let options = {
-    cwd: process.cwd(),
-
-    dist: {
-        src: source,
-        dest: destination,
-        baseurl: baseurl
+        console.log("required flags:")
+        console.log( requiredFlags );
+        process.exit(1);
     },
-    serve: {
-        port: port,
-        open: true,
-        path: "/"
-    }
-};
-runner.setOptions(options);
 
-let command = cli.input[0] || "dist";
+    /**
+     * 
+     * @param {*} portString 
+     */
+    checkPortNumber: function ( portString ) {
+        if ( !portString ) return NaN;
 
-async function run() {
-    let date = new Date()
-    let startTime = date.getTime();
+        let port = parseInt(portString);
+        let defaultString = "Reverting to default port (" + defaultPort + ").";
+
+        if ( !port ){
+            console.log(portString + " is not a valid port number.");
+            console.log(defaultString)
+            return NaN;
+        }
+
+        if ( port < 1024 || port > 65535 ) {
+            console.log("Port number outside of allowed range. (1024 - 65535).");
+            console.log(defaultString);
+            return NaN;
+        }
+
+        return port;
+    },
+
     
     
-    switch (command) {
 
-        case "build":
-            if ( checkRequiredFlags([]) ){
-                runner.build()
-            }
+    run: async function () {
+        const source = cli.flags["s"] || defaultSrc;
+        const destination = cli.flags["d"] || defaultDest;
+        const baseurl = cli.flags["b"] || "";
+        const port = this.checkPortNumber(cli.flags["-p"]) || defaultPort;
 
-        case "clean":
-            if ( checkRequiredFlags(["dist"]) ){
-                runner.clean();
-            }
-            break;
+        let options = {
+            cwd: process.cwd(),
 
-        case "clone-assets":
-            if ( checkRequiredFlags(["baseurl"]) ){
-                runner.clone_assets();
+            dist: {
+                src: source,
+                dest: destination,
+                baseurl: baseurl
+            },
+            serve: {
+                port: port,
+                open: true,
+                path: "/"
             }
-            break; 
+        };
+
+        let date = new Date()
+        let startTime = date.getTime();
         
-        case "dist":
-            if ( checkRequiredFlags(["baseurl"]) ){
-                runner.dist();
-            }
-            break;
+        runner.setOptions(options);
+        let command = cli.input[0] || "dist";
+        
+        switch (command) {
 
-        case "rewrite-css":
-            if ( checkRequiredFlags(["baseurl"]) ){
-                runner.rewrite_css();
-            }
-            break;
+            case "build":
+                if ( this.checkRequiredFlags([]) ){
+                    runner.build()
+                }
 
-        case "rewrite-html":
-            if ( checkRequiredFlags(["baseurl"]) ){
-                runner.rewrite_html();
-            }
-            break;    
+            case "clean":
+                if ( this.checkRequiredFlags(["dest"]) ){
+                    runner.clean();
+                }
+                break;
 
-        case "serve":
-            if ( checkRequiredFlags([]) ) {
-                runner.serve();
-            }
-            break;
+            case "clone-assets":
+                if ( this.checkRequiredFlags(["baseurl"]) ){
+                    runner.clone_assets();
+                }
+                break; 
+            
+            case "dist":
+                if ( this.checkRequiredFlags(["baseurl"]) ){
+                    runner.dist();
+                }
+                break;
 
-        case "watch":
-            if ( checkRequiredFlags([]) ) {
-                runner.watch();
-            }
+            case "rewrite-css":
+                if ( this.checkRequiredFlags(["baseurl"]) ){
+                    runner.rewrite_css();
+                }
+                break;
 
-        default:
-            console.log("command not recognized")
+            case "rewrite-html":
+                if ( this.checkRequiredFlags(["baseurl"]) ){
+                    runner.rewrite_html();
+                }
+                break;    
+
+            case "serve":
+                if ( this.checkRequiredFlags([]) ) {
+                    runner.serve();
+                }
+                break;
+
+            case "watch":
+                if ( this.checkRequiredFlags([]) ) {
+                    runner.watch();
+                }
+
+            default:
+                console.log("command not recognized")
+        }
+        
+        let end = new Date();
+        let elapsedTime = end.getTime() - startTime;
+        console.log("process completed in " + elapsedTime + " ms");
     }
-    
-    let end = new Date();
-    let elapsedTime = end.getTime() - startTime;
-    console.log("process completed in " + elapsedTime + " ms");
 }
-run();
