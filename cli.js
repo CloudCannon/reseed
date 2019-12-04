@@ -1,11 +1,26 @@
 #!/usr/bin/env node
 const meow = require("meow");
-const path = require("path");
 const runner = require("./lib/runner");
-const defaults = require("defaults");
 
 const helpString = `
-usage: dist -b | --baseurl <baseurl> [-d | --dest <destination>] [-s]
+Usage: dist <command> <flags>
+Flags:
+    -s | --source   The source folder to clone. Defaults to dist/site.
+    -d | --dest     The destination folder to clone the files to. Defaults to dist/prod
+    -b | --baseurl  The filename to prepend to the files in the source.
+    -p | --port     The portnumber to serve the cloned site on.
+
+Commands:
+    --Command--                                                     --Reqd flags--
+    build           Compiles HTML and CSS to be run at a baseurl.      --baseurl
+    clean           Removes all files from the dest folder.            --dest
+    clone-assets    Clones non CSS and HTML files from src to dest.    --baseurl
+    rewrite-css     Clones CSS files from src to dest and rewrites     
+                    urls to include baseurl.                           --baseurl
+    rewrite-html    Clones HTML files from src to dest and rewrites
+                    attributes to include baseurl.                     --baseurl
+    serve           Runs a local webserver on the dest folder.
+    watch           Watches the src folder and triggers builds.
 `
 
 const defaultSrc = "dist/site"
@@ -13,14 +28,14 @@ const defaultDest = "dist/prod";
 const defaultPort = 9000;
 
 const cli = meow(
-    "Try --help", 
+    helpString, 
     {
     flags: {
 		source: { 
 			type: 'string',
 			alias: 's'
         },
-        dist: {
+        dest: {
             type: 'string',
             alias: 'd'
         },
@@ -49,19 +64,21 @@ function checkRequiredFlags( requiredFlags ) {
 }
 
 function checkPortNumber( portString ) {
+    if ( !portString ) return NaN;
+
     let port = parseInt(portString);
     let defaultString = "Reverting to default port (" + defaultPort + ").";
 
     if ( !port ){
-        console.log(portString + "is not a valid port number.");
+        console.log(portString + " is not a valid port number.");
         console.log(defaultString)
-        return defaultPort;
+        return NaN;
     }
 
     if ( port < 1024 || port > 65535 ) {
         console.log("Port number outside of allowed range. (1024 - 65535).");
         console.log(defaultString);
-        return defaultPort;
+        return NaN;
     }
 
     return port;
@@ -70,9 +87,7 @@ function checkPortNumber( portString ) {
 let source = cli.flags["s"] || defaultSrc;
 let destination = cli.flags["d"] || defaultDest;
 let baseurl = cli.flags["b"] || "";
-let port = checkPortNumber(cli.flags["p"]) || 9000;
-
-
+let port = checkPortNumber(cli.flags["p"]) || defaultPort;
 
 let options = {
     cwd: process.cwd(),
