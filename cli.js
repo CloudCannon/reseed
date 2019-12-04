@@ -69,7 +69,7 @@ module.exports = {
      * @param {*} portString 
      */
     checkPortNumber: function ( portString ) {
-        if ( !portString ) return NaN;
+        if ( !portString ) return;
 
         let port = parseInt(portString);
         let defaultString = "Reverting to default port (" + defaultPort + ").";
@@ -77,13 +77,13 @@ module.exports = {
         if ( !port ){
             console.log(portString + " is not a valid port number.");
             console.log(defaultString)
-            return NaN;
+            return;
         }
 
         if ( port < 1024 || port > 65535 ) {
             console.log("Port number outside of allowed range. (1024 - 65535).");
             console.log(defaultString);
-            return NaN;
+            return;
         }
 
         return port;
