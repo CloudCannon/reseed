@@ -30,6 +30,7 @@ const command = ( func, requiredFlags = []) => {
     }
 }
 
+
 const commands = {
     "build": command(runner.build, ["baseurl"]),
     "clean": command(runner.clean, ["dest"]),
@@ -83,6 +84,7 @@ module.exports = {
 
         console.log("required flags:")
         console.log( requiredFlags );
+        console.log(cli.flags)
         process.exit(1);
     },
 
@@ -117,6 +119,8 @@ module.exports = {
         const baseurl = cli.flags["b"] || "";
         const port = this.checkPortNumber(cli.flags["-p"]) || defaultPort;
 
+        console.log(cli.flags);
+
         let options = {
             cwd: process.cwd(),
 
@@ -140,7 +144,7 @@ module.exports = {
         
         if (commands[cmd]){
             this.checkRequiredFlags(commands[cmd].requiredFlags);
-            commands[cmd].run.call(runner); //run function in the context of the runner module.
+            await commands[cmd].run.call(runner); //run function in the context of the runner module.
         } else {
             console.log("command not recognized");
         }

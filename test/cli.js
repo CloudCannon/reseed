@@ -1,19 +1,17 @@
-//const rewire = require("rewire");
-//const cli = rewire("../cli.js");
-const cli = require("../cli");
+const cli = require("../cli.js");
+const chai = require("chai");
 let expect = require('chai').expect;
+const chaiExecAsync = require("chai-exec");
+
+chai.use(chaiExecAsync);
 
 
-/*
-cli.__set__({
-    process: {
-        argv: ["dist", "-b", "test"]
-    }
-})
+
+
 
 console.log("df")
-const checkPort = cli.__get__("checkPortNumber");
-*/
+
+
 
 describe("checkPortNumber()", function() {
 
@@ -52,10 +50,27 @@ describe("checkPortNumber()", function() {
 
 })
 
-describe("checkRequiredFlags()", function() {
-    context ("User enters correct flag", function() {
-        it("should return true", function() {
-            expect(cli.checkRequiredFlags(["baseurl"])).to.equal(true);
+describe("running dist (default)", function() {
+    context ("User misses required flag", function() {
+        it("should exit with code (1)", async function() {
+            let dist = await chaiExecAsync('dist -s source');
+            expect(dist).to.exit.with.code(1);
+        })
+    }) 
+
+    context ("User enters correct flags", function() {
+        it("should complete without error", async function(){
+            let dist = await chaiExecAsync('dist -b baseurl');
+            expect(dist).to.have.stdout.that.contains("copying");
+        })
+    })
+})
+
+describe("running dist clean", function() {
+    context("User misses required flag", function(){
+        it("should exit with code (1)", async function() {
+            let dist = await chaiExecAsync('dist clean');
+            expect(dist).to.exit.with.code(1);
         })
     })
 })
