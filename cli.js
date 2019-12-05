@@ -22,6 +22,26 @@ Commands:
     watch           Watches the src folder and triggers builds.
 `
 
+
+const command = ( func, requiredFlags = []) => {
+    return {
+        run: func,
+        requiredFlags: requiredFlags
+    }
+}
+
+const commands = {
+    "build": command(runner.build, ["baseurl"]),
+    "clean": command(runner.clean, ["dest"]),
+    "clone-assets": command(runner.clone_assets, ["baseurl"]),
+    "dist": command(runner.dist, ["baseurl"]),
+    "rewrite_css": command(runner.rewrite_css, ["baseurl"]),
+    "rewrite-html": command(runner.rewrite_html, ["baseurl"]),
+    "serve": command(runner.serve),
+    "watch": command(runner.watch)
+}
+
+
 const defaultSrc = "dist/site"
 const defaultDest = "dist/prod";
 const defaultPort = 9000;
@@ -49,7 +69,9 @@ const cli = meow(
     }
 });
 
+
 module.exports = {
+    
     
     /**
      * Checks if the required flags for a command were given by the user.
@@ -57,7 +79,7 @@ module.exports = {
      * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
      */
     checkRequiredFlags: function ( requiredFlags ) {
-        if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return true;
+        if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return;
 
         console.log("required flags:")
         console.log( requiredFlags );
@@ -66,7 +88,7 @@ module.exports = {
 
     /**
      * 
-     * @param {*} portString 
+     * @param {string} portString 
      */
     checkPortNumber: function ( portString ) {
         if ( !portString ) return;
@@ -87,10 +109,7 @@ module.exports = {
         }
 
         return port;
-    },
-
-    
-    
+    },    
 
     run: async function () {
         const source = cli.flags["s"] || defaultSrc;
@@ -117,62 +136,18 @@ module.exports = {
         let startTime = date.getTime();
         
         runner.setOptions(options);
-        let command = cli.input[0] || "dist";
+        let cmd = cli.input[0] || "dist";
         
-        switch (command) {
-
-            case "build":
-                if ( this.checkRequiredFlags([]) ){
-                    runner.build()
-                }
-
-            case "clean":
-                if ( this.checkRequiredFlags(["dest"]) ){
-                    runner.clean();
-                }
-                break;
-
-            case "clone-assets":
-                if ( this.checkRequiredFlags(["baseurl"]) ){
-                    runner.clone_assets();
-                }
-                break; 
-            
-            case "dist":
-                if ( this.checkRequiredFlags(["baseurl"]) ){
-                    runner.dist();
-                }
-                break;
-
-            case "rewrite-css":
-                if ( this.checkRequiredFlags(["baseurl"]) ){
-                    runner.rewrite_css();
-                }
-                break;
-
-            case "rewrite-html":
-                if ( this.checkRequiredFlags(["baseurl"]) ){
-                    runner.rewrite_html();
-                }
-                break;    
-
-            case "serve":
-                if ( this.checkRequiredFlags([]) ) {
-                    runner.serve();
-                }
-                break;
-
-            case "watch":
-                if ( this.checkRequiredFlags([]) ) {
-                    runner.watch();
-                }
-
-            default:
-                console.log("command not recognized")
+        if (commands[cmd]){
+            this.checkRequiredFlags(commands[cmd].requiredFlags);
+            commands[cmd].run.call(runner); //run function in the context of the runner module.
+        } else {
+            console.log("command not recognized");
         }
-        
+
         let end = new Date();
         let elapsedTime = end.getTime() - startTime;
         console.log("process completed in " + elapsedTime + " ms");
     }
+    
 }
