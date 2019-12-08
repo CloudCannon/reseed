@@ -5,14 +5,6 @@ const chaiExecAsync = require("chai-exec");
 
 chai.use(chaiExecAsync);
 
-
-
-
-
-console.log("df")
-
-
-
 describe("checkPortNumber()", function() {
 
     context("User enters a non-numeric string as port number", function() {
@@ -58,14 +50,17 @@ describe("running dist (default)", function() {
         })
     }) 
 
+    /*
     context ("User enters correct flags", function() {
         it("should complete without error", async function(){
             let dist = await chaiExecAsync('dist -b baseurl');
             expect(dist).to.have.stdout.that.contains("copying");
         })
     })
+    */
 })
 
+/*
 describe("running dist clean", function() {
     context("User misses required flag", function(){
         it("should exit with code (1)", async function() {
@@ -74,3 +69,4 @@ describe("running dist clean", function() {
         })
     })
 })
+*/
