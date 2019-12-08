@@ -1,5 +1,6 @@
 const meow = require("meow");
 const runner = require("./lib/runner");
+const path = require("path");
 
 const helpString = `
 Usage: dist <command> <flags>
@@ -71,9 +72,7 @@ const cli = meow(
 });
 
 
-module.exports = {
-    
-    
+module.exports = { 
     /**
      * Checks if the required flags for a command were given by the user.
      * 
@@ -133,18 +132,19 @@ module.exports = {
                 port: port,
                 open: true,
                 path: "/"
-            }
+            }            
         };
+        options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
+        options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
 
         let date = new Date()
         let startTime = date.getTime();
-        
-        runner.setOptions(options);
+
         let cmd = cli.input[0] || "dist";
         
         if (commands[cmd]){
             this.checkRequiredFlags(commands[cmd].requiredFlags);
-            await commands[cmd].run.call(runner); //run function in the context of the runner module.
+            await commands[cmd].run.call(runner, options); //run function in the context of the runner module.
         } else {
             console.log("command not recognized");
         }
