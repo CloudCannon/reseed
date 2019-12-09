@@ -1,6 +1,8 @@
 const meow = require("meow");
 const runner = require("./lib/runner");
 const path = require("path");
+const log = require('fancy-log');
+const chalk = require('chalk');
 
 const helpString = `
 Usage: dist <command> <flags>
@@ -81,9 +83,8 @@ module.exports = {
     checkRequiredFlags: function ( requiredFlags ) {
         if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return;
 
-        console.log("required flags:")
-        console.log( requiredFlags );
-        console.log(cli.flags)
+        log.error( chalk.red("required flags:") );
+        log.error( chalk.red( requiredFlags ) );
         process.exit(1);
     },
 
@@ -98,14 +99,14 @@ module.exports = {
         let defaultString = "Reverting to default port (" + defaultPort + ").";
 
         if ( !port ){
-            console.log(portString + " is not a valid port number.");
-            console.log(defaultString)
+            log.error(chalk.yellow(portString + " is not a valid port number."));
+            log.error(chalk.yellow(defaultString));
             return;
         }
 
         if ( port < 1024 || port > 65535 ) {
-            console.log("Port number outside of allowed range. (1024 - 65535).");
-            console.log(defaultString);
+            log.error(chalk.yellow("Port number outside of allowed range. (1024 - 65535)."));
+            log.error(chalk.yellow(defaultString));
             return;
         }
 
@@ -116,9 +117,7 @@ module.exports = {
         const source = cli.flags["s"] || defaultSrc;
         const destination = cli.flags["d"] || defaultDest;
         const baseurl = cli.flags["b"] || "";
-        const port = this.checkPortNumber(cli.flags["-p"]) || defaultPort;
-
-        console.log(cli.flags);
+        const port = await this.checkPortNumber(cli.flags["p"]) || defaultPort;
 
         let options = {
             cwd: process.cwd(),
@@ -146,12 +145,12 @@ module.exports = {
             this.checkRequiredFlags(commands[cmd].requiredFlags);
             await commands[cmd].run.call(runner, options); //run function in the context of the runner module.
         } else {
-            console.log("command not recognized");
+            log(chalk.red("command not recognized"));
         }
 
         let end = new Date();
         let elapsedTime = end.getTime() - startTime;
-        console.log("process completed in " + elapsedTime + " ms");
+        log(chalk.yellow("⏱  process completed in " + elapsedTime + " ms. "));
     }
     
 }
