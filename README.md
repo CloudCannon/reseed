@@ -1,3 +1,5 @@
 # cli-dist
 The CLI for the CloudCannon dist package.
-[![Build Status](https://travis-ci.org/NJKode/cli-dist.png?branch=master)](https://travis-ci.org/NJKode/cli-dist)
+
+
+[![Build Status](https://travis-ci.com/NJKode/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/NJKode/cli-dist)
