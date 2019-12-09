@@ -23,6 +23,19 @@ let options = {
 options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
 options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
 
+
+describe ("fetchfiles", function() {
+    
+})
+
+describe ("copyfiles", function() {
+    
+})
+
+describe ("build", function() {
+    
+})
+
 describe ("clean", async function() {
     before(function () {
         fs.mkdirSync(dest);
@@ -53,7 +66,30 @@ describe ("clean", async function() {
     
 })
 
+describe ("clone-assets", function() {
+    
+})
+
+
+describe ("dist", function() {
+    
+})
+
+
+describe ("rewrite-css", function() {
+    
+})
+
+
+describe ("rewrite-html", function() {
+    
+})
+
 
 describe ("serve", async function() {
+    
+})
+
+describe ("watch", async function() {
     
 })
