@@ -42,6 +42,7 @@ describe("checkPortNumber()", function() {
 
 })
 
+/*
 describe("running dist (default)", function() {
     context ("User misses required flag", function() {
         it("should exit with code (1)", async function() {
@@ -49,16 +50,19 @@ describe("running dist (default)", function() {
             expect(dist).to.exit.with.code(1);
         })
     }) 
+    
 
-    /*
+    
     context ("User enters correct flags", function() {
         it("should complete without error", async function(){
             let dist = await chaiExecAsync('dist -b baseurl');
             expect(dist).to.have.stdout.that.contains("copying");
         })
     })
-    */
+    
 })
+*/
+
 
 /*
 describe("running dist clean", function() {
