@@ -1,7 +1,8 @@
 language: node_js
 node_js:
  - "node"
-install:
+before_install:
+  - npm install -g nyc
   - npm install -g codecov
   - npm install -g istanbul
 script:
