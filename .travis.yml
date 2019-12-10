@@ -3,5 +3,5 @@ node_js:
  - "node"
 install:
   - npm install -g codecov
-after_success:
-  - codecov --file coverage/lcov.info --disable search
+script:
+  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
