@@ -42,10 +42,16 @@ describe("checkPortNumber()", function() {
 
 })
 
-describe("checkRequiredFlags", function() {
+describe("checkRequiredFlags()", function() {
     context ("User misses required flag", function() {
-        it("should exit with code (1)", async function() {
+        it("Should return false", async function() {
             expect(cli.checkRequiredFlags({}, ["baseurl"])).to.equal(false);
+        })
+    }) 
+
+    context ("User supplies correct flag", function() {
+        it("Should return true", async function() {
+            expect(cli.checkRequiredFlags({baseurl: "test"}, ["baseurl"])).to.equal(true);
         })
     }) 
 })
