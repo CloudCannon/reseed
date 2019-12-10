@@ -5,5 +5,5 @@ install:
   - npm install -g codecov
   - npm install -g istanbul
 script:
-  - istanbul cover mocha --reporter lcovonly -- -R spec
-  - codecov
+  - npm run test
+  - npm run report-coverage

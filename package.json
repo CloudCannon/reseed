@@ -4,7 +4,8 @@
   "description": "Allows you to make a clone of your site with a different baseurl.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "keywords": [
     "CloudCannon",
@@ -33,9 +34,10 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-exec": "^1.1.2",
-    "mocha": "^6.2.2",
-    "rewire": "^4.0.1",
     "codecov": "^3.6.1",
-    "istanbul": "^0.4.5"
+    "istanbul": "^0.4.5",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "rewire": "^4.0.1"
   }
 }
