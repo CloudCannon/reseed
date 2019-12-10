@@ -80,12 +80,12 @@ module.exports = {
      * 
      * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
      */
-    checkRequiredFlags: function ( requiredFlags ) {
-        if ( requiredFlags.every(flag => { return flag in cli.flags; }) ) return;
+    checkRequiredFlags: function ( enteredFlags, requiredFlags ) {
+        if ( requiredFlags.every(flag => { return flag in enteredFlags; }) ) return true;
 
         log.error( chalk.red("required flags:") );
         log.error( chalk.red( requiredFlags ) );
-        process.exit(1);
+        return false;
     },
 
     /**
@@ -114,10 +114,10 @@ module.exports = {
     },    
 
     run: async function () {
-        const source = cli.flags["s"] || defaultSrc;
-        const destination = cli.flags["d"] || defaultDest;
-        const baseurl = cli.flags["b"] || "";
-        const port = await this.checkPortNumber(cli.flags["p"]) || defaultPort;
+        const source = cli.flags["source"] || defaultSrc;
+        const destination = cli.flags["destination"] || defaultDest;
+        const baseurl = cli.flags["baseurl"] || "";
+        const port = await this.checkPortNumber(cli.flags["port"]) || defaultPort;
 
         let options = {
             cwd: process.cwd(),
@@ -133,8 +133,12 @@ module.exports = {
                 path: "/"
             }            
         };
-        options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
-        options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
+
+        console.log(cli.flags);
+        options.dist.fullPathToSource = path.join(options.cwd, options.dist.src);
+        options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, baseurl);
+
+        console.log(options.dist.fullPathToDest);
 
         let date = new Date()
         let startTime = date.getTime();
@@ -142,8 +146,11 @@ module.exports = {
         let cmd = cli.input[0] || "dist";
         
         if (commands[cmd]){
-            this.checkRequiredFlags(commands[cmd].requiredFlags);
+            if (!this.checkRequiredFlags(cli.flags, commands[cmd].requiredFlags)){
+                process.exit(1);
+            }
             await commands[cmd].run.call(runner, options); //run function in the context of the runner module.
+            
         } else {
             log(chalk.red("command not recognized"));
         }

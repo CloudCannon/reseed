@@ -42,6 +42,14 @@ describe("checkPortNumber()", function() {
 
 })
 
+describe("checkRequiredFlags", function() {
+    context ("User misses required flag", function() {
+        it("should exit with code (1)", async function() {
+            expect(cli.checkRequiredFlags({}, ["baseurl"])).to.equal(false);
+        })
+    }) 
+})
+
 /*
 describe("running dist (default)", function() {
     context ("User misses required flag", function() {
