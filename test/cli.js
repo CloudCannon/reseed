@@ -1,5 +1,6 @@
 const cli = require("../cli.js");
 let expect = require('chai').expect;
+let fs = require("fs-extra");
 
 describe("checkPortNumber()", function() {
 
@@ -66,6 +67,9 @@ describe("setOptions()", function() {
 })
 
 describe("run()", function() {
+    before(function(){
+        fs.mkdirSync("test/forTesting");
+    })
     context ("User enters invalid command", function() {
         let inputs = {flags: {}, input: ["invalidcommand"]}
         it ("Should exit with code 1", async function() {
@@ -76,6 +80,7 @@ describe("run()", function() {
 
     
     context ("User enters valid command", function() {
+        
         let inputs = {flags: {"baseurl": "test", "source": "test/forTesting", "dest": "test/forTestingbuild"}, input: ["clone-assets"]}
         it ("Should exit with code (0)", async function() {
             let exitCode = await cli.run( inputs );
@@ -85,9 +90,13 @@ describe("run()", function() {
     
    context ("User misses required flag", function() {
     let inputs = {flags: {}, input: ["build"]}
-    it ("Should exit with code 1", async function() {
-        let exitCode = await cli.run( inputs );
-        expect(exitCode).to.equal(1);
+        it ("Should exit with code 1", async function() {
+            let exitCode = await cli.run( inputs );
+            expect(exitCode).to.equal(1);
+        })
     })
-})
+
+    after(function(){
+        fs.rmdirSync("test/forTesting", {recursive: true})
+    })
 })
