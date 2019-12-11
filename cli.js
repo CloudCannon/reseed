@@ -111,14 +111,13 @@ module.exports = {
         }
 
         return port;
-    },    
-
-    run: async function () {
-        const source = cli.flags["source"] || defaultSrc;
-        const destination = cli.flags["destination"] || defaultDest;
-        const baseurl = cli.flags["baseurl"] || "";
-        const port = await this.checkPortNumber(cli.flags["port"]) || defaultPort;
-
+    },
+    
+    setOptions: function ( flags ){
+        const source = flags["source"] || defaultSrc;
+        const destination = flags["destination"] || defaultDest;
+        const baseurl = flags["baseurl"] || "";
+        const port = this.checkPortNumber(flags["port"]) || defaultPort;
         let options = {
             cwd: process.cwd(),
 
@@ -134,11 +133,14 @@ module.exports = {
             }            
         };
 
-        console.log(cli.flags);
-        options.dist.fullPathToSource = path.join(options.cwd, options.dist.src);
+        options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
         options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, baseurl);
+        return options;
+    },
 
-        console.log(options.dist.fullPathToDest);
+    run: async function () {
+
+        let options = this.setOptions( cli.flags );
 
         let date = new Date()
         let startTime = date.getTime();
