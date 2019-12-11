@@ -56,6 +56,19 @@ describe("checkRequiredFlags()", function() {
     }) 
 })
 
+describe("setOptions()", function() {
+    context ("Receives flags from cli", function() {
+        let flags = {"baseurl": "testurl", "port": 9898, "dest": "testdest", "source": "testsource"}
+        it ("should return with the correct flags set", function() {
+            let options = cli.setOptions( flags );
+            expect(options.dist.baseurl).to.equal("testurl");
+            expect(options.serve.port).to.equal(9898);
+            expect(options.dist.dest).to.equal("testdest");
+            expect(options.dist.src).to.equal("testsource");
+        })
+    })
+})
+
 /*
 describe("running dist (default)", function() {
     context ("User misses required flag", function() {

@@ -115,7 +115,7 @@ module.exports = {
     
     setOptions: function ( flags ){
         const source = flags["source"] || defaultSrc;
-        const destination = flags["destination"] || defaultDest;
+        const destination = flags["dest"] || defaultDest;
         const baseurl = flags["baseurl"] || "";
         const port = this.checkPortNumber(flags["port"]) || defaultPort;
         let options = {
