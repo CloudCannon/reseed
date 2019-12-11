@@ -1,4 +1,3 @@
-const meow = require("meow");
 const runner = require("./lib/runner");
 const path = require("path");
 const log = require('fancy-log');
@@ -30,6 +29,8 @@ const defaultSrc = "dist/site"
 const defaultDest = "dist/prod";
 const defaultPort = 9000;
 
+let exitCode = 0;
+
 
 
 module.exports = { 
@@ -43,6 +44,7 @@ module.exports = {
 
         log.error( chalk.red("required flags:") );
         log.error( chalk.red( requiredFlags ) );
+        exitCode = 1;
         return false;
     },
 
@@ -97,6 +99,7 @@ module.exports = {
     },
 
     run: async function ( cli ) {
+        exitCode = 0;
 
         let options = this.setOptions( cli.flags );
 
@@ -111,11 +114,14 @@ module.exports = {
             } 
         } else {
             log(chalk.red("command not recognized"));
+            exitCode = 1;
         }
 
         let end = new Date();
         let elapsedTime = end.getTime() - startTime;
         log(chalk.yellow("⏱  process completed in " + elapsedTime + " ms. "));
+
+        return exitCode;
     }
     
 }

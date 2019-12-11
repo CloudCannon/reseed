@@ -1,9 +1,5 @@
 const cli = require("../cli.js");
-const chai = require("chai");
 let expect = require('chai').expect;
-const chaiExecAsync = require("chai-exec");
-
-chai.use(chaiExecAsync);
 
 describe("checkPortNumber()", function() {
 
@@ -69,35 +65,29 @@ describe("setOptions()", function() {
     })
 })
 
-/*
-describe("running dist (default)", function() {
-    context ("User misses required flag", function() {
-        it("should exit with code (1)", async function() {
-            let dist = await chaiExecAsync('dist -s source');
-            expect(dist).to.exit.with.code(1);
+describe("run()", function() {
+    context ("User enters invalid command", function() {
+        let inputs = {flags: {}, input: ["invalidcommand"]}
+        it ("Should exit with code 1", async function() {
+            let exitCode = await cli.run( inputs );
+            expect(exitCode).to.equal(1);
         })
-    }) 
-    
+    })
 
     
-    context ("User enters correct flags", function() {
-        it("should complete without error", async function(){
-            let dist = await chaiExecAsync('dist -b baseurl');
-            expect(dist).to.have.stdout.that.contains("copying");
+    context ("User enters valid command", function() {
+        let inputs = {flags: {"baseurl": "test", "source": "test/forTesting", "dest": "test/forTestingbuild"}, input: ["clone-assets"]}
+        it ("Should exit with code (0)", async function() {
+            let exitCode = await cli.run( inputs );
+            expect(exitCode).to.equal(0);
         })
     })
     
-})
-*/
-
-
-/*
-describe("running dist clean", function() {
-    context("User misses required flag", function(){
-        it("should exit with code (1)", async function() {
-            let dist = await chaiExecAsync('dist clean');
-            expect(dist).to.exit.with.code(1);
-        })
+   context ("User misses required flag", function() {
+    let inputs = {flags: {}, input: ["build"]}
+    it ("Should exit with code 1", async function() {
+        let exitCode = await cli.run( inputs );
+        expect(exitCode).to.equal(1);
     })
 })
-*/
+})
