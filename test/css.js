@@ -8,7 +8,49 @@ var dest = "/";
 var options = { "baseurl": "baseurl"};
 
 
-describe("css.js", function() {
+describe("rewrite css", function(){
+    context("css file rewritable url", function() {
+        it("should rewrite the url in file", function(){
+            let cssCont = "section.hero { background-image: url(../../testImage.jpg);}" 
+            let rewritten = cssRewrite.rewrite(cssCont, "//testcss.css", "testBaseurl");
+            let testReg = /testBaseurl\/testImage\.jpg/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
+    })
+
+    context("css file with ignorable url", function() {
+        it("should return the url unchanged", function(){
+            let ignoreURL = /https\:\/\/testImage.jpg/
+            let ignorableCss = "section.hero { background-image: url(https://testImage.jpg);}"
+            let rewritten = cssRewrite.rewrite(ignorableCss, "//testcss.css", "testBaseurl");
+            expect(ignoreURL.test(rewritten)).to.equal(true);
+        })
+    })
+})
+
+describe("plugin", function(){
+    before(function(){
+        fs.mkdirSync("test/testdir");
+        let testCSS =  "section.hero { background-image: url(../../testImage.jpg);}"
+        fs.writeFileSync("test/testdir/testcss.css", testCSS);
+        let emptyCSS =  ""
+        fs.writeFileSync("test/testdir/emptycss.css", emptyCSS);
+    })
+
+    context("User supplies a valid css file", function(){
+        it("should return 0", function(){
+            let file = path.resolve("test/testdir/testcss.css");
+            let dest = path.resolve("test/testdir", "testbase");
+            expect(cssRewrite.plugin(file, dest, "testbase")).to.equal(0);
+        })
+    })
+    context('empty css file', function() {
+        it('Should return undefined', function(){
+            let file = path.resolve("test/testdir/emptycss.css");
+            let dest = path.resolve("test/testdir", "testbase");
+            expect(cssRewrite.plugin(file, dest, "testbase")).to.equal(undefined);
+        })
+    })
 
     context('No file specified', function() {
         it('should return undefined', function() {
@@ -27,43 +69,6 @@ describe("css.js", function() {
             expect(cssRewrite.plugin(filename, "", null)).to.equal(undefined);
         })
     })
-
-    /*
-    context('empty css file', function() {
-        it('Should return undefined', functino(){
-            expect(cssRewrite())
-        })
-    })
-    */   
-})
-
-describe("rewrite css", function(){
-    context("css file supplied", function() {
-        it("should rewrite the url in file", function(){
-            let cssCont = "section.hero { background-image: url(../../testImage.jpg);}" 
-            let rewritten = cssRewrite.rewrite(cssCont, "//testcss.css", "testBaseurl");
-            console.log(rewritten);
-            let testReg = /testBaseurl\/testImage\.jpg/
-            expect(testReg.test(rewritten)).to.equal(true);
-        })
-    })
-})
-
-describe("plugin", function(){
-    before(function(){
-        fs.mkdirSync("test/testdir");
-        let testCSS =  "section.hero { background-image: url(../../testImage.jpg); background-size: cover; background-repeat: no-repeat; background-attachment: fixed; text-align: left; margin-top: -100px; padding-top: 250px; }"
-        fs.writeFileSync("test/testdir/testcss.css", testCSS);
-    })
-
-    context("User supplies a valid css file", function(){
-        it("should return 0", function(){
-            let file = path.resolve("test/testdir/testcss.css");
-            let dest = path.resolve("test/testdir", "testbase");
-            expect(cssRewrite.plugin(file, dest, {baseurl:"testbase"})).to.equal(0);
-        })
-    })
-
 
     after(function(){
         fs.rmdirSync("test/testdir", {recursive: true})
