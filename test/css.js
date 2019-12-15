@@ -24,7 +24,7 @@ describe("rewrite css", function(){
             let ignorableCss = "section.hero { background-image: url(https://testImage.jpg);}"
             let rewritten = cssRewrite.rewrite(ignorableCss, "//testcss.css", "testBaseurl");
             expect(ignoreURL.test(rewritten)).to.equal(true);
-        })
+        }) 
     })
 })
 
@@ -45,28 +45,28 @@ describe("plugin", function(){
         })
     })
     context('empty css file', function() {
-        it('Should return undefined', function(){
+        it('Should return 0', function(){
             let file = path.resolve("test/testdir/emptycss.css");
             let dest = path.resolve("test/testdir", "testbase");
-            expect(cssRewrite.plugin(file, dest, "testbase")).to.equal(undefined);
+            expect(cssRewrite.plugin(file, dest, "testbase")).to.equal(0);
         })
     })
 
     context('No file specified', function() {
-        it('should return undefined', function() {
-            expect(cssRewrite.plugin("", dest, options)).to.equal(undefined);
+        it('should return 1', function() {
+            expect(cssRewrite.plugin("", dest, options)).to.equal(1);
         })
     })
 
     context('No destination specified', function() {
-        it('Should return undefined', function(){
-            expect(cssRewrite.plugin(filename, "", options)).to.equal(undefined);
+        it('Should return 1', function(){
+            expect(cssRewrite.plugin(filename, "", options)).to.equal(1);
         })
     })
 
     context('No baseurl', function() {
-        it('should return 0', function() {
-            expect(cssRewrite.plugin(filename, "", null)).to.equal(undefined);
+        it('should return 1', function() {
+            expect(cssRewrite.plugin(filename, "", null)).to.equal(1);
         })
     })
 
