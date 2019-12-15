@@ -5,7 +5,7 @@ let path = require('path');
 
 var filename = "test/testdir";
 var dest = "/";
-var options = { "baseurl": "baseurl"};
+var baseurl = "testbase"
 
 
 describe("rewrite css", function(){
@@ -54,13 +54,13 @@ describe("plugin", function(){
 
     context('No file specified', function() {
         it('should return 1', function() {
-            expect(cssRewrite.plugin("", dest, options)).to.equal(1);
+            expect(cssRewrite.plugin("", dest, baseurl)).to.equal(1);
         })
     })
 
     context('No destination specified', function() {
         it('Should return 1', function(){
-            expect(cssRewrite.plugin(filename, "", options)).to.equal(1);
+            expect(cssRewrite.plugin(filename, "", baseurl)).to.equal(1);
         })
     })
 
