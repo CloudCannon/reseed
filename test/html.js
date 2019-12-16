@@ -17,6 +17,15 @@ describe("rewrite html", function(){
         })
     })
 
+    context("html file with rewritable srcset", function() {
+        it("should rewrite the url in file", function(){
+            let htmlCont = `<img srcset="testImage.jpg" >`
+            let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            let testReg = /testBaseurl\/testImage\.jpg"/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
+    })
+
     context("html file with rewritable href", function() {
         it("should rewrite the url in file", function(){
             let htmlCont = `<a href="testImage.jpg" >link </a>`
@@ -26,11 +35,20 @@ describe("rewrite html", function(){
         })
     })
 
+    context("html file with rewritable meta", function() {
+        it("should rewrite the url in file", function(){
+            let htmlCont = `<body><meta http-equiv="refresh" content="0;url=testImage.jpg"/></body>`
+            let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            console.log(rewritten)
+            let testReg = /testBaseurl\/testImage\.jpg/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
+    })
+
     context("html file with rewritable style", function() {
         it("should rewrite the url in file", function(){
             let htmlCont = `<style> p {background-img: url("testImage.jpg");} >`
             let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
-            console.log(rewritten);
             let testReg = /testBaseurl\/testImage\.jpg/
             expect(testReg.test(rewritten)).to.equal(true);
         })
