@@ -8,10 +8,29 @@ var dest = "/";
 var baseurl = "testbase";
 
 describe("rewrite html", function(){
-    context("html file rewritable url", function() {
+    context("html file with rewritable src", function() {
         it("should rewrite the url in file", function(){
             let htmlCont = `<img src="testImage.jpg" >`
             let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            let testReg = /testBaseurl\/testImage\.jpg"/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
+    })
+
+    context("html file with rewritable href", function() {
+        it("should rewrite the url in file", function(){
+            let htmlCont = `<a href="testImage.jpg" >link </a>`
+            let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            let testReg = /testBaseurl\/testImage\.jpg/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
+    })
+
+    context("html file with rewritable style", function() {
+        it("should rewrite the url in file", function(){
+            let htmlCont = `<style> p {background-img: url("testImage.jpg");} >`
+            let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            console.log(rewritten);
             let testReg = /testBaseurl\/testImage\.jpg/
             expect(testReg.test(rewritten)).to.equal(true);
         })
