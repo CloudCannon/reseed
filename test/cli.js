@@ -81,7 +81,7 @@ describe("run()", function() {
     
     context ("User enters valid command", function() {
         
-        let inputs = {flags: {"baseurl": "test", "source": "test/forTesting", "dest": "test/forTestingbuild"}, input: ["clone-assets"]}
+        let inputs = {flags: {"baseurl": "test", "source": "test/forTesting", "dest": "test/forTesting"}, input: ["clone-assets"]}
         it ("Should exit with code (0)", async function() {
             let exitCode = await cli.run( inputs );
             expect(exitCode).to.equal(0);

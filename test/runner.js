@@ -25,7 +25,42 @@ options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, optio
 
 
 describe ("fetchfiles", function() {
-    
+
+    before(function(){
+        fs.mkdirSync("test/forTesting");
+        fs.writeFileSync("test/forTesting/image.jpg", "image");
+        fs.writeFileSync("test/forTesting/style.css", "css");
+        fs.writeFileSync("test/forTesting/index.html", "html");
+    })
+
+    context ("type = any", function() {
+        it("should retrieve all files", async function() {
+            let results = await runner.fetchFiles("test/forTesting", "any");
+            expect(results.length).to.equal(3);
+        })
+    })
+    context ("type = css", function() {
+        it("should retrieve all files", async function() {
+            let results = await runner.fetchFiles("test/forTesting", "css");
+            expect(path.extname(results[0])).to.equal(".css");
+        })
+    })
+    context ("type = html", function() {
+        it("should retrieve all files", async function() {
+            let results = await runner.fetchFiles("test/forTesting", "html");
+            expect(path.extname(results[0])).to.equal(".html");
+        })
+    })
+    context ("type = assets", function() {
+        it("should retrieve all files", async function() {
+            let results = await runner.fetchFiles("test/forTesting", "assets");
+            expect(path.extname(results[0])).to.equal(".jpg");
+        })
+    })
+
+    after(function(){
+        fs.rmdirSync("test/forTesting", {recursive: true});
+    })
 })
 
 describe ("copyfiles", function() {
