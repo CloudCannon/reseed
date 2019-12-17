@@ -31,7 +31,7 @@ describe ("fetchfiles", function() {
         fs.mkdirSync("test/forTesting/assets");
         fs.mkdirSync("test/forTesting/css");
         fs.mkdirSync("test/forTesting/html");
-        fs.mkdirSync("test/emptyDir");
+        fs.mkdirSync("test/forTesting/emptyDir/emptierDir", {recursive:true});
         fs.writeFileSync("test/forTesting/image.jpg", "image");
         fs.writeFileSync("test/forTesting/assets/image2.jpg", "image");
         fs.writeFileSync("test/forTesting/style.css", "css");
@@ -74,12 +74,45 @@ describe ("fetchfiles", function() {
         })
     })
 
+    context ("dir doesnt exist", function(){
+        it ("should throw an error", async function(){
+            let results = await runner.fetchFiles("test/fakeDir");
+            expect(results).to.equal(undefined);
+            //expect(await function() {runner.fetchFiles("test/fakeDir")}).to.throw();        
+        })
+    })
+
     after(function(){
         fs.rmdirSync("test/forTesting", {recursive: true});
     })
 })
 
 describe ("copyfiles", function() {
+    let testOp = {
+        cwd: "/",
+
+        dist: {
+            src: "test/src",
+            dest: "test/dest",
+            baseurl: "baseurl"
+        },
+        serve: {
+            port: 9000,
+            open: true,
+            path: "/"
+        }            
+    };
+    testOp.dist.fullPathToSource = path.resolve(testOp.cwd, testOp.dist.src);
+    testOp.dist.fullPathToDest = path.resolve(testOp.cwd, testOp.dist.dest, "baseurl");
+
+    context("copy files from src to dest", function(){
+        it("should return the copied files", async function(){
+            let fileList = ["test/src/image.jpg"]
+            //let results =  await runner.copyFiles(fileList, testOp);
+            //console.log(results);
+            //expect(results).to.eql({css:[], html:[], other:["test/dest/baseurl/image.jpg"]})
+        })
+    })
     
 })
 
