@@ -28,33 +28,49 @@ describe ("fetchfiles", function() {
 
     before(function(){
         fs.mkdirSync("test/forTesting");
+        fs.mkdirSync("test/forTesting/assets");
+        fs.mkdirSync("test/forTesting/css");
+        fs.mkdirSync("test/forTesting/html");
+        fs.mkdirSync("test/emptyDir");
         fs.writeFileSync("test/forTesting/image.jpg", "image");
+        fs.writeFileSync("test/forTesting/assets/image2.jpg", "image");
         fs.writeFileSync("test/forTesting/style.css", "css");
+        fs.writeFileSync("test/forTesting/css/style2.css", "css");
         fs.writeFileSync("test/forTesting/index.html", "html");
+        fs.writeFileSync("test/forTesting/html/index2.html", "html");
     })
 
     context ("type = any", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "any");
-            expect(results.length).to.equal(3);
+            expect(results.length).to.equal(6);
         })
     })
     context ("type = css", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "css");
-            expect(path.extname(results[0])).to.equal(".css");
+            expect(results.length).to.equal(2);
+            expect(results.every(file => {
+                return path.extname(file) === ".css"
+            })).to.equal(true)
         })
     })
     context ("type = html", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "html");
-            expect(path.extname(results[0])).to.equal(".html");
+            expect(results.length).to.equal(2);
+            expect(results.every(file => {
+                return path.extname(file) === ".html"
+            })).to.equal(true)
         })
     })
     context ("type = assets", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "assets");
-            expect(path.extname(results[0])).to.equal(".jpg");
+            expect(results.length).to.equal(2);
+            expect(results.every(file => {
+                return path.extname(file) === ".jpg"
+            })).to.equal(true)
         })
     })
 
