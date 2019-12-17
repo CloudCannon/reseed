@@ -39,7 +39,6 @@ describe("rewrite html", function(){
         it("should rewrite the url in file", function(){
             let htmlCont = `<body><meta http-equiv="refresh" content="0;url=testImage.jpg"/></body>`
             let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
-            console.log(rewritten)
             let testReg = /testBaseurl\/testImage\.jpg/
             expect(testReg.test(rewritten)).to.equal(true);
         })
@@ -52,7 +51,15 @@ describe("rewrite html", function(){
             let testReg = /testBaseurl\/testImage\.jpg/
             expect(testReg.test(rewritten)).to.equal(true);
         })
+        it("should rewrite the url in file", function(){
+            let htmlCont = `<h1 style="background-img: url(testImage.jpg)">text</h1>`
+            let rewritten = htmlRewrite.rewrite(htmlCont, "//testhtml.html", "testBaseurl");
+            let testReg = /testBaseurl\/testImage\.jpg/
+            expect(testReg.test(rewritten)).to.equal(true);
+        })
     })
+
+    
 
     context("html file with ignorable url", function() {
         it("should return the url unchanged", function(){
