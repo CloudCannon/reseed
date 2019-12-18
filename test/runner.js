@@ -88,6 +88,20 @@ describe ("fetchfiles", function() {
 })
 
 describe ("copyfiles", function() {
+    before(function(){
+        fs.mkdirSync("test/src");
+        fs.mkdirSync("test/src/assets");
+        fs.mkdirSync("test/src/css");
+        fs.mkdirSync("test/src/html");
+        fs.writeFileSync("test/src/image.jpg", "image");
+        fs.writeFileSync("test/src/assets/image2.jpg", "image");
+        fs.writeFileSync("test/src/style.css", "css");
+        fs.writeFileSync("test/src/css/style2.css", "css");
+        fs.writeFileSync("test/src/index.html", "html");
+        fs.writeFileSync("test/src/html/index2.html", "html");
+    })
+    
+
     let testOp = {
         cwd: "/",
 
@@ -102,16 +116,33 @@ describe ("copyfiles", function() {
             path: "/"
         }            
     };
-    testOp.dist.fullPathToSource = path.resolve(testOp.cwd, testOp.dist.src);
-    testOp.dist.fullPathToDest = path.resolve(testOp.cwd, testOp.dist.dest, "baseurl");
+    testOp.dist.fullPathToSource = path.resolve(testOp.dist.src);
+    testOp.dist.fullPathToDest = path.resolve(testOp.dist.dest, "baseurl");
 
     context("copy files from src to dest", function(){
         it("should return the copied files", async function(){
-            let fileList = ["test/src/image.jpg"]
-            //let results =  await runner.copyFiles(fileList, testOp);
-            //console.log(results);
-            //expect(results).to.eql({css:[], html:[], other:["test/dest/baseurl/image.jpg"]})
+            let fileList = ["test/src/image.jpg", "test/src/assets/image2.jpg", "test/src/style.css", 
+            "test/src/css/style2.css", "test/src/index.html", "test/src/html/index2.html"];
+            let results =  await runner.copyFiles(fileList, testOp);
+            console.log(results);
+            expect(results["css"].length).to.equal(2);
+            expect(results["html"].length).to.equal(2);
+            expect(results["other"].length).to.equal(2);
+
+            /*
+            let testfile = "test/dest/";
+            let file = path.basename(results["other"][0]);
+            let filelen = testfile.length + file.length;
+
+            let resFile = results["other"][0];
+            expect(resFile.substring(resFile.length - filelen, resFile.length)).to.equal("/"+testfile+file);
+            */
         })
+    })
+
+    after(function(){
+        fs.rmdirSync("test/dest", {recursive: true});
+        fs.rmdirSync("test/src", {recursive: true});
     })
     
 })
