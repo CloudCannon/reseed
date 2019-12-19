@@ -88,6 +88,7 @@ describe("run()", function() {
         })
     })
     
+    
    context ("User misses required flag", function() {
     let inputs = {flags: {}, input: ["build"]}
         it ("Should exit with code 1", async function() {

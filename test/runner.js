@@ -43,14 +43,16 @@ describe ("fetchfiles", function() {
     context ("type = any", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "any");
-            expect(results.length).to.equal(6);
+            expect(results["css"].length).to.equal(2);
+            expect(results["other"].length).to.equal(2);
+            expect(results["html"].length).to.equal(2);
         })
     })
     context ("type = css", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "css");
-            expect(results.length).to.equal(2);
-            expect(results.every(file => {
+            expect(results["css"].length).to.equal(2);
+            expect(results["css"].every(file => {
                 return path.extname(file) === ".css"
             })).to.equal(true)
         })
@@ -58,8 +60,8 @@ describe ("fetchfiles", function() {
     context ("type = html", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "html");
-            expect(results.length).to.equal(2);
-            expect(results.every(file => {
+            expect(results["html"].length).to.equal(2);
+            expect(results["html"].every(file => {
                 return path.extname(file) === ".html"
             })).to.equal(true)
         })
@@ -67,8 +69,8 @@ describe ("fetchfiles", function() {
     context ("type = assets", function() {
         it("should retrieve all files", async function() {
             let results = await runner.fetchFiles("test/forTesting", "assets");
-            expect(results.length).to.equal(2);
-            expect(results.every(file => {
+            expect(results["other"].length).to.equal(2);
+            expect(results["other"].every(file => {
                 return path.extname(file) === ".jpg"
             })).to.equal(true)
         })
@@ -125,9 +127,7 @@ describe ("copyfiles", function() {
             "test/src/css/style2.css", "test/src/index.html", "test/src/html/index2.html"];
             let results =  await runner.copyFiles(fileList, testOp);
             console.log(results);
-            expect(results["css"].length).to.equal(2);
-            expect(results["html"].length).to.equal(2);
-            expect(results["other"].length).to.equal(2);
+            expect(results.length).to.equal(6);
 
             /*
             let testfile = "test/dest/";
