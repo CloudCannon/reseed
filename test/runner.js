@@ -7,11 +7,11 @@ const fs = require("fs-extra");
 let dest = "test/testdir"
 
 let options = {
-    cwd: process.cwd(),
+    cwd: "/",
 
     dist: {
-        src: "/",
-        dest: dest,
+        src: "test/src",
+        dest: "test/dest",
         baseurl: "baseurl"
     },
     serve: {
@@ -20,8 +20,25 @@ let options = {
         path: "/"
     }            
 };
-options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
+options.dist.fullPathToSource = options.dist.src;
 options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
+
+let testOp = {
+    cwd: "/",
+
+    dist: {
+        src: "test/src",
+        dest: "test/dest",
+        baseurl: "baseurl"
+    },
+    serve: {
+        port: 9000,
+        open: true,
+        path: "/"
+    }            
+};
+testOp.dist.fullPathToSource = testOp.dist.src;
+testOp.dist.fullPathToDest = path.resolve(testOp.dist.dest, "baseurl");
 
 
 describe ("fetchfiles", function() {
@@ -104,22 +121,7 @@ describe ("copyfiles", function() {
     })
     
 
-    let testOp = {
-        cwd: "/",
-
-        dist: {
-            src: "test/src",
-            dest: "test/dest",
-            baseurl: "baseurl"
-        },
-        serve: {
-            port: 9000,
-            open: true,
-            path: "/"
-        }            
-    };
-    testOp.dist.fullPathToSource = path.resolve(testOp.dist.src);
-    testOp.dist.fullPathToDest = path.resolve(testOp.dist.dest, "baseurl");
+    
 
     context("copy files from src to dest", function(){
         it("should return the copied files", async function(){
@@ -183,6 +185,35 @@ describe ("clean", async function() {
 
 describe ("clone-assets", function() {
     
+    before(function(){
+        fs.mkdirSync("test/src");
+        fs.mkdirSync("test/src/assets");
+        fs.writeFileSync("test/src/image.jpg", "image");
+        fs.writeFileSync("test/src/assets/image2.jpg", "image");
+    })
+
+    
+    context("Cloning from a valid directory", function(){
+        
+        it("should return the cloned files", async function(){
+            let results = await runner.clone_assets(testOp);
+            expect(results.length).to.equal(2);
+        })
+    })
+    
+    context("Cloning from invalid directory", function(){
+        it("should return undefined", async function(){
+            options.dist.src = "thisdoesntexist"
+            let results = await runner.clone_assets(options);
+            expect(results).to.equal(undefined);
+        })
+    })
+    
+    
+    after(function(){
+        fs.rmdirSync("test/dest", {recursive: true});
+        fs.rmdirSync("test/src", {recursive: true});
+    })
 })
 
 
@@ -192,12 +223,64 @@ describe ("dist", function() {
 
 
 describe ("rewrite-css", function() {
+    before(function(){
+        fs.mkdirSync("test/src");
+        fs.mkdirSync("test/src/css");
+        fs.writeFileSync("test/src/style.css", "css");
+        fs.writeFileSync("test/src/css/style2.css", "css");
+    })
+
+    context("Cloning from a valid directory", function(){
+        
+        it("should return the cloned files", async function(){
+            let results = await runner.rewrite_css(testOp);
+            expect(results).to.eql([]);
+        })
+    })
     
+    context("Cloning from invalid directory", function(){
+        it("should return undefined", async function(){
+            options.dist.src = "thisdoesntexist"
+            let results = await runner.clone_assets(options);
+            expect(results).to.equal(undefined);
+        })
+    })
+
+    after(function(){
+        fs.rmdirSync("test/dest", {recursive: true});
+        fs.rmdirSync("test/src", {recursive: true});
+    })
 })
 
 
 describe ("rewrite-html", function() {
+    before(function(){
+        fs.mkdirSync("test/src");
+        fs.mkdirSync("test/src/html");
+        fs.writeFileSync("test/src/index.html", "html");
+        fs.writeFileSync("test/src/html/index2.html", "html");
+    })
+
+    context("Cloning from a valid directory", function(){
+        
+        it("should return the cloned files", async function(){
+            let results = await runner.rewrite_html(testOp);
+            expect(results).to.eql([]);
+        })
+    })
     
+    context("Cloning from invalid directory", function(){
+        it("should return undefined", async function(){
+            options.dist.src = "thisdoesntexist"
+            let results = await runner.clone_assets(options);
+            expect(results).to.equal(undefined);
+        })
+    })
+
+    after(function(){
+        fs.rmdirSync("test/dest", {recursive: true});
+        fs.rmdirSync("test/src", {recursive: true});
+    })
 })
 
 
