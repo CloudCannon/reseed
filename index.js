@@ -23,6 +23,10 @@ Commands:
 `
 
 
+/**
+ * Takes input from user via command line and outputs an object containing
+ * arguments (in camelCase) and flags.
+ */
 const inputs = meow(
     helpString, 
     {
@@ -46,11 +50,14 @@ const inputs = meow(
     }
 });
 
+/**
+ * Passes inputs to cli.js
+ */
 async function run(){
     const exitCode = await cli.run( inputs );
     console.log("exit code: " + exitCode);
     if (exitCode) process.exit(exitCode);
 }
-run()
+run();
 
 

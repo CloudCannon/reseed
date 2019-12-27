@@ -4,7 +4,13 @@ const log = require('fancy-log');
 const chalk = require('chalk');
 
 
-
+/**
+* Factory function for creating commands. 
+* @param {function} func The function that calling this command will run. These functions 
+* are usually included in the runner class. Implementing new functinoality shoud
+* be done n runner.js.
+* @return {Object} The command.
+*/
 const command = ( func, requiredFlags = []) => {
     return {
         run: func,
@@ -13,6 +19,11 @@ const command = ( func, requiredFlags = []) => {
 }
 
 
+/**
+ The different commands for operation. New commands can be specified here.
+ Each command requires a function to run, and a lsi of required flags. 
+ Required flags will be checked before the command is run.
+*/
 const commands = {
     "build": command(runner.build, ["baseurl"]),
     "clean": command(runner.clean, ["dest"]),
@@ -49,8 +60,11 @@ module.exports = {
     },
 
     /**
+     * Checks a given port number to see if it is valid.
      * 
-     * @param {string} portString 
+     * @param {string} portString
+     * @returns {number} The number representation of portString on no-error.
+     *                  Returns the default port number on error.
      */
     checkPortNumber: function ( portString ) {
         if ( !portString ) return;
@@ -73,6 +87,12 @@ module.exports = {
         return port;
     },
     
+    /**
+    * Function that ajusts the options that the cli runs on.
+    * 
+    * @param {Object} Flags the flags that were set by the user in the command line.
+    * @return {Object} An object containing information on how to run the given CLI command.
+    */
     setOptions: function ( flags ){
         const source = flags["source"] || defaultSrc;
         const destination = flags["dest"] || defaultDest;
@@ -98,6 +118,13 @@ module.exports = {
         return options;
     },
 
+    /**
+     * Takes the command line arguments and runs the appropriate commands.
+     * 
+     * @param {Object} cli The meow object that handled the user input.
+     * @return {int} Returns the exit code of the operation. (0) means no error,
+     * non-zero means an error occured.
+     */
     run: async function ( cli ) {
         exitCode = 0;
 
