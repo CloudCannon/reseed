@@ -257,7 +257,7 @@ describe ("rewrite-css", function() {
         
         it("should return the cloned files", async function(){
             let results = await runner.rewrite_css(testOp);
-            expect(results).to.eql([]);
+            expect(results).to.equal(0);
         })
     })
     
@@ -289,7 +289,7 @@ describe ("rewrite-html", function() {
         
         it("should return the cloned files", async function(){
             let results = await runner.rewrite_html(testOp);
-            expect(results).to.eql([]);
+            expect(results).to.equal(0);
         })
     })
     
