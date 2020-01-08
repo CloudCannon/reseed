@@ -23,7 +23,7 @@ The CLI for the CloudCannon dist package.
 
 
 ## Build
-### ```build```
+##### ```build```
 Cleans dest, and copies files from src to dest/baseurl.
 CSS and HTML files have their hrefs/urls/etc to include baseurl.
 
@@ -39,7 +39,7 @@ dist build -b baseurlName
 
 
 ## Clean
-### ```clean```
+##### ```clean```
 
 Deletes all files in dest.
 
@@ -50,7 +50,7 @@ dist clean -d path/To/Destination
 
 
 ## Clone Assets
-### ```clone-assets```
+##### ```clone-assets```
 Copy the files from source to destination/baseurl without altering the data in any way.
 
 #### Example:
@@ -62,7 +62,7 @@ dist clone-assets -b baseurl
 [-b | --baseurl ]
 
 ## Dist
-### ```dist```
+##### ```dist```
 Runs build, serve, then watch.
 Is the default command (runs when no command is specified by user.)
 
@@ -76,6 +76,7 @@ dist -s path/to/src -d path/to/dest -b baseurlName
 
 
 ## Rewrite CSS
+##### ```rewrite-css```
 Copies css files from src to dest/baseurl.
 Then rewrites the newly copied files so that urls/hrefs/etc that reference local
 content have baseurl prepended to them.
@@ -89,7 +90,7 @@ dist rewrite-css -b baseurlName
 
 
 ## Rewrite HTML
-### ```rewrite-html```
+##### ```rewrite-html```
 Copies html files from src to dest/baseurl.
 Rewrites the newly copied files so that urls/hrefs/etc that reference local
 content have baseurl prepended to them.
@@ -103,7 +104,7 @@ dist rewrite-html -b baseurlName
 [-b | --baseurl ]
 
 ## Serve
-### ```serve```
+##### ```serve```
 Serves the files on a local webserver, so that they my be viewed in a browser.
 
 #### Example:
@@ -113,7 +114,7 @@ dist serve -d path/to/dest
 
 
 ## Watch
-### ```watch```
+##### ```watch```
 Continuously watches the dest/baseurl directory to check for changes. If a change
 occurs, then the browser that is viewing the local webserver will be reloaded, so
 that the new content can be viewed. Because this process runs continously, it does
