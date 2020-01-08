@@ -23,6 +23,7 @@ let options = {
 options.dist.fullPathToSource = options.dist.src;
 options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
 
+// TESTOP IS NEVER CHANGED
 let testOp = {
     cwd: "/",
 
@@ -150,7 +151,29 @@ describe ("copyfiles", function() {
 })
 
 describe ("build", function() {
-    
+    before(function(){
+        fs.mkdirSync("test/src");
+        fs.mkdirSync("test/src/assets");
+        fs.mkdirSync("test/src/css");
+        fs.mkdirSync("test/src/html");
+        fs.writeFileSync("test/src/image.jpg", "image");
+        fs.writeFileSync("test/src/assets/image2.jpg", "image");
+        fs.writeFileSync("test/src/style.css", "css");
+        fs.writeFileSync("test/src/css/style2.css", "css");
+        fs.writeFileSync("test/src/index.html", "html");
+        fs.writeFileSync("test/src/html/index2.html", "html");
+    })
+
+    context ("building a valid filesystem", function(){
+        it("should return 0", async function(){
+            let res = await runner.build( testOp );
+        })
+    })
+
+    after(function(){
+        fs.rmdirSync("test/dest", {recursive: true});
+        fs.rmdirSync("test/src", {recursive: true});
+    })
 })
 
 describe ("clean", async function() {
@@ -241,8 +264,9 @@ describe ("rewrite-css", function() {
     context("Cloning from invalid directory", function(){
         it("should return undefined", async function(){
             options.dist.src = "thisdoesntexist"
-            let results = await runner.clone_assets(options);
-            expect(results).to.equal(undefined);
+            let results = await runner.rewrite_css(options);
+            console.log(results);
+            expect(results).to.equal(1);
         })
     })
 
@@ -272,8 +296,8 @@ describe ("rewrite-html", function() {
     context("Cloning from invalid directory", function(){
         it("should return undefined", async function(){
             options.dist.src = "thisdoesntexist"
-            let results = await runner.clone_assets(options);
-            expect(results).to.equal(undefined);
+            let results = await runner.rewrite_html(options);
+            expect(results).to.equal(1);
         })
     })
 
