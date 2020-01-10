@@ -7,6 +7,14 @@
     "test": "nyc mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NJKode/cli-dist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NJKode/cli-dist/issues"
+  },
+  "homepage": "https://github.com/NJKode/cli-dist#readme",
   "keywords": [
     "CloudCannon",
     "Cloud",
@@ -29,6 +37,8 @@
     "fs-extra": "^8.1.0",
     "meow": "^6.0.0",
     "path": "^0.12.7",
+    "readline-sync": "^1.4.10",
+    "semver": "^7.1.1",
     "srcset": "^2.0.1",
     "util": "^0.12.1"
   },
