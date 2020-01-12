@@ -42,7 +42,7 @@ testOp.dist.fullPathToSource = testOp.dist.src;
 testOp.dist.fullPathToDest = path.resolve(testOp.dist.dest, "baseurl");
 
 
-describe ("fetchfiles", function() {
+describe ("_fetchFiles", function() {
 
     before(function(){
         fs.mkdirSync("test/forTesting");
@@ -60,7 +60,7 @@ describe ("fetchfiles", function() {
 
     context ("type = any", function() {
         it("should retrieve all files", async function() {
-            let results = await runner.fetchFiles("test/forTesting", "any");
+            let results = await runner._fetchFiles("test/forTesting", "any");
             expect(results["css"].length).to.equal(2);
             expect(results["other"].length).to.equal(2);
             expect(results["html"].length).to.equal(2);
@@ -68,7 +68,7 @@ describe ("fetchfiles", function() {
     })
     context ("type = css", function() {
         it("should retrieve all files", async function() {
-            let results = await runner.fetchFiles("test/forTesting", "css");
+            let results = await runner._fetchFiles("test/forTesting", "css");
             expect(results["css"].length).to.equal(2);
             expect(results["css"].every(file => {
                 return path.extname(file) === ".css"
@@ -77,7 +77,7 @@ describe ("fetchfiles", function() {
     })
     context ("type = html", function() {
         it("should retrieve all files", async function() {
-            let results = await runner.fetchFiles("test/forTesting", "html");
+            let results = await runner._fetchFiles("test/forTesting", "html");
             expect(results["html"].length).to.equal(2);
             expect(results["html"].every(file => {
                 return path.extname(file) === ".html"
@@ -86,7 +86,7 @@ describe ("fetchfiles", function() {
     })
     context ("type = assets", function() {
         it("should retrieve all files", async function() {
-            let results = await runner.fetchFiles("test/forTesting", "assets");
+            let results = await runner._fetchFiles("test/forTesting", "assets");
             expect(results["other"].length).to.equal(2);
             expect(results["other"].every(file => {
                 return path.extname(file) === ".jpg"
@@ -96,9 +96,9 @@ describe ("fetchfiles", function() {
 
     context ("dir doesnt exist", function(){
         it ("should throw an error", async function(){
-            let results = await runner.fetchFiles("test/fakeDir");
+            let results = await runner._fetchFiles("test/fakeDir");
             expect(results).to.equal(undefined);
-            //expect(await function() {runner.fetchFiles("test/fakeDir")}).to.throw();        
+            //expect(await function() {runner._fetchFiles("test/fakeDir")}).to.throw();        
         })
     })
 
@@ -107,7 +107,7 @@ describe ("fetchfiles", function() {
     })
 })
 
-describe ("copyfiles", function() {
+describe ("_copyFiles", function() {
     before(function(){
         fs.mkdirSync("test/src");
         fs.mkdirSync("test/src/assets");
@@ -128,7 +128,7 @@ describe ("copyfiles", function() {
         it("should return the copied files", async function(){
             let fileList = ["test/src/image.jpg", "test/src/assets/image2.jpg", "test/src/style.css", 
             "test/src/css/style2.css", "test/src/index.html", "test/src/html/index2.html"];
-            let results =  await runner.copyFiles(fileList, testOp);
+            let results =  await runner._copyFiles(fileList, testOp);
             console.log(results);
             expect(results.length).to.equal(6);
 
