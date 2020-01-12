@@ -18,7 +18,10 @@ let options = {
         port: 9000,
         open: true,
         path: "/"
-    }            
+    },
+    flags: {
+        overwrite: true
+    }               
 };
 options.dist.fullPathToSource = options.dist.src;
 options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
@@ -36,6 +39,9 @@ let testOp = {
         port: 9000,
         open: true,
         path: "/"
+    },
+    flags: {
+        overwrite: true
     }            
 };
 testOp.dist.fullPathToSource = testOp.dist.src;

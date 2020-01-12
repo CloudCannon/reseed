@@ -55,7 +55,7 @@ describe("checkRequiredFlags()", function() {
 
 describe("setOptions()", function() {
     context ("Receives flags from cli", function() {
-        let flags = {"baseurl": "testurl", "port": 9898, "dest": "testdest", "source": "testsource"}
+        let flags = {"baseurl": "testurl", "port": 9898, "dest": "testdest", "source": "testsource", "overwrite": true}
         it ("should return with the correct flags set", function() {
             let options = cli.setOptions( flags );
             expect(options.dist.baseurl).to.equal("testurl");

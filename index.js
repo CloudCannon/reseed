@@ -46,6 +46,10 @@ const inputs = meow(
         port: {
             type: 'string',
             alias: 'p'
+        },
+        overwrite: {
+            type: 'boolean',
+            alias: 'o'
         }
     }
 });

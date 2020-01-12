@@ -43,7 +43,6 @@ const defaultPort = 9000;
 let exitCode = 0;
 
 
-
 module.exports = { 
     /**
      * Checks if the required flags for a command were given by the user.
@@ -110,7 +109,10 @@ module.exports = {
                 port: port,
                 open: true,
                 path: "/"
-            }            
+            } ,
+            flags:{
+                overwrite: flags["overwrite"]
+            }           
         };
 
         options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
