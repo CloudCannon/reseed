@@ -271,7 +271,14 @@ describe ("rewrite-css", function() {
         it("should return undefined", async function(){
             options.dist.src = "thisdoesntexist"
             let results = await runner.rewrite_css(options);
-            console.log(results);
+            expect(results).to.equal(1);
+        })
+    })
+
+    context("trying to copy files that dont exist", function(){
+        it("should return 1", async function(){
+            options.dist.fullPathToSource = "fake";
+            let results = await runner.rewrite_css(options);
             expect(results).to.equal(1);
         })
     })
@@ -302,6 +309,14 @@ describe ("rewrite-html", function() {
     context("Cloning from invalid directory", function(){
         it("should return undefined", async function(){
             options.dist.src = "thisdoesntexist"
+            let results = await runner.rewrite_html(options);
+            expect(results).to.equal(1);
+        })
+    })
+
+    context("trying to copy files that dont exist", function(){
+        it("should return 1", async function(){
+            options.dist.fullPathToSource = "fake";
             let results = await runner.rewrite_html(options);
             expect(results).to.equal(1);
         })
