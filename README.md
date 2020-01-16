@@ -2,7 +2,7 @@
 The CLI for the CloudCannon dist package.
 
 
-[![Build Status](https://travis-ci.com/NJKode/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/NJKode/cli-dist)
+[![Build Status](https://travis-ci.com/CloudCannon/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/NJKode/cli-dist)
 [![codecov](https://codecov.io/gh/NJKode/cli-dist/branch/master/graph/badge.svg?token=Q4yyn9DLZ6)](https://codecov.io/gh/NJKode/cli-dist)
 
 
