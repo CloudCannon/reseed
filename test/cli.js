@@ -69,6 +69,7 @@ describe("setOptions()", function() {
 describe("run()", function() {
     before(function(){
         fs.mkdirSync("test/forTesting");
+        fs.writeFileSync("test/forTesting/image.jpg", "image");
     })
     context ("User enters invalid command", function() {
         let inputs = {flags: {}, input: ["invalidcommand"]}
@@ -88,9 +89,16 @@ describe("run()", function() {
         })
     })
     
-    
-   context ("User misses required flag", function() {
-    let inputs = {flags: {}, input: ["build"]}
+    context ("Command runs but fails", function() {
+        let inputs = {flags: {"baseurl": "test", "source": "test/invalidplace", "dest": "test/forTesting"}, input: ["clone-assets"]}
+        it("Should exit with code (1)", async function() {
+            let exitCode = await cli.run( inputs );
+            expect(exitCode).to.equal(1);
+        })
+    })
+
+    context ("User misses required flag", function() {
+        let inputs = {flags: {}, input: ["build"]}
         it ("Should exit with code 1", async function() {
             let exitCode = await cli.run( inputs );
             expect(exitCode).to.equal(1);

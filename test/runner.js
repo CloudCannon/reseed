@@ -234,7 +234,7 @@ describe ("clone-assets", function() {
         it("should return undefined", async function(){
             options.dist.src = "thisdoesntexist"
             let results = await runner.clone_assets(options);
-            expect(results).to.equal(undefined);
+            expect(results).to.equal(1);
         })
     })
     

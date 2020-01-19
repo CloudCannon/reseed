@@ -139,7 +139,10 @@ module.exports = {
         
         if (commands[cmd]){
             if (this.checkRequiredFlags(cli.flags, commands[cmd].requiredFlags)){
-                await commands[cmd].run.call(runner, options); //run function in the context of the runner module.
+                let exit = await commands[cmd].run.call(runner, options); //run function in the context of the runner module.
+                if (typeof exit === "number"){
+                    exitCode = exit;
+                }
             } 
         } else {
             log(chalk.red("command not recognized"));
