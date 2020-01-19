@@ -156,6 +156,22 @@ describe ("_copyFiles", function() {
     
 })
 
+describe("_askYesNo", function() {
+    context("Response is affirmative", function(){
+        it("should return true", async function(){
+            let response = await runner._askYesNo("question", "Y");
+            expect(response).to.equal(true);
+        })
+    })
+
+    context("Response is negative", function(){
+        it("should return false", async function(){
+            let response = await runner._askYesNo("question", "N");
+            expect(response).to.equal(false);
+        })
+    })
+})
+
 describe ("build", function() {
     before(function(){
         fs.mkdirSync("test/src");
