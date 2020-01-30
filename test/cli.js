@@ -62,6 +62,9 @@ describe("setOptions()", function() {
             expect(options.serve.port).to.equal(9898);
             expect(options.dist.dest).to.equal("testdest");
             expect(options.dist.src).to.equal("testsource");
+
+            expect(options.flags.split).to.equal(1);
+            expect(options.flags.partition).to.equal(1);
         })
     })
 })

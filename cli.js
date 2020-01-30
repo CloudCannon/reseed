@@ -97,6 +97,9 @@ module.exports = {
         const destination = flags["dest"] || defaultDest;
         const baseurl = flags["baseurl"] || "";
         const port = this.checkPortNumber(flags["port"]) || defaultPort;
+        const split = flags["split"] || 1;
+        const partition = flags["partition"] || 1;
+
         let options = {
             cwd: process.cwd(),
 
@@ -111,8 +114,10 @@ module.exports = {
                 path: "/"
             } ,
             flags:{
-                overwrite: flags["overwrite"]
-            }           
+                overwrite: flags["overwrite"],
+                split,
+                partition
+            }
         };
 
         options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);

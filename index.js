@@ -8,6 +8,8 @@ Flags:
     -d | --dest     The destination folder to clone the files to. Defaults to dist/prod
     -b | --baseurl  The filename to prepend to the files in the source.
     -p | --port     The portnumber to serve the cloned site on.
+    --split         The number of partitions to divide files into
+    --partition     The partition number to process
 
 Commands:
     --Command--                                                     --Reqd flags--
@@ -50,6 +52,16 @@ const inputs = meow(
         overwrite: {
             type: 'boolean',
             alias: 'o'
+        },
+        split: {
+            type: 'number',
+            alias: null,
+            default: 1
+        },
+        parition: {
+            type: 'number',
+            alias: null,
+            default: 1
         }
     }
 });
