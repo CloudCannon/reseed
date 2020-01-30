@@ -167,7 +167,7 @@ describe ("_fetchFiles", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/forTesting", {recursive: true});
+        fs.remove("test/forTesting");
     })
 })
 
@@ -208,8 +208,8 @@ describe ("_copyFiles", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
     
 })
@@ -251,8 +251,8 @@ describe ("build", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -281,7 +281,7 @@ describe ("clean", async function() {
 
     
     after(function () {
-        fs.rmdirSync("test/testdir", {recursive: true})
+        fs.removeSync("test/testdir", {recursive: true})
     })
     
 })
@@ -314,8 +314,8 @@ describe ("clone-assets", function() {
     
     
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -358,8 +358,8 @@ describe ("rewrite-css", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -397,8 +397,8 @@ describe ("rewrite-html", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 

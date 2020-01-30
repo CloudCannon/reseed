@@ -109,6 +109,6 @@ describe("run()", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/forTesting", {recursive: true})
+        fs.removeSync("test/forTesting")
     })
 })
