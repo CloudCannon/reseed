@@ -58,7 +58,7 @@ const inputs = meow(
             alias: null,
             default: 1
         },
-        parition: {
+        partition: {
             type: 'number',
             alias: null,
             default: 1
