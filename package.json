@@ -26,6 +26,9 @@
   "bin": {
     "dist": "./index.js"
   },
+  "engines": {
+    "node": ">=11.0.0"
+  },
   "dependencies": {
     "browser-sync": "^2.26.7",
     "chalk": "^3.0.0",
