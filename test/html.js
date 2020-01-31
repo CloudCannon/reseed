@@ -114,7 +114,7 @@ describe("plugin", function(){
     })
 
     after(function(){
-        fs.rmdirSync("test/testdir", {recursive: true})
+        fs.removeSync("test/testdir", {recursive: true})
     })
 
 })

@@ -100,6 +100,64 @@ describe ("_fetchFiles", function() {
         })
     })
 
+    context ("partitions", function() {
+
+        const getPartitionFiles = (partition) => {
+            return Object.keys(partition).reduce((acc, type) => [ ...acc, ...partition[type]], []).sort();
+        };
+
+        before(async function(){
+            this.defaultPartition = await runner._fetchFiles("test/forTesting", "assets");
+            this.partition1 = await runner._fetchFiles("test/forTesting", "assets", { split: 2, partition: 1 });
+            this.partition2 = await runner._fetchFiles("test/forTesting", "assets", { split: 2, partition: 2 });
+        })
+
+        it("prevents invalid `split` or `partition` value", async function () {
+            let partition = await runner._fetchFiles("test/forTesting", "assets", { split: 0, partition: 0 });
+            let files = getPartitionFiles(partition);
+
+            expect(files.length).to.equal(6);
+        });
+
+        it("prevents undefined `split` or `partition` value", async function () {
+            let partition = await runner._fetchFiles("test/forTesting", "assets", { split: undefined, partition: undefined });
+            let files = getPartitionFiles(partition);
+
+            expect(files.length).to.equal(6);
+        });
+
+        it("ensured `partition` is not greater than `split`", async function () {
+            let partition = await runner._fetchFiles("test/forTesting", "assets", { split: 1, partition: 2 });
+            let files = getPartitionFiles(partition);
+
+            expect(files.length).to.equal(6);
+        });
+
+        it("should match default behaviour", async function () {
+            let defaultPartitionFiles = getPartitionFiles(this.defaultPartition);
+            let partition1Files = getPartitionFiles(this.partition1);
+            let partition2Files = getPartitionFiles(this.partition2);
+
+            expect(defaultPartitionFiles).to.eql([...partition1Files, ...partition2Files]);
+        });
+
+        it("should create partitions", async function() {
+            let partition1Files = getPartitionFiles(this.partition1);
+            let partition2Files = getPartitionFiles(this.partition2);
+
+            expect(partition1Files.length).to.equal(3);
+            expect(partition2Files.length).to.equal(3);
+        });
+
+        it("should not have duplicate files", async function() {
+            let partition1Files = getPartitionFiles(this.partition1);
+            let partition2Files = getPartitionFiles(this.partition2);
+            let duplicateFiles = partition1Files.filter(value => partition2Files.includes(value))
+
+            expect(duplicateFiles).to.eql([]);
+        });
+    })
+
     context ("dir doesnt exist", function(){
         it ("should throw an error", async function(){
             let results = await runner._fetchFiles("test/fakeDir");
@@ -109,7 +167,7 @@ describe ("_fetchFiles", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/forTesting", {recursive: true});
+        fs.remove("test/forTesting");
     })
 })
 
@@ -150,8 +208,8 @@ describe ("_copyFiles", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
     
 })
@@ -193,8 +251,8 @@ describe ("build", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -223,7 +281,7 @@ describe ("clean", async function() {
 
     
     after(function () {
-        fs.rmdirSync("test/testdir", {recursive: true})
+        fs.removeSync("test/testdir", {recursive: true})
     })
     
 })
@@ -256,8 +314,8 @@ describe ("clone-assets", function() {
     
     
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -300,8 +358,8 @@ describe ("rewrite-css", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
@@ -339,8 +397,8 @@ describe ("rewrite-html", function() {
     })
 
     after(function(){
-        fs.rmdirSync("test/dest", {recursive: true});
-        fs.rmdirSync("test/src", {recursive: true});
+        fs.removeSync("test/dest");
+        fs.removeSync("test/src");
     })
 })
 
