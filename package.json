@@ -1,6 +1,6 @@
 {
   "name": "reseed",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Allows you to make a clone of your site with a different baseurl.",
   "main": "index.js",
   "scripts": {
