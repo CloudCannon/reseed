@@ -24,7 +24,7 @@
   "author": "Nathan Kennedy",
   "license": "ISC",
   "bin": {
-    "dist": "./index.js"
+    "reseed": "./index.js"
   },
   "engines": {
     "node": ">=10.0.0"
