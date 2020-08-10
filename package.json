@@ -27,7 +27,7 @@
     "dist": "./index.js"
   },
   "engines": {
-    "node": ">=11.0.0"
+    "node": ">=10.0.0"
   },
   "dependencies": {
     "browser-sync": "^2.26.12",
