@@ -1,10 +1,10 @@
-# cli-dist
-The CLI for the CloudCannon dist package.
+# Reseed
+Allows you to make a clone of your site with a different baseurl.
 
-Requires node >=11.0.0
+Requires node >=10.0.0
 
 [![Build Status](https://travis-ci.com/CloudCannon/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/CloudCannon/cli-dist)
-[![codecov](https://codecov.io/gh/CloudCannon/cli-dist/branch/master/graph/badge.svg?token=Q4yyn9DLZ6)](https://codecov.io/gh/CloudCannon/cli-dist)
+[![codecov](https://codecov.io/gh/CloudCannon/reseed/branch/master/graph/badge.svg?token=Q4yyn9DLZ6)](https://codecov.io/gh/CloudCannon/reseed)
 
 
 
@@ -34,7 +34,7 @@ CSS and HTML files have their hrefs/urls/etc to include baseurl.
 $ dist build -b baseurlName
 ```
 
-#### Required flags: 
+#### Required flags:
 [-b | --baseurl ]
 
 
@@ -119,7 +119,7 @@ $ dist serve -d path/to/dest
 Continuously watches the dest/baseurl directory to check for changes. If a change
 occurs, then the browser that is viewing the local webserver will be reloaded, so
 that the new content can be viewed. Because this process runs continously, it does
-not return an exit code because it must be cancelled by the user in-terminal. 
+not return an exit code because it must be cancelled by the user in-terminal.
 
 #### Example:
 ```

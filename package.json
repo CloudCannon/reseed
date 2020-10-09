@@ -9,17 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CloudCannon/cli-dist.git"
+    "url": "git+https://github.com/CloudCannon/reseed.git"
   },
   "bugs": {
-    "url": "https://github.com/CloudCannon/cli-dist/issues"
+    "url": "https://github.com/CloudCannon/reseed/issues"
   },
-  "homepage": "https://github.com/CloudCannon/cli-dist#readme",
+  "homepage": "https://github.com/CloudCannon/reseed#readme",
   "keywords": [
     "CloudCannon",
-    "Cloud",
-    "Cannon",
-    "dist"
+    "Reseed",
+    "Subpath",
+    "href",
+    "url",
+    "link"
   ],
   "author": "Nathan Kennedy",
   "license": "ISC",
