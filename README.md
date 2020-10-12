@@ -125,3 +125,13 @@ not return an exit code because it must be cancelled by the user in-terminal.
 ```
 $ dist watch -d path/to/dest
 ```
+
+# Flags
+```
+    -s | --source   The source folder to clone. Defaults to dist/site.
+    -d | --dest     The destination folder to clone the files to. Defaults to dist/prod
+    -b | --baseurl  The filename to prepend to the files in the source.
+    -p | --port     The portnumber to serve the cloned site on.
+    --split         The number of partitions to divide files into
+    --partition     The partition number to process
+```
