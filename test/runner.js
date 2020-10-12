@@ -72,17 +72,21 @@ describe('_fetchFiles', function () {
 		});
 	});
 	context('type = css', function () {
-		it('should retrieve all files', async function () {
+		it('should retrieve all css files', async function () {
 			const results = await runner._fetchFiles('test/forTesting', 'css');
 			expect(results.css.length).to.equal(2);
+			expect(results.html.length).to.equal(0);
+			expect(results.other.length).to.equal(0);
 			expect(results.css.every((file) => path.extname(file) === '.css')).to.equal(true);
 		});
 	});
 
 	context('type = html', function () {
-		it('should retrieve all files', async function () {
+		it('should retrieve all html files', async function () {
 			const results = await runner._fetchFiles('test/forTesting', 'html');
 			expect(results.html.length).to.equal(2);
+			expect(results.css.length).to.equal(0);
+			expect(results.other.length).to.equal(0);
 			expect(results.html.every((file) => path.extname(file) === '.html')).to.equal(true);
 		});
 	});
@@ -91,6 +95,8 @@ describe('_fetchFiles', function () {
 		it('should retrieve all files', async function () {
 			const results = await runner._fetchFiles('test/forTesting', 'assets');
 			expect(results.other.length).to.equal(2);
+			expect(results.css.length).to.equal(0);
+			expect(results.html.length).to.equal(0);
 			expect(results.other.every((file) => path.extname(file) === '.jpg')).to.equal(true);
 		});
 	});
@@ -101,27 +107,27 @@ describe('_fetchFiles', function () {
 		);
 
 		before(async function () {
-			this.defaultPartition = await runner._fetchFiles('test/forTesting', 'assets');
-			this.partition1 = await runner._fetchFiles('test/forTesting', 'assets', { split: 2, partition: 1 });
-			this.partition2 = await runner._fetchFiles('test/forTesting', 'assets', { split: 2, partition: 2 });
+			this.defaultPartition = await runner._fetchFiles('test/forTesting', 'any');
+			this.partition1 = await runner._fetchFiles('test/forTesting', 'any', { split: 2, partition: 1 });
+			this.partition2 = await runner._fetchFiles('test/forTesting', 'any', { split: 2, partition: 2 });
 		});
 
 		it('prevents invalid `split` or `partition` value', async function () {
-			const partition = await runner._fetchFiles('test/forTesting', 'assets', { split: 0, partition: 0 });
+			const partition = await runner._fetchFiles('test/forTesting', 'any', { split: 0, partition: 0 });
 			const files = getPartitionFiles(partition);
 
 			expect(files.length).to.equal(6);
 		});
 
 		it('prevents undefined `split` or `partition` value', async function () {
-			const partition = await runner._fetchFiles('test/forTesting', 'assets', { split: undefined, partition: undefined });
+			const partition = await runner._fetchFiles('test/forTesting', 'any', { split: undefined, partition: undefined });
 			const files = getPartitionFiles(partition);
 
 			expect(files.length).to.equal(6);
 		});
 
 		it('ensured `partition` is not greater than `split`', async function () {
-			const partition = await runner._fetchFiles('test/forTesting', 'assets', { split: 1, partition: 2 });
+			const partition = await runner._fetchFiles('test/forTesting', 'any', { split: 1, partition: 2 });
 			const files = getPartitionFiles(partition);
 
 			expect(files.length).to.equal(6);

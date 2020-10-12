@@ -48,9 +48,7 @@ module.exports = {
 	 * @param {string[]} requiredFlags An array of the required flags for the command (in any order).
 	 */
 	checkRequiredFlags: function (enteredFlags, requiredFlags) {
-		if (requiredFlags.every((flag) => {
-			return flag in enteredFlags;
-		})) {
+		if (requiredFlags.every((flag) => flag in enteredFlags)) {
 			return true;
 		}
 
@@ -65,7 +63,7 @@ module.exports = {
 	 *
 	 * @param {string} portString
 	 * @returns {number} The number representation of portString on no-error.
-	 *					 Returns the default port number on error.
+	 * Returns the default port number on error.
 	 */
 	checkPortNumber: function (portString) {
 		if (!portString) {
