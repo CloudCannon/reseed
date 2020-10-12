@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-const cli = require('./cli');
 const meow = require('meow');
+const cli = require('./cli');
+
 const helpString = `
 Usage: dist <command> <flags>
 Flags:
@@ -31,48 +32,47 @@ Commands:
 const inputs = meow(
 	helpString,
 	{
-	flags: {
-		source: {
-			type: 'string',
-			alias: 's'
-		},
-		dest: {
-			type: 'string',
-			alias: 'd'
-		},
-		baseurl: {
-			type: 'string',
-			alias: 'b'
-		},
-		port: {
-			type: 'string',
-			alias: 'p'
-		},
-		overwrite: {
-			type: 'boolean',
-			alias: 'o'
-		},
-		split: {
-			type: 'number',
-			alias: null,
-			default: 1
-		},
-		partition: {
-			type: 'number',
-			alias: null,
-			default: 1
+		flags: {
+			source: {
+				type: 'string',
+				alias: 's'
+			},
+			dest: {
+				type: 'string',
+				alias: 'd'
+			},
+			baseurl: {
+				type: 'string',
+				alias: 'b'
+			},
+			port: {
+				type: 'string',
+				alias: 'p'
+			},
+			overwrite: {
+				type: 'boolean',
+				alias: 'o'
+			},
+			split: {
+				type: 'number',
+				alias: null,
+				default: 1
+			},
+			partition: {
+				type: 'number',
+				alias: null,
+				default: 1
+			}
 		}
 	}
-});
+);
 
 /**
  * Passes inputs to cli.js
  */
-async function run(){
-	const exitCode = await cli.run( inputs );
-	console.log("exit code: " + exitCode);
+async function run() {
+	const exitCode = await cli.run(inputs);
+	console.log(`exit code: ${exitCode}`);
 	if (exitCode) process.exit(exitCode);
 }
 run();
-
-
