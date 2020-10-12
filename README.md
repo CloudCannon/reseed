@@ -3,7 +3,7 @@ Allows you to make a clone of your site with a different baseurl.
 
 Requires node >=10.0.0
 
-[![Build Status](https://travis-ci.com/CloudCannon/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/CloudCannon/cli-dist)
+[![Build Status](https://travis-ci.com/CloudCannon/cli-dist.svg?token=PCpTqbePqYxMDyjhMTKF&branch=master)](https://travis-ci.com/CloudCannon/reseed)
 [![codecov](https://codecov.io/gh/CloudCannon/reseed/branch/master/graph/badge.svg?token=Q4yyn9DLZ6)](https://codecov.io/gh/CloudCannon/reseed)
 
 
