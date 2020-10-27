@@ -70,6 +70,15 @@ describe('rewrite html', function () {
 			expect(ignoreURL.test(rewritten)).to.equal(true);
 		});
 	});
+
+	context('html file with reseed-ignore', function () {
+		it('should return the url unchanged', function () {
+			const ignoreURL = /testBaseurl\/testImage\.jpg/;
+			const ignorablehtml = "<img src='testImage.jpg' reseed-ignore>";
+			const rewritten = htmlRewrite.rewrite(ignorablehtml, '//testhtml.html', 'testBaseurl');
+			expect(ignoreURL.test(rewritten)).to.equal(false);
+		});
+	});
 });
 
 describe('plugin', function () {
