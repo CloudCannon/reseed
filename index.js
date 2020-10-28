@@ -8,7 +8,8 @@ Flags:
     -s | --source   The source folder to clone. Defaults to dist/site.
     -d | --dest     The destination folder to clone the files to. Defaults to dist/prod
     -b | --baseurl  The filename to prepend to the files in the source.
-    -p | --port     The portnumber to serve the cloned site on.
+	-p | --port     The portnumber to serve the cloned site on.
+	-e | --extrasrc A list of extra src attributes to be rewritten
     --split         The number of partitions to divide files into
     --partition     The partition number to process
 
@@ -48,6 +49,11 @@ const inputs = meow(
 			port: {
 				type: 'string',
 				alias: 'p'
+			},
+			extrasrc: {
+				type: 'string',
+				alias: 'e',
+				isMultiple: true
 			},
 			overwrite: {
 				type: 'boolean',

@@ -10,36 +10,48 @@ const dest = '/';
 const baseurl = 'testbase';
 
 describe('rewrite html', function () {
-	context('element with src attribute', function () {
-		context('src is rewritable', function () {
-			it('should rewrite the url in file', function () {
-				const element = '<img src="testImage.jpg">';
-				const expectedElement = '<img src="/testBaseurl/testImage.jpg">';
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
+	context('elements with some src attribute', function () {
+		context('urls are rewritable', function () {
+			it('should rewrite the url in each src attribute', function () {
+				const element = `<img src="testImage.jpg">
+				<img poster="testImage.jpg">
+				<img extraAttrOne="testImage.jpg">
+				<img extraAttrTwo="testImage.jpg">`;
+				const expectedElement = `<img src="/testBaseurl/testImage.jpg">
+				<img poster="/testBaseurl/testImage.jpg">
+				<img extraAttrOne="/testBaseurl/testImage.jpg">
+				<img extraAttrTwo="/testBaseurl/testImage.jpg">`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
 				expect(rewrittenElement).to.equal(expectedElement);
 			});
 		});
 
-		context('src is ignorable', function () {
-			it('should return the url unchanged', function () {
-				const element = '<img src="https://testImage.jpg">';
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
+		context('urls are ignorable', function () {
+			it('should return each element unchanged', function () {
+				const element = `<img src="https://testImage.jpg">
+				<img poster="https://testImage.jpg">
+				<img extraAttrOne="https://testImage.jpg">
+				<img extraAttrTwo="https://testImage.jpg">`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
 				expect(rewrittenElement).to.equal(element);
 			});
 		});
 
-		context('element uses reseed-ignore', function () {
-			it('should return the url unchanged', function () {
-				const element = '<img src="testImage.jpg" reseed-ignore>';
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
+		context('elements use reseed-ignore', function () {
+			it('should return each element unchanged', function () {
+				const element = `<img src="testImage.jpg" reseed-ignore>
+				<img poster="testImage.jpg" reseed-ignore>
+				<img extraAttrOne="testImage.jpg" reseed-ignore>
+				<img extraAttrTwo="testImage.jpg" reseed-ignore>`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
 				expect(rewrittenElement).to.equal(element);
 			});
 		});
 	});
 
 	context('element with srcset attribute', function () {
-		context('srcset is rewritable', function () {
-			it('should rewrite the url in file', function () {
+		context('url is rewritable', function () {
+			it('should rewrite the url in the element', function () {
 				const element = '<img srcset="testImage.jpg">';
 				const expectedElement = '<img srcset="/testBaseurl/testImage.jpg">';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -47,7 +59,7 @@ describe('rewrite html', function () {
 			});
 		});
 
-		context('srcset is ignorable', function () {
+		context('url is ignorable', function () {
 			it('should return the url unchanged', function () {
 				const element = '<img srcset="https://testImage.jpg">';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -56,7 +68,7 @@ describe('rewrite html', function () {
 		});
 
 		context('element uses reseed-ignore', function () {
-			it('should return the url unchanged', function () {
+			it('should return the element unchanged', function () {
 				const element = '<img srcset="testImage.jpg" reseed-ignore>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);
@@ -65,8 +77,8 @@ describe('rewrite html', function () {
 	});
 
 	context('element with href attribute', function () {
-		context('href is rewritable', function () {
-			it('should rewrite the href', function () {
+		context('url is rewritable', function () {
+			it('should rewrite the url in the href', function () {
 				const element = '<a href="testImage.jpg">link</a>';
 				const expectedElement = '<a href="/testBaseurl/testImage.jpg">link</a>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -74,22 +86,26 @@ describe('rewrite html', function () {
 			});
 		});
 
-		context('href is ignorable', function () {
-			const element = '<a href="https://testImage.jpg">link</a>';
-			const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-			expect(rewrittenElement).to.equal(element);
+		context('url is ignorable', function () {
+			it('should return the <a> element unchanged', function () {
+				const element = '<a href="https://testImage.jpg">link</a>';
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
+				expect(rewrittenElement).to.equal(element);
+			});
 		});
 
 		context('element uses reseed-ignore', function () {
-			const element = '<a href="testImage.jpg" reseed-ignore>link</a>';
-			const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-			expect(rewrittenElement).to.equal(element);
+			it('should return the <a> element unchanged', function () {
+				const element = '<a href="testImage.jpg" reseed-ignore>link</a>';
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
+				expect(rewrittenElement).to.equal(element);
+			});
 		});
 	});
 
 	context('element with meta attribute', function () {
 		context('url is rewritable', function () {
-			it('should rewrite the url in file', function () {
+			it('should rewrite the url in the element', function () {
 				const element = '<body><meta http-equiv="refresh" content="0;url=testImage.jpg"></body>';
 				const expectedElement = '<body><meta http-equiv="refresh" content="0;url=/testBaseurl/testImage.jpg"></body>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -98,7 +114,7 @@ describe('rewrite html', function () {
 		});
 
 		context('url is ignorable', function () {
-			it('should ignore the url', function () {
+			it('should return the element unchanged', function () {
 				const element = '<body><meta http-equiv="refresh" content="0;url=https://testImage.jpg"></body>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);
@@ -106,7 +122,7 @@ describe('rewrite html', function () {
 		});
 
 		context('element uses reseed-ignore', function () {
-			it('should ignore the url', function () {
+			it('should return the element unchanged', function () {
 				const element = '<body><meta http-equiv="refresh" content="0;url=testImage.jpg" reseed-ignore></body>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);
@@ -116,7 +132,7 @@ describe('rewrite html', function () {
 
 	context('element with style attribute', function () {
 		context('url is rewritable', function () {
-			it('should rewrite the url', function () {
+			it('should rewrite the url in the element', function () {
 				const element = '<h1 style="background-img: url(\'testImage.jpg\')">text</h1>';
 				const expectedElement = '<h1 style="background-img: url(\'/testBaseurl/testImage.jpg\')">text</h1>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -125,7 +141,7 @@ describe('rewrite html', function () {
 		});
 
 		context('url is ignorable', function () {
-			it('should ignore the url', function () {
+			it('should return the element unchanged', function () {
 				const element = '<h1 style="background-img: url(\'https://testImage.jpg\')">text</h1>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);
@@ -133,7 +149,7 @@ describe('rewrite html', function () {
 		});
 
 		context('element uses reseed-ignore', function () {
-			it('should ignore the url', function () {
+			it('should return the element unchanged', function () {
 				const element = '<h1 style="background-img: url(testImage.jpg)" reseed-ignore>text</h1>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);
@@ -142,8 +158,8 @@ describe('rewrite html', function () {
 	});
 
 	context('style element', function () {
-		context('with rewritable url', function () {
-			it('should rewrite the url', function () {
+		context('url is rewritable', function () {
+			it('should rewrite the url in the element', function () {
 				const element = '<style> p {background-img: url("testImage.jpg");}></style>';
 				const expectedElement = '<style> p {background-img: url(\'/testBaseurl/testImage.jpg\');}></style>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
@@ -152,7 +168,7 @@ describe('rewrite html', function () {
 		});
 
 		context('with ignorable url', function () {
-			it('should ignore the url', function () {
+			it('should return the element unchanged', function () {
 				const element = '<style> p {background-img: url(\'https://testImage.jpg\');}></style>';
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(element);

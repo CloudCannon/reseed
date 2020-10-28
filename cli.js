@@ -24,7 +24,6 @@ const command = (func, requiredFlags = []) => ({
 const commands = {
 	/* eslint-disable quote-props */
 	'build': command(runner.build, ['baseurl']),
-	// eslint-disable-next-line quote-props
 	'clean': command(runner.clean, ['dest']),
 	'clone-assets': command(runner.clone_assets, ['baseurl']),
 	'dist': command(runner.dist, ['baseurl']),
@@ -101,6 +100,7 @@ module.exports = {
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
 		const partition = flags.partition || 1;
+		const extraSrcAttrs = flags.extrasrc || [];
 
 		const options = {
 			cwd: process.cwd(),
@@ -116,6 +116,7 @@ module.exports = {
 				path: '/'
 			},
 			flags: {
+				extraSrcAttrs: extraSrcAttrs,
 				overwrite: flags.overwrite,
 				split: split,
 				partition: partition
