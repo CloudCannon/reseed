@@ -128,10 +128,12 @@ $ dist watch -d path/to/dest
 
 # Flags
 ```
-    -s | --source   The source folder to clone. Defaults to dist/site.
-    -d | --dest     The destination folder to clone the files to. Defaults to dist/prod
-    -b | --baseurl  The filename to prepend to the files in the source.
-    -p | --port     The portnumber to serve the cloned site on.
-    --split         The number of partitions to divide files into
-    --partition     The partition number to process
+    -s | --source       The source folder to clone. Defaults to dist/site.
+    -d | --dest         The destination folder to clone the files to. Defaults to dist/prod.
+    -b | --baseurl      The filename to prepend to the files in the source.
+    -p | --port         The portnumber to serve the cloned site on.
+    -e | --extrasrc     A list of extra src attributes to be rewritten.
+    -o | --overwrite    When cleaning --dest, don't prompt for confirmation.
+    --split             The number of partitions to divide files into.
+    --partition         The partition number to process.
 ```
