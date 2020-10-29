@@ -3,6 +3,7 @@
 const path = require('path');
 const { expect } = require('chai');
 const fs = require('fs-extra');
+const sinon = require('sinon');
 const runner = require('../lib/runner.js');
 
 const dest = 'test/testdir';
@@ -194,6 +195,13 @@ describe('_copyFiles', function () {
 		});
 	});
 
+	context('no files to copy', function () {
+		it('should return undefined', async function () {
+			const results = await runner._copyFiles();
+			expect(results).to.equal(undefined);
+		});
+	});
+
 	after(function () {
 		fs.removeSync('test/dest');
 		fs.removeSync('test/src');
@@ -217,6 +225,7 @@ describe('_askYesNo', function () {
 });
 
 describe('build', function () {
+	/*
 	before(function () {
 		fs.mkdirSync('test/src');
 		fs.mkdirSync('test/src/assets');
@@ -229,16 +238,107 @@ describe('build', function () {
 		fs.writeFileSync('test/src/index.html', 'html');
 		fs.writeFileSync('test/src/html/index2.html', 'html');
 	});
+	*/
+	let cleanStub;
+	let fetchStub;
+	let cloneAssetsStub;
+	let rewriteCssStub;
+	let rewriteHtmlStub;
 
-	context('building a valid filesystem', function () {
-		it.skip('should return 0', async function () {
-			// const res = await runner.build(testOp);
+	before(function () {
+		cleanStub = sinon.stub(runner, 'clean');
+		fetchStub = sinon.stub(runner, '_fetchFiles');
+		cloneAssetsStub = sinon.stub(runner, 'clone_assets');
+		rewriteCssStub = sinon.stub(runner, 'rewrite_css');
+		rewriteHtmlStub = sinon.stub(runner, 'rewrite_html');
+	});
+
+	context('clean fails', function () {
+		before(function () {
+			cleanStub.returns(1);
+		});
+
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
+	context('fetchFiles fails', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns();
+		});
+
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
+	context('clone_assets fails', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns([]);
+			cloneAssetsStub.returns();
+			rewriteCssStub.returns(0);
+			rewriteHtmlStub.returns(0);
+		});
+
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
+	context('rewrite_css fails', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns([]);
+			cloneAssetsStub.returns([]);
+			rewriteCssStub.returns(1);
+			rewriteHtmlStub.returns(0);
+		});
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
+	context('rewrite_html fails', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns([]);
+			cloneAssetsStub.returns([]);
+			rewriteCssStub.returns(0);
+			rewriteHtmlStub.returns(1);
+		});
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
+	context('everything works', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns([]);
+			cloneAssetsStub.returns([]);
+			rewriteCssStub.returns(0);
+			rewriteHtmlStub.returns(0);
+		});
+		it('should return with exit code 0', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(0);
 		});
 	});
 
 	after(function () {
-		fs.removeSync('test/dest');
-		fs.removeSync('test/src');
+		cleanStub.restore();
+		fetchStub.restore();
+		cloneAssetsStub.restore();
+		rewriteCssStub.restore();
+		rewriteHtmlStub.restore();
 	});
 });
 
@@ -247,7 +347,7 @@ describe('clean', async function () {
 		fs.mkdirSync(dest);
 	});
 
-	await context('Removing a file', function () {
+	context('Removing a file', function () {
 		it('should remove the directory', async function () {
 			options.dist.dest = dest;
 			const res = await runner.clean(options);
@@ -255,7 +355,7 @@ describe('clean', async function () {
 		});
 	});
 
-	await context('invalid directory name', function () {
+	context('invalid directory name', function () {
 		options.dist.dest = 'thisdoesntexist';
 		it('should return an empty array', async function () {
 			const res = await runner.clean(options);
@@ -298,7 +398,48 @@ describe('clone-assets', function () {
 });
 
 describe('dist', function () {
+	let buildStub;
+	let serveStub;
+	let watchStub;
 
+	before(function () {
+		buildStub = sinon.stub(runner, 'build');
+		serveStub = sinon.stub(runner, 'serve');
+		watchStub = sinon.stub(runner, 'watch');
+	});
+
+	context('build fails', function () {
+		before(function () {
+			buildStub.returns(1);
+		});
+
+		it('should return with exit code 1', async function () {
+			const results = await runner.dist();
+			expect(results).to.equal(1);
+		});
+
+		after(function () {
+			buildStub.reset();
+		});
+	});
+
+	context('build succeeds', function () {
+		before(function () {
+			serveStub.returns();
+			watchStub.returns();
+		});
+
+		it('should return with exit code 0', async function () {
+			const results = await runner.dist();
+			expect(results).to.equal(0);
+		});
+	});
+
+	after(function () {
+		buildStub.restore();
+		serveStub.restore();
+		watchStub.restore();
+	});
 });
 
 describe('rewrite-css', function () {
@@ -338,26 +479,46 @@ describe('rewrite-css', function () {
 	});
 });
 
-describe('rewrite-html', function () {
+describe('rewrite_html', function () {
+	let fetchFileStub;
+	let copyFilesStub;
+
 	before(function () {
-		fs.mkdirSync('test/src');
-		fs.mkdirSync('test/src/html');
-		fs.writeFileSync('test/src/index.html', 'html');
-		fs.writeFileSync('test/src/html/index2.html', 'html');
+		fetchFileStub = sinon.stub(runner, '_fetchFiles');
+		copyFilesStub = sinon.stub(runner, '_copyFiles');
 	});
 
-	context('Cloning from a valid directory', function () {
-		it('should return the cloned files', async function () {
-			const results = await runner.rewrite_html(testOp);
-			expect(results).to.equal(0);
+	context('No files to copy', function () {
+		context('_fetchFiles fails', function () {
+			before(function () {
+				fetchFileStub.returns();
+			});
+			it('should return with exit code 1', async function () {
+				const result = await runner.rewrite_html(testOp);
+				expect(result).to.equal(1);
+			});
+		});
+		context('fetchFiles succeeds', function () {
+			before(function () {
+				fetchFileStub.callThrough();
+			});
+		});
+
+		after(function () {
+			fetchFileStub.restore();
 		});
 	});
 
-	context('Cloning from invalid directory', function () {
-		it('should return undefined', async function () {
-			options.dist.src = 'thisdoesntexist';
-			const results = await runner.rewrite_html(options);
-			expect(results).to.equal(1);
+	context('copiedFiles errored', function () {
+		before(function () {
+			copyFilesStub.returns();
+		});
+		it('should return with exit code 1', async function () {
+			const result = await runner.rewrite_html(testOp, ['file1', 'file2']);
+			expect(result).to.equal(1);
+		});
+		after(function () {
+			copyFilesStub.restore();
 		});
 	});
 
@@ -369,9 +530,23 @@ describe('rewrite-html', function () {
 		});
 	});
 
-	after(function () {
-		fs.removeSync('test/dest');
-		fs.removeSync('test/src');
+	context('Cloning from a valid directory', function () {
+		before(function () {
+			fs.mkdirSync('test/src');
+			fs.mkdirSync('test/src/html');
+			fs.writeFileSync('test/src/index.html', 'html');
+			fs.writeFileSync('test/src/html/index2.html', 'html');
+		});
+
+		it('should return the cloned files', async function () {
+			const results = await runner.rewrite_html(testOp);
+			expect(results).to.equal(0);
+		});
+
+		after(function () {
+			fs.removeSync('test/dest');
+			fs.removeSync('test/src');
+		});
 	});
 });
 
