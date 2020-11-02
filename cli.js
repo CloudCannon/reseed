@@ -11,34 +11,31 @@ const runner = require('./lib/runner');
 * be done n runner.js.
 * @return {Object} The command.
 */
-const command = (func, requiredFlags = []) => ({
+const createCommand = (func, requiredFlags = []) => ({
 	run: func,
 	requiredFlags: requiredFlags
 });
 
 /**
  The different commands for operation. New commands can be specified here.
- Each command requires a function to run, and a lsi of required flags.
+ Each command requires a function to run, and a list of required flags.
  Required flags will be checked before the command is run.
 */
 const commands = {
 	/* eslint-disable quote-props */
-	'build': command(runner.build, ['baseurl']),
-	'clean': command(runner.clean, ['dest']),
-	'clone-assets': command(runner.clone_assets, ['baseurl']),
-	'dist': command(runner.dist, ['baseurl']),
-	'rewrite_css': command(runner.rewrite_css, ['baseurl']),
-	'rewrite-html': command(runner.rewrite_html, ['baseurl']),
-	'serve': command(runner.serve),
-	'watch': command(runner.watch)
+	'build': createCommand(runner.build, ['baseurl', 'dest']),
+	'clean': createCommand(runner.clean, ['dest']),
+	'clone-assets': createCommand(runner.clone_assets, ['baseurl', 'dest']),
+	'reseed': createCommand(runner.build, ['baseurl', 'dest']),
+	'rewrite_css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
+	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
+	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
+	'watch': createCommand(runner.watch)
 	/* eslint-enable quote-props */
 };
 
-const defaultSrc = 'dist/site';
-const defaultDest = 'dist/prod';
+const defaultSrc = './';
 const defaultPort = 9000;
-
-let exitCode = 0;
 
 module.exports = {
 	/**
@@ -53,7 +50,6 @@ module.exports = {
 
 		log.error(chalk.red('required flags:'));
 		log.error(chalk.red(requiredFlags));
-		exitCode = 1;
 		return false;
 	},
 
@@ -95,7 +91,7 @@ module.exports = {
 	*/
 	setOptions: function (flags) {
 		const source = flags.source || defaultSrc;
-		const destination = flags.dest || defaultDest;
+		const destination = flags.dest;
 		const baseurl = flags.baseurl || '';
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
@@ -105,7 +101,7 @@ module.exports = {
 		const options = {
 			cwd: process.cwd(),
 
-			dist: {
+			paths: {
 				src: source,
 				dest: destination,
 				baseurl: baseurl
@@ -123,8 +119,8 @@ module.exports = {
 			}
 		};
 
-		options.dist.fullPathToSource = path.resolve(options.cwd, options.dist.src);
-		options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, baseurl);
+		options.paths.fullPathToSource = path.resolve(options.cwd, options.paths.src);
+		options.paths.fullPathToDest = path.resolve(options.cwd, options.paths.dest, baseurl);
 		return options;
 	},
 
@@ -136,26 +132,27 @@ module.exports = {
 	 * non-zero means an error occured.
 	 */
 	run: async function (cli) {
-		exitCode = 0;
+		const cmd = cli.input[0] || 'reseed';
+		if (!commands[cmd]) {
+			log(chalk.red('command not recognized'));
+			log(cli.help);
+			return 2;
+		}
+
+		if (!this.checkRequiredFlags(cli.flags, commands[cmd].requiredFlags)) {
+			return 2;
+		}
 
 		const options = this.setOptions(cli.flags);
 
 		const date = new Date();
 		const startTime = date.getTime();
 
-		const cmd = cli.input[0] || 'dist';
-
-		if (commands[cmd]) {
-			if (this.checkRequiredFlags(cli.flags, commands[cmd].requiredFlags)) {
-				// run function in the context of the runner module.
-				const exit = await commands[cmd].run.call(runner, options);
-				if (typeof exit === 'number') {
-					exitCode = exit;
-				}
-			}
-		} else {
-			log(chalk.red('command not recognized'));
-			exitCode = 1;
+		// run function in the context of the runner module.
+		let exitCode = 0;
+		const exit = await commands[cmd].run.call(runner, options);
+		if (typeof exit === 'number') {
+			exitCode = exit;
 		}
 
 		const end = new Date();
