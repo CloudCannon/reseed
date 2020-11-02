@@ -10,14 +10,14 @@ Requires node >=10.0.0
 
 ## Contents
 
-- [reseed](##reseed)
-- [reseed clean](##clean)
-- [reseed clone-assets](##reseed-clone-assets)
-- [reseed rewrite-css](##reseed=rewrite-css)
-- [reseed rewrite-html](##reseed-rewrite-html)
-- [reseed serve](##reseed-serve)
-- [reseed watch](##reseed-watch)
-- [Flags](##Flags)
+- [reseed](#reseed)
+- [reseed clean](#clean)
+- [reseed clone-assets](#reseed-clone-assets)
+- [reseed rewrite-css](#reseed=rewrite-css)
+- [reseed rewrite-html](#reseed-rewrite-html)
+- [reseed serve](#reseed-serve)
+- [reseed watch](#reseed-watch)
+- [Flags](#Flags)
 
 
 # Commands
@@ -90,7 +90,7 @@ $ reseed rewrite-html -b baseurlName
 
 
 ## ```reseed serve```
-Runs [```build```](##reseed-build), then serves the files on a local webserver, so that they my be viewed in a browser. Then runs [```watch```](##reseed-watch).
+Runs [```build```](#reseed-build), then serves the files on a local webserver, so that they my be viewed in a browser. Then runs [```watch```](#reseed-watch).
 
 #### Example:
 ```
