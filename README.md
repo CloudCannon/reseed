@@ -9,121 +9,107 @@ Requires node >=10.0.0
 
 
 ## Contents
-<ul>
-    <li> Build
-    <li> Clean
-    <li> Clone Assets
-    <li> Dist
-    <li> Rewrite CSS
-    <li> Rewrite HTML
-    <li> Serve
-    <li> Watch
-</ul>
+
+- [reseed](##reseed)
+- [reseed clean](##clean)
+- [reseed clone-assets](##reseed-clone-assets)
+- [reseed rewrite-css](##reseed=rewrite-css)
+- [reseed rewrite-html](##reseed-rewrite-html)
+- [reseed serve](##reseed-serve)
+- [reseed watch](##reseed-watch)
+- [Flags](##Flags)
+
 
 # Commands
 
 
-## Build
-##### ```build```
-Cleans dest, and copies files from src to dest/baseurl.
-CSS and HTML files have their hrefs/urls/etc to include baseurl.
+## ```reseed```
+Cleans destination directory, and copies files from src to dest/baseurl.
+CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
 
 #### Example:
-
 ```
-$ dist build -b baseurlName
+$ reseed -s path/to/src -d path/to/dest -b baseurlName
 ```
 
 #### Required flags:
-[-b | --baseurl ]
+`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 
-## Clean
-##### ```clean```
+## ```reseed-clean```
 
-Deletes all files in dest.
-
-#### Example:
-```
-$ dist clean -d path/To/Destination
-```
-
-
-## Clone Assets
-##### ```clone-assets```
-Copy the files from source to destination/baseurl without altering the data in any way.
+Deletes all files in the destination directory.
 
 #### Example:
 ```
-$ dist clone-assets -b baseurl
+$ reseed clean -d path/to/dest
 ```
 
 #### Required flags:
-[-b | --baseurl ]
+`[ -d | --dest ]`
 
-## Dist
-##### ```dist```
-Runs build, serve, then watch.
-Is the default command (runs when no command is specified by user.)
+
+## ```reseed clone-assets```
+Copy all but files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
 
 #### Example:
 ```
-$ dist -s path/to/src -d path/to/dest -b baseurlName
+$ reseed clone-assets -b baseurl
 ```
 
 #### Required flags:
-[-b | --baseurl ]
+`[ -b | --baseurl ], [ -d | --dest ]`
 
 
-## Rewrite CSS
-##### ```rewrite-css```
+## ```reseed rewrite-css```
 Copies css files from src to dest/baseurl.
 Then rewrites the newly copied files so that urls/hrefs/etc that reference local
 content have baseurl prepended to them.
 
 #### Example:
 ```
-$ dist rewrite-css -b baseurlName
+$ reseed rewrite-css -b baseurlName
 ```
+
 #### Required flags:
-[-b | --baseurl ]
+`[ -b | --baseurl ], [ -d | --dest ]`
 
 
-## Rewrite HTML
-##### ```rewrite-html```
+## ```reseed rewrite-html```
 Copies html files from src to dest/baseurl.
-Rewrites the newly copied files so that urls/hrefs/etc that reference local
-content have baseurl prepended to them.
+Rewrites the newly copied files so that internal urls/hrefs/etc have baseurl prepended to them.
 
 #### Example:
 ```
-$ dist rewrite-html -b baseurlName
+$ reseed rewrite-html -b baseurlName
 ```
 
 #### Required flags:
-[-b | --baseurl ]
+`[ -b | --baseurl ], [ -d | --dest ]`
 
-## Serve
-##### ```serve```
-Serves the files on a local webserver, so that they my be viewed in a browser.
+
+## ```reseed serve```
+Runs [```build```](##reseed-build), then serves the files on a local webserver, so that they my be viewed in a browser. Then runs [```watch```](##reseed-watch).
 
 #### Example:
 ```
-$ dist serve -d path/to/dest
+$ reseed serve -d path/to/dest
 ```
 
+#### Required flags:
+`[ -b | --baseurl ], [ -d | --dest ]`
 
-## Watch
-##### ```watch```
-Continuously watches the dest/baseurl directory to check for changes. If a change
+
+## ```reseed watch```
+Continuously watches the src directory to check for changes. If a change
 occurs, then the browser that is viewing the local webserver will be reloaded, so
 that the new content can be viewed. Because this process runs continously, it does
 not return an exit code because it must be cancelled by the user in-terminal.
 
 #### Example:
 ```
-$ dist watch -d path/to/dest
+$ reseed watch -s path/to/src
 ```
 
 # Flags
@@ -136,4 +122,5 @@ $ dist watch -d path/to/dest
     -o | --overwrite    When cleaning --dest, don't prompt for confirmation.
     --split             The number of partitions to divide files into.
     --partition         The partition number to process.
+	--help				Show help in the terminal.
 ```
