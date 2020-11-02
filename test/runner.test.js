@@ -11,7 +11,7 @@ const dest = 'test/testdir';
 const options = {
 	cwd: '/',
 
-	dist: {
+	paths: {
 		src: 'test/src',
 		dest: 'test/dest',
 		baseurl: 'baseurl'
@@ -25,14 +25,14 @@ const options = {
 		overwrite: true
 	}
 };
-options.dist.fullPathToSource = options.dist.src;
-options.dist.fullPathToDest = path.resolve(options.cwd, options.dist.dest, options.dist.baseurl);
+options.paths.fullPathToSource = options.paths.src;
+options.paths.fullPathToDest = path.resolve(options.cwd, options.paths.dest, options.paths.baseurl);
 
 // TESTOP IS NEVER CHANGED
 const testOp = {
 	cwd: '/',
 
-	dist: {
+	paths: {
 		src: 'test/src',
 		dest: 'test/dest',
 		baseurl: 'baseurl'
@@ -46,8 +46,8 @@ const testOp = {
 		overwrite: true
 	}
 };
-testOp.dist.fullPathToSource = testOp.dist.src;
-testOp.dist.fullPathToDest = path.resolve(testOp.dist.dest, 'baseurl');
+testOp.paths.fullPathToSource = testOp.paths.src;
+testOp.paths.fullPathToDest = path.resolve(testOp.paths.dest, 'baseurl');
 
 describe('_fetchFiles', function () {
 	before(function () {
@@ -225,20 +225,6 @@ describe('_askYesNo', function () {
 });
 
 describe('build', function () {
-	/*
-	before(function () {
-		fs.mkdirSync('test/src');
-		fs.mkdirSync('test/src/assets');
-		fs.mkdirSync('test/src/css');
-		fs.mkdirSync('test/src/html');
-		fs.writeFileSync('test/src/image.jpg', 'image');
-		fs.writeFileSync('test/src/assets/image2.jpg', 'image');
-		fs.writeFileSync('test/src/style.css', 'css');
-		fs.writeFileSync('test/src/css/style2.css', 'css');
-		fs.writeFileSync('test/src/index.html', 'html');
-		fs.writeFileSync('test/src/html/index2.html', 'html');
-	});
-	*/
 	let cleanStub;
 	let fetchStub;
 	let cloneAssetsStub;
@@ -343,20 +329,37 @@ describe('build', function () {
 });
 
 describe('clean', async function () {
+	let yesNoStub;
 	before(function () {
+		yesNoStub = sinon.stub(runner, '_askYesNo');
 		fs.mkdirSync(dest);
+	});
+
+	context('User answers no to overwrite', function () {
+		before(function () {
+			yesNoStub.returns(false);
+		});
+
+		it('should return exit code 1', async function () {
+			const res = await runner.clean({ paths: { dest: dest }, flags: {} });
+			expect(res).to.equal(1);
+		});
+
+		after(function () {
+			yesNoStub.restore();
+		});
 	});
 
 	context('Removing a file', function () {
 		it('should remove the directory', async function () {
-			options.dist.dest = dest;
+			options.paths.dest = dest;
 			const res = await runner.clean(options);
-			expect(res).to.eql([path.resolve(options.dist.dest)]);
+			expect(res).to.eql([path.resolve(options.paths.dest)]);
 		});
 	});
 
 	context('invalid directory name', function () {
-		options.dist.dest = 'thisdoesntexist';
+		options.paths.dest = 'thisdoesntexist';
 		it('should return an empty array', async function () {
 			const res = await runner.clean(options);
 			expect(res).to.eql([]);
@@ -385,7 +388,7 @@ describe('clone-assets', function () {
 
 	context('Cloning from invalid directory', function () {
 		it('should return undefined', async function () {
-			options.dist.src = 'thisdoesntexist';
+			options.paths.src = 'thisdoesntexist';
 			const results = await runner.clone_assets(options);
 			expect(results).to.equal(1);
 		});
@@ -397,7 +400,7 @@ describe('clone-assets', function () {
 	});
 });
 
-describe('dist', function () {
+describe('buildAndServe', function () {
 	let buildStub;
 	let serveStub;
 	let watchStub;
@@ -414,7 +417,7 @@ describe('dist', function () {
 		});
 
 		it('should return with exit code 1', async function () {
-			const results = await runner.dist();
+			const results = await runner.buildAndServe();
 			expect(results).to.equal(1);
 		});
 
@@ -430,7 +433,7 @@ describe('dist', function () {
 		});
 
 		it('should return with exit code 0', async function () {
-			const results = await runner.dist();
+			const results = await runner.buildAndServe();
 			expect(results).to.equal(0);
 		});
 	});
@@ -459,7 +462,7 @@ describe('rewrite-css', function () {
 
 	context('Cloning from invalid directory', function () {
 		it('should return undefined', async function () {
-			options.dist.src = 'thisdoesntexist';
+			options.paths.src = 'thisdoesntexist';
 			const results = await runner.rewrite_css(options);
 			expect(results).to.equal(1);
 		});
@@ -467,7 +470,7 @@ describe('rewrite-css', function () {
 
 	context('trying to copy files that dont exist', function () {
 		it('should return 1', async function () {
-			options.dist.fullPathToSource = 'fake';
+			options.paths.fullPathToSource = 'fake';
 			const results = await runner.rewrite_css(options);
 			expect(results).to.equal(1);
 		});
@@ -524,7 +527,7 @@ describe('rewrite_html', function () {
 
 	context('trying to copy files that dont exist', function () {
 		it('should return 1', async function () {
-			options.dist.fullPathToSource = 'fake';
+			options.paths.fullPathToSource = 'fake';
 			const results = await runner.rewrite_html(options);
 			expect(results).to.equal(1);
 		});

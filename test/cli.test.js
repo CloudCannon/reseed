@@ -59,10 +59,10 @@ describe('setOptions()', function () {
 		};
 		it('should return with the correct flags set', function () {
 			const options = cli.setOptions(flags);
-			expect(options.dist.baseurl).to.equal('testurl');
+			expect(options.paths.baseurl).to.equal('testurl');
 			expect(options.serve.port).to.equal(9898);
-			expect(options.dist.dest).to.equal('testdest');
-			expect(options.dist.src).to.equal('testsource');
+			expect(options.paths.dest).to.equal('testdest');
+			expect(options.paths.src).to.equal('testsource');
 
 			expect(options.flags.split).to.equal(1);
 			expect(options.flags.partition).to.equal(1);
@@ -77,9 +77,9 @@ describe('run()', function () {
 	});
 	context('User enters invalid command', function () {
 		const inputs = { flags: {}, input: ['invalidcommand'] };
-		it('Should exit with code 1', async function () {
+		it('Should exit with code 2', async function () {
 			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(1);
+			expect(exitCode).to.equal(2);
 		});
 	});
 
@@ -107,9 +107,9 @@ describe('run()', function () {
 
 	context('User misses required flag', function () {
 		const inputs = { flags: {}, input: ['build'] };
-		it('Should exit with code 1', async function () {
+		it('Should exit with code 2', async function () {
 			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(1);
+			expect(exitCode).to.equal(2);
 		});
 	});
 
