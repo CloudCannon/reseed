@@ -1,7 +1,7 @@
 {
   "name": "reseed",
   "version": "2.0.0",
-  "description": "Allows you to make a clone of your site with a different baseurl.",
+  "description": "Reseed is an open-source tool for integrating static sites into subpaths.",
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
