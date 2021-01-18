@@ -3,7 +3,7 @@ const meow = require('meow');
 const cli = require('./cli');
 
 const helpString = `
-Usage: reseed <command> <flags>
+Usage: reseed <command> <options>
 
 Commands:
     build             Compiles HTML and CSS to be run at a baseurl
@@ -14,10 +14,10 @@ Commands:
     serve             Runs 'build' then a local webserver on the dest folder
     watch             Watches the src folder and triggers builds
 
-'clean' requires --dest flag set
-All other commands (except 'watch') require both --baseurl and --dest flags set.
+'clean' requires --dest option set
+All other commands require both --baseurl and --dest options set.
 
-Flags:
+Options:
     -s | --source     The source folder to clone. Defaults to current directory.
     -d | --dest       The destination folder to clone the files to.
     -b | --baseurl    The base-URL to prepend to the files once copied

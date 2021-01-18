@@ -7,7 +7,7 @@ const runner = require('./lib/runner');
 /**
 * Factory function for creating commands.
 * @param {function} func The function that calling this command will run. These functions
-* are usually included in the runner class. Implementing new functinoality shoud
+* are usually included in the runner class. Implementing new functionality should
 * be done n runner.js.
 * @return {Object} The command.
 */
@@ -30,7 +30,7 @@ const commands = {
 	'rewrite_css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
 	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
 	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
-	'watch': createCommand(runner.watch)
+	'watch': createCommand(runner.watch, ['baseurl', 'dest'])
 	/* eslint-enable quote-props */
 };
 
