@@ -9,35 +9,49 @@ Requires node >=10.0.0
 
 
 ## Contents
+- [Installation](#installation)
+- [Commands](#commands)
+	- [reseed](#reseed)
+	- [reseed clone-assets](#reseed-clone-assets)
+	- [reseed rewrite-css](#reseed-rewrite-css)
+	- [reseed rewrite-html](#reseed-rewrite-html)
+	- [reseed serve](#reseed-serve)
+	- [reseed watch](#reseed-watch)
+- [Options](#Options)
 
-- [reseed](#reseed)
-- [reseed clean](#clean)
-- [reseed clone-assets](#reseed-clone-assets)
-- [reseed rewrite-css](#reseed=rewrite-css)
-- [reseed rewrite-html](#reseed-rewrite-html)
-- [reseed serve](#reseed-serve)
-- [reseed watch](#reseed-watch)
-- [Flags](#Flags)
 
+# Installation
+
+Install globally with npm:
+
+```Shell
+$ npm install reseed --global
+```
+
+or scoped to your project:
+
+```Shell
+$ npm install reseed --save-dev
+```
 
 # Commands
 
+> All commands (except [```clean```](#reseed-clean)) require both `baseurl` and `dest` options set.
+>
+> [```clean```](#reseed-clean) only requires the `dest` option set.
 
 ## ```reseed```
 Cleans destination directory, and copies files from src to dest/baseurl.
 CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
 
 #### Example:
+```shell
+$ reseed -s path/to/src -d path/to/dest -b baseurl
 ```
-$ reseed -s path/to/src -d path/to/dest -b baseurlName
-```
-
-#### Required flags:
-`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 
-## ```reseed-clean```
+## ```reseed clean```
 
 Deletes all files in the destination directory.
 
@@ -46,20 +60,14 @@ Deletes all files in the destination directory.
 $ reseed clean -d path/to/dest
 ```
 
-#### Required flags:
-`[ -d | --dest ]`
-
 
 ## ```reseed clone-assets```
-Copy all but files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
+Copy all files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
 
 #### Example:
+```Shell
+$ reseed clone-assets -b baseurl -d path/to/dest
 ```
-$ reseed clone-assets -b baseurl
-```
-
-#### Required flags:
-`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 ## ```reseed rewrite-css```
@@ -69,11 +77,8 @@ content have baseurl prepended to them.
 
 #### Example:
 ```
-$ reseed rewrite-css -b baseurlName
+$ reseed rewrite-css -b baseurl -d path/to/dest
 ```
-
-#### Required flags:
-`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 ## ```reseed rewrite-html```
@@ -82,45 +87,38 @@ Rewrites the newly copied files so that internal urls/hrefs/etc have baseurl pre
 
 #### Example:
 ```
-$ reseed rewrite-html -b baseurlName
+$ reseed rewrite-html -b baseurl -d path/to/dest
 ```
-
-#### Required flags:
-`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 ## ```reseed serve```
-Runs [```build```](#reseed-build), then serves the files on a local webserver, so that they my be viewed in a browser. Then runs [```watch```](#reseed-watch).
+Runs [```reseed```](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [```watch```](#reseed-watch).
 
 #### Example:
 ```
-$ reseed serve -d path/to/dest
+$ reseed serve -s path/to/src -d path/to/dest -b baseurl
 ```
-
-#### Required flags:
-`[ -b | --baseurl ], [ -d | --dest ]`
 
 
 ## ```reseed watch```
 Continuously watches the src directory to check for changes. If a change
-occurs, then the browser that is viewing the local webserver will be reloaded, so
-that the new content can be viewed. Because this process runs continously, it does
-not return an exit code because it must be cancelled by the user in-terminal.
+occurs, a new build is triggered, and the browser is then reloaded.
 
 #### Example:
 ```
-$ reseed watch -s path/to/src
+$ reseed watch -s path/to/src -d path/to/dest -b baseurl
 ```
 
-# Flags
-```
-    -s | --source       The source folder to clone. Defaults to dist/site.
-    -d | --dest         The destination folder to clone the files to. Defaults to dist/prod.
-    -b | --baseurl      The filename to prepend to the files in the source.
-    -p | --port         The portnumber to serve the cloned site on.
-    -e | --extrasrc     A list of extra src attributes to be rewritten.
-    -o | --overwrite    When cleaning --dest, don't prompt for confirmation.
-    --split             The number of partitions to divide files into.
-    --partition         The partition number to process.
-	--help				Show help in the terminal.
-```
+# Options
+
+Option        | Alias | Type    | Description
+------------- | ----- | ------- | -----------
+`--source`    | `-s`  | String  | The source folder to clone. Defaults to current working directory.
+`--dest`      | `-d`  | String  | The destination folder to clone the files to.
+`--baseurl`   | `-b`  | String  | The filename to prepend to the files in the source.
+`--port`      | `-p`  | Integer | The port number to serve the cloned site on.
+`--extrasrc`  | `-e`  | [String]| A list of extra src attributes to be rewritten.
+`--overwrite` | `-o`  | Boolean | When cleaning `--dest`, don't prompt for confirmation.
+`--split`     |       | Integer | The number of partitions to divide files into.
+`--partition` |       | Integer | The partition number to process.
+`--help`      |       | Boolean | Show help in the terminal
