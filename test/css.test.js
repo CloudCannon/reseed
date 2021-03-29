@@ -1,5 +1,5 @@
 /* eslint-disable prefer-arrow-callback */
-const fs = require('fs-extra');
+const mock = require('mock-fs');
 const { expect } = require('chai');
 const path = require('path');
 
@@ -31,11 +31,12 @@ describe('rewrite css', function () {
 
 describe('plugin', function () {
 	before(function () {
-		fs.mkdirSync('test/testdir');
-		const testCSS = 'section.hero { background-image: url(../../testImage.jpg);}';
-		fs.writeFileSync('test/testdir/testcss.css', testCSS);
-		const emptyCSS = '';
-		fs.writeFileSync('test/testdir/emptycss.css', emptyCSS);
+		mock({
+			'test/testdir': {
+				'testcss.css': 'section.hero { background-image: url(../../testImage.jpg);}',
+				'emptycss.css': ''
+			}
+		});
 	});
 
 	context('User supplies a valid css file', function () {
@@ -72,6 +73,6 @@ describe('plugin', function () {
 	});
 
 	after(function () {
-		fs.removeSync('test/testdir');
+		mock.restore();
 	});
 });

@@ -1,5 +1,5 @@
 /* eslint-disable prefer-arrow-callback */
-const fs = require('fs-extra');
+const mock = require('mock-fs');
 const { expect } = require('chai');
 const path = require('path');
 
@@ -179,11 +179,12 @@ describe('rewrite html', function () {
 
 describe('plugin', function () {
 	before(function () {
-		fs.mkdirSync('test/testdir');
-		const testhtml = "<img src='testimage.png' >";
-		fs.writeFileSync('test/testdir/testhtml.html', testhtml);
-		const emptyhtml = '';
-		fs.writeFileSync('test/testdir/emptyhtml.html', emptyhtml);
+		mock({
+			'test/testdir': {
+				'testhtml.html': '<img src="testimage.png" >',
+				'emptyhtml.html': ''
+			}
+		});
 	});
 
 	context('User supplies a valid html file', function () {
@@ -216,11 +217,11 @@ describe('plugin', function () {
 
 	context('No baseurl', function () {
 		it('should return 1', function () {
-			expect(htmlRewrite.plugin(filename, '', null)).to.equal(1);
+			expect(htmlRewrite.plugin(filename, 'dest', null)).to.equal(1);
 		});
 	});
 
 	after(function () {
-		fs.removeSync('test/testdir', { recursive: true });
+		mock.restore();
 	});
 });
