@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 const { expect } = require('chai');
-const fs = require('fs-extra');
+const mock = require('mock-fs');
 const cli = require('../cli.js');
 
 describe('checkPortNumber()', function () {
@@ -72,8 +72,7 @@ describe('setOptions()', function () {
 
 describe('run()', function () {
 	before(function () {
-		fs.mkdirSync('test/forTesting');
-		fs.writeFileSync('test/forTesting/image.jpg', 'image');
+		mock({ 'test/forTesting/image.jpg': 'imgdata' });
 	});
 	context('User enters invalid command', function () {
 		const inputs = { flags: {}, input: ['invalidcommand'] };
@@ -114,6 +113,6 @@ describe('run()', function () {
 	});
 
 	after(function () {
-		fs.removeSync('test/forTesting');
+		mock.restore();
 	});
 });
