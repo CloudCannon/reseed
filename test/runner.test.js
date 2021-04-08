@@ -32,13 +32,14 @@ testOp.paths.fullPathToSource = testOp.paths.src;
 testOp.paths.fullPathToDest = path.resolve(testOp.paths.dest, 'baseurl');
 Object.freeze(testOp);
 
-describe('_fetchFiles', function () {
+describe('_fetchAllFiles', function () {
 	before(function () {
 		mock({
 			testDir: {
 				'image.jpg': 'imgdata',
 				'style.css': 'css',
 				'index.html': 'html',
+				'sitemap.xml': 'sitemap',
 				emptyDir: { emptierDir: {} },
 				assets: {
 					'image2.jpg': 'imgdata'
@@ -55,39 +56,10 @@ describe('_fetchFiles', function () {
 
 	context('type = any', function () {
 		it('should retrieve all files', async function () {
-			const results = await runner._fetchFiles('testDir', 'any');
+			const results = await runner._fetchAllFiles('testDir');
 			expect(results.css.length).to.equal(2);
-			expect(results.other.length).to.equal(2);
+			expect(results.other.length).to.equal(3);
 			expect(results.html.length).to.equal(2);
-		});
-	});
-	context('type = css', function () {
-		it('should retrieve all css files', async function () {
-			const results = await runner._fetchFiles('testDir', 'css');
-			expect(results.css.length).to.equal(2);
-			expect(results.html.length).to.equal(0);
-			expect(results.other.length).to.equal(0);
-			expect(results.css.every((file) => path.extname(file) === '.css')).to.equal(true);
-		});
-	});
-
-	context('type = html', function () {
-		it('should retrieve all html files', async function () {
-			const results = await runner._fetchFiles('testDir', 'html');
-			expect(results.html.length).to.equal(2);
-			expect(results.css.length).to.equal(0);
-			expect(results.other.length).to.equal(0);
-			expect(results.html.every((file) => path.extname(file) === '.html')).to.equal(true);
-		});
-	});
-
-	context('type = assets', function () {
-		it('should retrieve all files', async function () {
-			const results = await runner._fetchFiles('testDir', 'assets');
-			expect(results.other.length).to.equal(2);
-			expect(results.css.length).to.equal(0);
-			expect(results.html.length).to.equal(0);
-			expect(results.other.every((file) => path.extname(file) === '.jpg')).to.equal(true);
 		});
 	});
 
@@ -97,30 +69,30 @@ describe('_fetchFiles', function () {
 		);
 
 		before(async function () {
-			this.defaultPartition = await runner._fetchFiles('testDir', 'any');
-			this.partition1 = await runner._fetchFiles('testDir', 'any', { split: 2, partition: 1 });
-			this.partition2 = await runner._fetchFiles('testDir', 'any', { split: 2, partition: 2 });
+			this.defaultPartition = await runner._fetchAllFiles('testDir');
+			this.partition1 = await runner._fetchAllFiles('testDir', { split: 2, partition: 1 });
+			this.partition2 = await runner._fetchAllFiles('testDir', { split: 2, partition: 2 });
 		});
 
 		it('prevents invalid `split` or `partition` value', async function () {
-			const partition = await runner._fetchFiles('testDir', 'any', { split: 0, partition: 0 });
+			const partition = await runner._fetchAllFiles('testDir', { split: 0, partition: 0 });
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(6);
+			expect(files.length).to.equal(7);
 		});
 
 		it('prevents undefined `split` or `partition` value', async function () {
-			const partition = await runner._fetchFiles('testDir', 'any', { split: undefined, partition: undefined });
+			const partition = await runner._fetchAllFiles('testDir', { split: undefined, partition: undefined });
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(6);
+			expect(files.length).to.equal(7);
 		});
 
 		it('ensured `partition` is not greater than `split`', async function () {
-			const partition = await runner._fetchFiles('testDir', 'any', { split: 1, partition: 2 });
+			const partition = await runner._fetchAllFiles('testDir', { split: 1, partition: 2 });
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(6);
+			expect(files.length).to.equal(7);
 		});
 
 		it('should match default behaviour', async function () {
@@ -136,7 +108,7 @@ describe('_fetchFiles', function () {
 			const partition2Files = getPartitionFiles(this.partition2);
 
 			expect(partition1Files.length).to.equal(3);
-			expect(partition2Files.length).to.equal(3);
+			expect(partition2Files.length).to.equal(4);
 		});
 
 		it('should not have duplicate files', async function () {
@@ -150,9 +122,8 @@ describe('_fetchFiles', function () {
 
 	context('dir doesnt exist', function () {
 		it('should throw an error', async function () {
-			const results = await runner._fetchFiles('test/fakeDir');
-			expect(results).to.equal(undefined);
-			// expect(await function() {runner._fetchFiles('test/fakeDir')}).to.throw();
+			const results = await runner._fetchAllFiles('test/fakeDir');
+			expect(results).to.eq(undefined);
 		});
 	});
 
@@ -228,7 +199,7 @@ describe('build', function () {
 
 	before(function () {
 		cleanStub = sinon.stub(runner, 'clean');
-		fetchStub = sinon.stub(runner, '_fetchFiles');
+		fetchStub = sinon.stub(runner, '_fetchAllFiles');
 		cloneAssetsStub = sinon.stub(runner, 'clone_assets');
 		rewriteCssStub = sinon.stub(runner, 'rewrite_css');
 		rewriteHtmlStub = sinon.stub(runner, 'rewrite_html');
@@ -493,12 +464,12 @@ describe('rewrite_html', function () {
 	let copyFilesStub;
 
 	before(function () {
-		fetchFileStub = sinon.stub(runner, '_fetchFiles');
+		fetchFileStub = sinon.stub(runner, '_fetchAllFiles');
 		copyFilesStub = sinon.stub(runner, '_copyFiles');
 	});
 
 	context('No files to copy', function () {
-		context('_fetchFiles fails', function () {
+		context('_fetchAllFiles fails', function () {
 			before(function () {
 				fetchFileStub.returns();
 			});
@@ -554,6 +525,49 @@ describe('rewrite_html', function () {
 
 		it('should return the cloned files', async function () {
 			const results = await runner.rewrite_html(testOp);
+			expect(results).to.equal(0);
+		});
+
+		after(function () {
+			mock.restore();
+		});
+	});
+});
+
+describe('rewrite_sitemap()', function () {
+	context('', function () {
+		before(function () {
+			mock({
+				'test/src': {
+					'sitemapindex.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+					<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+					<sitemap>
+						<loc>http://example.org/sitemaps/pagelist.xml</loc>
+						<lastmod>2016-11-11T00:00:00+13:00</lastmod>
+					</sitemap>
+
+					<sitemap>
+						<loc>http://example.org/sitemaps/morepages.xml</loc>
+						<lastmod>2016-11-11T00:00:00+13:00</lastmod>
+					</sitemap>
+					sitemap>
+						<loc>dudlink/map.xml</loc>
+						<lastmod>2016-11-11T00:00:00+13:00</lastmod>
+					</sitemap>
+					</sitemapindex>`,
+					sitemaps: {
+						'pagelist.xml': 'xml',
+						'morepages.xml': 'xml'
+					}
+				}
+			});
+		});
+
+		it('should return the cloned files', async function () {
+			const options = cloneObject(testOp);
+			options.paths.sitemap = 'sitemapindex.xml';
+			const results = await runner.rewrite_sitemap(options);
 			expect(results).to.equal(0);
 		});
 

@@ -27,8 +27,9 @@ const commands = {
 	'clean': createCommand(runner.clean, ['dest']),
 	'clone-assets': createCommand(runner.clone_assets, ['baseurl', 'dest']),
 	'reseed': createCommand(runner.build, ['baseurl', 'dest']),
-	'rewrite_css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
+	'rewrite-css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
 	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
+	'rewrite-sitemap': createCommand(runner.rewrite_sitemap, ['baseurl', 'dest']),
 	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
 	'watch': createCommand(runner.watch, ['baseurl', 'dest'])
 	/* eslint-enable quote-props */
@@ -93,6 +94,7 @@ module.exports = {
 		const source = flags.source || defaultSrc;
 		const destination = flags.dest;
 		const baseurl = flags.baseurl || '';
+		const sitemap = flags.sitemap || 'sitemap.xml';
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
 		const partition = flags.partition || 1;
@@ -104,7 +106,8 @@ module.exports = {
 			paths: {
 				src: source,
 				dest: destination,
-				baseurl: baseurl
+				baseurl: baseurl,
+				sitemap: sitemap
 			},
 			serve: {
 				port: port,

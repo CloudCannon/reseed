@@ -11,6 +11,7 @@ Commands:
     clone-assets      Clones non CSS and HTML files from src to dest
     rewrite-css       Clones CSS files from src to dest and rewrites urls to include baseurl
     rewrite-html      Clones HTML files from src to dest and rewrites attributes to include baseurl
+	rewrite-sitemap   Finds all sitemap files based on index sitemap, and rewrites links to include baseurl
     serve             Runs 'build' then a local webserver on the dest folder
     watch             Watches the src folder and triggers builds
 
@@ -23,6 +24,7 @@ Options:
     -b | --baseurl    The base-URL to prepend to the files once copied
     -p | --port       The portnumber to serve the cloned site on
     -e | --extrasrc   A list of extra src attributes to be rewritten
+	-m | --sitemap    A path to a valid sitemap file
     -o | --overwrite  When cleaning --dest, don't prompt for confirmation
          --split      The number of partitions to divide files into
          --partition  The partition number to process
@@ -56,6 +58,10 @@ const inputs = meow(
 				type: 'string',
 				alias: 'e',
 				isMultiple: true
+			},
+			sitemap: {
+				type: 'string',
+				alias: 'm'
 			},
 			overwrite: {
 				type: 'boolean',
