@@ -197,6 +197,7 @@ describe('build', function () {
 	let cloneAssetsStub;
 	let rewriteCssStub;
 	let rewriteHtmlStub;
+	let rewriteSitemapStub;
 
 	before(function () {
 		cleanStub = sinon.stub(runner, 'clean');
@@ -204,6 +205,7 @@ describe('build', function () {
 		cloneAssetsStub = sinon.stub(runner, 'clone_assets');
 		rewriteCssStub = sinon.stub(runner, 'rewrite_css');
 		rewriteHtmlStub = sinon.stub(runner, 'rewrite_html');
+		rewriteSitemapStub = sinon.stub(runner, 'rewrite_sitemap');
 	});
 
 	context('clean fails', function () {
@@ -272,6 +274,21 @@ describe('build', function () {
 		});
 	});
 
+	context('rewrite_sitemap fails', function () {
+		before(function () {
+			cleanStub.returns([]);
+			fetchStub.returns([]);
+			cloneAssetsStub.returns([]);
+			rewriteCssStub.returns(0);
+			rewriteHtmlStub.returns(0);
+			rewriteSitemapStub.returns(1);
+		});
+		it('should return with exit code 1', async function () {
+			const result = await runner.build(testOp);
+			expect(result).to.equal(1);
+		});
+	});
+
 	context('everything works', function () {
 		before(function () {
 			cleanStub.returns([]);
@@ -279,6 +296,7 @@ describe('build', function () {
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
 			rewriteHtmlStub.returns(0);
+			rewriteSitemapStub.returns(0);
 		});
 		it('should return with exit code 0', async function () {
 			const result = await runner.build(testOp);
@@ -292,6 +310,7 @@ describe('build', function () {
 		cloneAssetsStub.restore();
 		rewriteCssStub.restore();
 		rewriteHtmlStub.restore();
+		rewriteSitemapStub.restore();
 	});
 });
 
