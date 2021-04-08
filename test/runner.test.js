@@ -4,6 +4,7 @@ const path = require('path');
 const { expect } = require('chai');
 const mock = require('mock-fs');
 const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 const runner = require('../lib/runner.js');
 
 const dest = 'test/testdir';
@@ -582,5 +583,21 @@ describe('serve', function () {
 });
 
 describe('watch', function () {
+	let runnerWatch;
+	before(function () {
+		runnerWatch = proxyquire('../lib/runner', {
+			chokidar: {
+				watch: sinon.stub().returns({
+					on: sinon.stub().yields()
+				})
+			}
+		});
+	});
 
+	context('nice', function () {
+		it('is cool', function () {
+			const result = runnerWatch.watch(testOp);
+			expect(result).to.equal(0);
+		});
+	});
 });
