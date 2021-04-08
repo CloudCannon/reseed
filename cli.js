@@ -91,23 +91,26 @@ module.exports = {
 	* @return {Object} An object containing information on how to run the given CLI command.
 	*/
 	setOptions: function (flags) {
+		const cwd = process.cwd();
 		const source = flags.source || defaultSrc;
 		const destination = flags.dest;
 		const baseurl = flags.baseurl || '';
-		const sitemap = flags.sitemap || 'sitemap.xml';
+		const sitemap = path.resolve(source, flags.sitemap || 'sitemap.xml');
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
 		const partition = flags.partition || 1;
 		const extraSrcAttrs = flags.extrasrc || [];
 
 		const options = {
-			cwd: process.cwd(),
+			cwd: cwd,
 
 			paths: {
 				src: source,
 				dest: destination,
 				baseurl: baseurl,
-				sitemap: sitemap
+				sitemap: sitemap,
+				fullPathToSource: path.resolve(cwd, source),
+				fullPathToDest: path.resolve(cwd, destination, baseurl)
 			},
 			serve: {
 				port: port,
@@ -122,8 +125,6 @@ module.exports = {
 			}
 		};
 
-		options.paths.fullPathToSource = path.resolve(options.cwd, options.paths.src);
-		options.paths.fullPathToDest = path.resolve(options.cwd, options.paths.dest, baseurl);
 		return options;
 	},
 
