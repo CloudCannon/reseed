@@ -15,6 +15,7 @@ Requires node >=10.0.0
 	- [reseed clone-assets](#reseed-clone-assets)
 	- [reseed rewrite-css](#reseed-rewrite-css)
 	- [reseed rewrite-html](#reseed-rewrite-html)
+	- [reseed rewrite-sitemap](#reseed-rewrite-sitemap)
 	- [reseed serve](#reseed-serve)
 	- [reseed watch](#reseed-watch)
 - [Options](#Options)
@@ -106,6 +107,18 @@ $ reseed rewrite-html -b baseurl -d path/to/dest
 ```
 
 
+## ```reseed rewrite-sitemap```
+Copies the sitemap from src to dest/baseurl. Rewrites the copied file so that links have baseurl prepended to them.
+If the provided file is a sitemap index, the referenced sitemaps will be processed similarly.
+
+The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` option. If no sitemap file is specified, will default to `sitemap.xml`.
+
+#### Example:
+```
+$ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
+```
+
+
 ## ```reseed serve```
 Runs [```reseed```](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [```watch```](#reseed-watch).
 
@@ -133,6 +146,7 @@ Option        | Alias | Type    | Description
 `--baseurl`   | `-b`  | String  | The filename to prepend to the files in the source.
 `--port`      | `-p`  | Integer | The port number to serve the cloned site on.
 `--extrasrc`  | `-e`  | String  | Extra src attribute to be rewritten.</br>Can set multiple attributes by specifying the flag multiple times.
+`--sitemap`   | `-m`  | String  | Path to the index sitemap. Defaults to `sitemap.xml`.
 `--overwrite` | `-o`  | Boolean | When cleaning `--dest`, don't prompt for confirmation.
 `--split`     |       | Integer | The number of partitions to divide files into.
 `--partition` |       | Integer | The partition number to process.
