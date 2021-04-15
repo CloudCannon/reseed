@@ -555,7 +555,14 @@ describe('rewrite_html', function () {
 });
 
 describe('rewrite_sitemap()', function () {
-	context('', function () {
+	context('no sitemap', function () {
+		it('should return error exit code (1)', async function () {
+			const results = await runner.rewrite_sitemap(testOp);
+			expect(results).to.equal(1);
+		});
+	});
+
+	context('Uses sitemap index', function () {
 		before(function () {
 			mock({
 				'test/src': {
@@ -571,7 +578,7 @@ describe('rewrite_sitemap()', function () {
 						<loc>http://example.org/sitemaps/morepages.xml</loc>
 						<lastmod>2016-11-11T00:00:00+13:00</lastmod>
 					</sitemap>
-					sitemap>
+					<sitemap>
 						<loc>dudlink/map.xml</loc>
 						<lastmod>2016-11-11T00:00:00+13:00</lastmod>
 					</sitemap>
@@ -584,7 +591,7 @@ describe('rewrite_sitemap()', function () {
 			});
 		});
 
-		it('should return the cloned files', async function () {
+		it('should return exit code 0', async function () {
 			const options = cloneObject(testOp);
 			options.paths.sitemap = 'sitemapindex.xml';
 			const results = await runner.rewrite_sitemap(options);
