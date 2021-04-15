@@ -6,7 +6,8 @@
   "scripts": {
     "test": "nyc mocha",
     "view-report": "nyc --reporter=html mocha",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "ci-test": "nyc --reporter=lcov mocha",
+    "report-coverage": "codecov",
     "lint-autofix": "eslint --fix lib/** config/** test/** application.js",
     "lint-code": "eslint  lib/** config/** test/** application.js",
     "lint": "npm run lint-autofix && npm run lint-code"
