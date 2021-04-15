@@ -54,7 +54,6 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "codecov": "^3.8.0",
     "eslint": "^7.10.0",
     "eslint-config-cloudcannon": "^1.0.0-rc5",
     "eslint-plugin-import": "^2.22.1",
