@@ -92,10 +92,13 @@ module.exports = {
 	*/
 	setOptions: function (flags) {
 		const cwd = process.cwd();
-		const source = flags.source || defaultSrc;
-		const destination = flags.dest;
-		const baseurl = flags.baseurl || '';
-		const sitemap = flags.sitemap || 'sitemap.xml';
+
+		// trim leading and trailing slashes
+		const source = (flags.source || defaultSrc).replace(/^\/|\/$/g, '');
+		const destination = flags.dest.replace(/^\/|\/$/g, '');
+		const baseurl = flags.baseurl.replace(/^\/|\/$/g, '');
+		const sitemap = (flags.sitemap || 'sitemap.xml').replace(/^\/|\/$/g, '');
+
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
 		const partition = flags.partition || 1;
