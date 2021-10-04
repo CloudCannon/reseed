@@ -55,20 +55,20 @@ describe('plugin', function () {
 	});
 
 	context('No file specified', function () {
-		it('should return 1', function () {
-			expect(cssRewrite.plugin('', dest, baseurl)).to.equal(1);
+		it('should return 2', function () {
+			expect(cssRewrite.plugin('', dest, baseurl)).to.equal(2);
 		});
 	});
 
 	context('No destination specified', function () {
-		it('Should return 1', function () {
-			expect(cssRewrite.plugin(filename, '', baseurl)).to.equal(1);
+		it('Should return 3', function () {
+			expect(cssRewrite.plugin(filename, '', baseurl)).to.equal(3);
 		});
 	});
 
 	context('No baseurl', function () {
-		it('should return 1', function () {
-			expect(cssRewrite.plugin(filename, '', null)).to.equal(1);
+		it('should return 3', function () {
+			expect(cssRewrite.plugin(filename, '', null)).to.equal(3);
 		});
 	});
 

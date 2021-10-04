@@ -251,12 +251,12 @@ describe('build', function () {
 			cleanStub.returns([]);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
-			rewriteCssStub.returns(1);
+			rewriteCssStub.returns(2);
 			rewriteHtmlStub.returns(0);
 		});
-		it('should return with exit code 1', async function () {
+		it('should return with exit code 2', async function () {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(1);
+			expect(result).to.equal(2);
 		});
 	});
 
@@ -266,11 +266,11 @@ describe('build', function () {
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
-			rewriteHtmlStub.returns(1);
+			rewriteHtmlStub.returns(2);
 		});
-		it('should return with exit code 1', async function () {
+		it('should return with exit code 2', async function () {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(1);
+			expect(result).to.equal(2);
 		});
 	});
 
@@ -281,11 +281,11 @@ describe('build', function () {
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
 			rewriteHtmlStub.returns(0);
-			rewriteSitemapStub.returns(1);
+			rewriteSitemapStub.returns(2);
 		});
-		it('should return with exit code 1', async function () {
+		it('should return with exit code 2', async function () {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(1);
+			expect(result).to.equal(2);
 		});
 	});
 
@@ -509,13 +509,13 @@ describe('rewrite_html', function () {
 		});
 	});
 
-	context('copiedFiles errored', function () {
+	context('copyFiles errored', function () {
 		before(function () {
 			copyFilesStub.returns();
 		});
-		it('should return with exit code 1', async function () {
+		it('should return with exit code 4', async function () {
 			const result = await runner.rewrite_html(testOp, ['file1', 'file2']);
-			expect(result).to.equal(1);
+			expect(result).to.equal(4);
 		});
 		after(function () {
 			copyFilesStub.restore();
