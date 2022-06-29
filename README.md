@@ -137,6 +137,12 @@ occurs, a new build is triggered, and the browser is then reloaded.
 $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 ```
 
+## Ignore
+Prevents reseed from adding the baseurl infront of an elements path
+```
+<a href="/manual" reseed-ignore>Click me!</a>
+```
+
 # Options
 
 Option        | Alias | Type    | Description
