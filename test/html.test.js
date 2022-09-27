@@ -79,8 +79,18 @@ describe('rewrite html', function () {
 	context('element with href attribute', function () {
 		context('url is rewritable', function () {
 			it('should rewrite the url in the href', function () {
-				const element = '<a href="testImage.jpg">link</a>';
-				const expectedElement = '<a href="/testBaseurl/testImage.jpg">link</a>';
+				const element = `<a href="testImage.jpg">link</a>
+				<a href="testPage/noSlash">link</a>
+				<a href="testPage/withSlash/">link</a>
+				<a href="/">link</a>
+				<a href="">link</a>
+				<a>link</a>`;
+				const expectedElement = `<a href="/testBaseurl/testImage.jpg">link</a>
+				<a href="/testBaseurl/testPage/noSlash">link</a>
+				<a href="/testBaseurl/testPage/withSlash/">link</a>
+				<a href="/testBaseurl/">link</a>
+				<a href>link</a>
+				<a>link</a>`;
 				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 				expect(rewrittenElement).to.equal(expectedElement);
 			});
