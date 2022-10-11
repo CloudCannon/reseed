@@ -11,10 +11,10 @@ Reseed is an open-source tool for integrating static sites into subpaths.
 
 Requires node &gt;=10.0.0
 
-
 ## Installation
 
-Install with npm globally: `npm install -g reseed` or as a dev dependency: `npm install -D reseed`.<br>Then run using the following structure:
+Install with npm globally: `npm install -g reseed` or as a dev dependency: `npm install -D reseed`
+Then run using the following structure:
 
 ```
 $ reseed [command] [options]
@@ -35,4 +35,5 @@ Once installed you can also set up your `package.json` with a custom script, suc
 Then use `npm run reseed` within your project.
 
 ## Running via npx
-Alternatively, you can use `npx` to avoid installing `reseed` as a dependency.<br>For example: `npx reseed -s path/to/src -d path/to/dest -b baseurl`
+
+Alternatively, you can use `npx` to avoid installing `reseed` as a dependency.&lt;br&gt;For example: `npx reseed -s path/to/src -d path/to/dest -b baseurl`
