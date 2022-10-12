@@ -9,7 +9,6 @@ weight: 2
 
 > All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.<br>The [`clean`](#reseed-clean) command only requires the `dest` option set.
 >
->
 > See [Options](#options) for more info.
 
 ### `reseed`
