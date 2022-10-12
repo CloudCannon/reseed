@@ -3,7 +3,7 @@ date: 2022-10-12T00:00:00Z
 title: Ignore certain URLs
 nav_title: Ignoring URLs
 nav_section: Installing
-weight: 1
+weight: 3
 ---
 You can prevent reseed from processing specific URLs in your HTML files.&nbsp;
 
