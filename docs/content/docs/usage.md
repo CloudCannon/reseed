@@ -15,7 +15,7 @@ reseed [command] [options]
 
 > All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set. See [Options](#options) for more info.
 
-### `reseed`
+### reseed
 
 Cleans destination directory, and copies files from `src` to dest`/baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
 
@@ -25,7 +25,7 @@ Cleans destination directory, and copies files from `src` to dest`/baseurl`. CSS
 $ reseed -s path/to/src -d path/to/dest -b baseurl
 ```
 
-### `reseed clean`
+### reseed clean
 
 Deletes all files in the destination directory.
 
@@ -35,7 +35,7 @@ Deletes all files in the destination directory.
 $ reseed clean -d path/to/dest
 ```
 
-### `reseed clone-assets`
+### reseed clone-assets
 
 Copy all files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
 
@@ -45,7 +45,7 @@ Copy all files (excluding CSS and HTML) from source to destination/baseurl witho
 $ reseed clone-assets -b baseurl -d path/to/dest
 ```
 
-### `reseed rewrite-css`
+### reseed rewrite-css
 
 Copies css files from src to dest/baseurl. Then rewrites the newly copied files so that urls/hrefs/etc that reference local content have baseurl prepended to them.
 
@@ -55,7 +55,7 @@ Copies css files from src to dest/baseurl. Then rewrites the newly copied files 
 $ reseed rewrite-css -b baseurl -d path/to/dest
 ```
 
-### `reseed rewrite-html`
+### reseed rewrite-html
 
 Copies html files from src to dest/baseurl. Rewrites the newly copied files so that internal urls/hrefs/etc have baseurl prepended to them.
 
@@ -65,7 +65,7 @@ Copies html files from src to dest/baseurl. Rewrites the newly copied files so t
 $ reseed rewrite-html -b baseurl -d path/to/dest
 ```
 
-### `reseed rewrite-sitemap`
+### reseed rewrite-sitemap
 
 Copies the sitemap from src to dest/baseurl. Rewrites the copied file so that links have baseurl prepended to them. If the provided file is a sitemap index, the referenced sitemaps will be processed similarly.
 
@@ -77,7 +77,7 @@ The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` 
 $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 ```
 
-### `reseed serve`
+### reseed serve
 
 Runs [`reseed`](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [`watch`](#reseed-watch).
 
@@ -87,7 +87,7 @@ Runs [`reseed`](#reseed), then serves the files on a local webserver, so that th
 $ reseed serve -s path/to/src -d path/to/dest -b baseurl
 ```
 
-### `reseed watch`
+### reseed watch
 
 Continuously watches the src directory to check for changes. If a change occurs, a new build is triggered, and the browser is then reloaded.
 
