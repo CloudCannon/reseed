@@ -8,14 +8,13 @@ weight: 2
 ## Commands
 
 > All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.<br>The [`clean`](#reseed-clean) command only requires the `dest` option set.
->
 > See [Options](#options) for more info.
 
 ### `reseed`
 
 Cleans destination directory, and copies files from `src` to dest`/baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed -s path/to/src -d path/to/dest -b baseurl
@@ -25,7 +24,7 @@ $ reseed -s path/to/src -d path/to/dest -b baseurl
 
 Deletes all files in the destination directory.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed clean -d path/to/dest
@@ -35,7 +34,7 @@ $ reseed clean -d path/to/dest
 
 Copy all files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed clone-assets -b baseurl -d path/to/dest
@@ -45,7 +44,7 @@ $ reseed clone-assets -b baseurl -d path/to/dest
 
 Copies css files from src to dest/baseurl. Then rewrites the newly copied files so that urls/hrefs/etc that reference local content have baseurl prepended to them.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed rewrite-css -b baseurl -d path/to/dest
@@ -55,7 +54,7 @@ $ reseed rewrite-css -b baseurl -d path/to/dest
 
 Copies html files from src to dest/baseurl. Rewrites the newly copied files so that internal urls/hrefs/etc have baseurl prepended to them.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed rewrite-html -b baseurl -d path/to/dest
@@ -67,7 +66,7 @@ Copies the sitemap from src to dest/baseurl. Rewrites the copied file so that li
 
 The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` option. If no sitemap file is specified, will default to `sitemap.xml`.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
@@ -77,7 +76,7 @@ $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 
 Runs [`reseed`](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [`watch`](#reseed-watch).
 
-#### Example:
+*Example:*
 
 ```
 $ reseed serve -s path/to/src -d path/to/dest -b baseurl
@@ -87,7 +86,7 @@ $ reseed serve -s path/to/src -d path/to/dest -b baseurl
 
 Continuously watches the src directory to check for changes. If a change occurs, a new build is triggered, and the browser is then reloaded.
 
-#### Example:
+*Example:*
 
 ```
 $ reseed watch -s path/to/src -d path/to/dest -b baseurl
@@ -96,6 +95,8 @@ $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 ### Ignore
 
 Prevents reseed from adding the baseurl infront of an elements path
+
+*Example:*
 
 ```
 <a href="/manual" reseed-ignore>Click me!</a>
