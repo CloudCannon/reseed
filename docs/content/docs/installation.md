@@ -15,7 +15,7 @@ Requires node `^10.0.0`
 
 Install with npm globally: `npm install -g reseed`
 
-or as a dev dependency: `npm install -D reseed`
+or as a dev dependency in your project: `npm install -D reseed`
 
 ## Running
 
@@ -41,4 +41,10 @@ Then use `npm run reseed` within your project.
 
 ## Running via npx
 
-Alternatively, you can use `npx` to avoid installing `reseed` as a dependency.&lt;br&gt;For example: `npx reseed -s path/to/src -d path/to/dest -b baseurl`
+Alternatively, you can use `npx` to avoid installing `reseed` as a dependency.
+
+For example:
+
+```
+npx reseed -s path/to/src -d path/to/dest -b baseurl
+```
