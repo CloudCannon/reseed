@@ -5,8 +5,6 @@ nav_title: Installation
 nav_section: Installing
 weight: 1
 ---
-# Installing and running Reseed
-
 Reseed is an open-source tool for integrating static sites into subpaths. In order to keep up to date with your content changes, it should be run as part of your site build process.
 
 Requires node `^10.0.0`
