@@ -8,8 +8,11 @@ weight: 2
 
 The Reseed CLI is run with **one** command, followed by one or more options in any order.
 
-All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. 
-The [`clean`](#reseed-clean) command only requires the `dest` option set. 
+
+All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.
+
+The [`clean`](#reseed-clean) command only requires the `dest` option set.
+
 See [Options](#options) for more info.
 
 ## Commands
