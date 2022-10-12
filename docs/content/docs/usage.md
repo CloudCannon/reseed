@@ -8,16 +8,21 @@ weight: 2
 
 The Reseed CLI is run with **one** command, followed by one or more options in any order.
 
+All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. 
+The [`clean`](#reseed-clean) command only requires the `dest` option set. 
+See [Options](#options) for more info.
+
 ## Commands
 
-> All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. 
-> The [`clean`](#reseed-clean) command only requires the `dest` option set. 
-> See [Options](#options) for more info.
+> All commands will first delete the directory specified by `--dest`.
+> Be sure this option is configured correctly to avoid deleting the wrong files!
+
 
 ### reseed
 
-Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
-Sitemaps
+Cleans destination directory, and copies files from `src` to `dest`/`baseurl`.
+CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
+If the site has a `sitemap.xml`, the urls within that sitemap will also be rewritten. 
 
 **Example:**
 
@@ -37,7 +42,7 @@ $ reseed clean -d path/to/dest
 
 ### reseed clone-assets
 
-Copy all files (excluding CSS and HTML) from source to destination/baseurl without altering the data.
+Copy all files (excluding CSS and HTML) from source to `dest`/`baseurl` without altering the data.
 
 **Example:**
 
@@ -47,7 +52,7 @@ $ reseed clone-assets -b baseurl -d path/to/dest
 
 ### reseed rewrite-css
 
-Copies css files from src to dest/baseurl. Then rewrites the newly copied files so that urls/hrefs/etc that reference local content have baseurl prepended to them.
+Copies CSS files from `src` to `dest`/`baseurl`. Then rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
 
 **Example:**
 
@@ -57,7 +62,7 @@ $ reseed rewrite-css -b baseurl -d path/to/dest
 
 ### reseed rewrite-html
 
-Copies html files from src to dest/baseurl. Rewrites the newly copied files so that internal urls/hrefs/etc have baseurl prepended to them.
+Copies HTML files from `src` to `dest`/`baseurl`. Rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
 
 **Example:**
 
@@ -67,7 +72,9 @@ $ reseed rewrite-html -b baseurl -d path/to/dest
 
 ### reseed rewrite-sitemap
 
-Copies the sitemap from src to dest/baseurl. Rewrites the copied file so that links have baseurl prepended to them. If the provided file is a sitemap index, the referenced sitemaps will be processed similarly.
+Copies the sitemap (defaults to `sitemap.xml`) from `src` to `dest`/`baseurl`. 
+Rewrites the copied file so that links have baseurl prepended to them. 
+If the provided file is a sitemap index, the referenced sitemaps will also be processed.
 
 The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` option. If no sitemap file is specified, will default to `sitemap.xml`.
 
@@ -79,7 +86,8 @@ $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 
 ### reseed serve
 
-Runs [`reseed`](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [`watch`](#reseed-watch).
+Runs [`reseed`](#reseed), then serves the copied files on a local webserver to be viewed in a browser.
+Then runs [`watch`](#reseed-watch).
 
 **Example:**
 
@@ -89,7 +97,8 @@ $ reseed serve -s path/to/src -d path/to/dest -b baseurl
 
 ### reseed watch
 
-Continuously watches the src directory to check for changes. If a change occurs, a new build is triggered, and the browser is then reloaded.
+Continuously watches the `src` directory to check for changes.
+If a change occurs, a new build is triggered, and the browser is then reloaded.
 
 **Example:**
 
