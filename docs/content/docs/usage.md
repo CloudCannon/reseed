@@ -10,7 +10,6 @@ The Reseed CLI is run with **one** command, followed by one or more options in a
 
 
 All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.
-
 The [`clean`](#reseed-clean) command only requires the `dest` option set.
 
 See [Options](#options) for more info.
@@ -55,7 +54,8 @@ $ reseed clone-assets -b baseurl -d path/to/dest
 
 ### reseed rewrite-css
 
-Copies CSS files from `src` to `dest`/`baseurl`. Then rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
+Copies CSS files from `src` to `dest`/`baseurl`.
+Then rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
 
 **Example:**
 
@@ -65,7 +65,8 @@ $ reseed rewrite-css -b baseurl -d path/to/dest
 
 ### reseed rewrite-html
 
-Copies HTML files from `src` to `dest`/`baseurl`. Rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
+Copies HTML files from `src` to `dest`/`baseurl`.
+Rewrites the newly copied files so that internal urls/hrefs/etc have `baseurl` prepended to them.
 
 **Example:**
 
@@ -79,7 +80,8 @@ Copies the sitemap (defaults to `sitemap.xml`) from `src` to `dest`/`baseurl`.
 Rewrites the copied file so that links have baseurl prepended to them. 
 If the provided file is a sitemap index, the referenced sitemaps will also be processed.
 
-The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` option. If no sitemap file is specified, will default to `sitemap.xml`.
+The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` option.
+If no sitemap file is specified, will default to `sitemap.xml`.
 
 **Example:**
 
