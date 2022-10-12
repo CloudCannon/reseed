@@ -11,7 +11,7 @@ The Reseed CLI uses the following structure:
 reseed [command] [options]
 ```
 
-## Commands&nbsp;
+## Commands
 
 > All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set. See [Options](#options) for more info.
 
@@ -97,6 +97,6 @@ Continuously watches the src directory to check for changes. If a change occurs,
 $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 ```
 
-# Options
+## Options
 
 &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Option&lt;/th&gt;&lt;th&gt;Alias&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--source&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-s&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The source folder to clone. Defaults to current working directory.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--dest&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The destination folder to clone the files to.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--baseurl&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-b&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The filename to prepend to the files in the source.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--port&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The port number to serve the cloned site on.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--extrasrc&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--sitemap&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-m&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;Path to the index sitemap. Defaults to &lt;code&gt;sitemap.xml&lt;/code&gt;.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--overwrite&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-o&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Boolean&lt;/td&gt;&lt;td&gt;When cleaning &lt;code&gt;--dest&lt;/code&gt;, don't prompt for confirmation.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--split&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The number of partitions to divide files into.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--partition&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The partition number to process.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--help&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Boolean&lt;/td&gt;&lt;td&gt;Show help in the terminal&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
