@@ -9,7 +9,7 @@ weight: 1
 
 Reseed is an open-source tool for integrating static sites into subpaths. In order to keep up to date with your content changes, it should be run as part of your site build process.
 
-Requires node ^10.0.0
+Requires node `^10.0.0`
 
 ## Installation
 
@@ -19,7 +19,7 @@ or as a dev dependency: `npm install -D reseed`
 
 ## Running
 
-Reseed is run using the following structure.
+Reseed is run using the following structure:
 
 ```
 $ reseed [command] [options]
