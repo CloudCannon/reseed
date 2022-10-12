@@ -5,10 +5,15 @@ nav_title: Usage
 nav_section: Installing
 weight: 2
 ---
-## Commands
+The Reseed CLI uses the following structure:
 
-> All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.<br>The [`clean`](#reseed-clean) command only requires the `dest` option set.
-> See [Options](#options) for more info.
+```shell
+reseed [command] [options]
+```
+
+## Commands&nbsp;
+
+> All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set. See [Options](#options) for more info.
 
 ### `reseed`
 
@@ -94,4 +99,4 @@ $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 
 # Options
 
-<table><thead><tr><th>Option</th><th>Alias</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>--source</code></td><td><code>-s</code></td><td>String</td><td>The source folder to clone. Defaults to current working directory.</td></tr><tr><td><code>--dest</code></td><td><code>-d</code></td><td>String</td><td>The destination folder to clone the files to.</td></tr><tr><td><code>--baseurl</code></td><td><code>-b</code></td><td>String</td><td>The filename to prepend to the files in the source.</td></tr><tr><td><code>--port</code></td><td><code>-p</code></td><td>Integer</td><td>The port number to serve the cloned site on.</td></tr><tr><td><code>--extrasrc</code></td><td><code>-e</code></td><td>String</td><td>Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.</td></tr><tr><td><code>--sitemap</code></td><td><code>-m</code></td><td>String</td><td>Path to the index sitemap. Defaults to <code>sitemap.xml</code>.</td></tr><tr><td><code>--overwrite</code></td><td><code>-o</code></td><td>Boolean</td><td>When cleaning <code>--dest</code>, don't prompt for confirmation.</td></tr><tr><td><code>--split</code></td><td>&nbsp;</td><td>Integer</td><td>The number of partitions to divide files into.</td></tr><tr><td><code>--partition</code></td><td>&nbsp;</td><td>Integer</td><td>The partition number to process.</td></tr><tr><td><code>--help</code></td><td>&nbsp;</td><td>Boolean</td><td>Show help in the terminal</td></tr></tbody></table>
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Option&lt;/th&gt;&lt;th&gt;Alias&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--source&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-s&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The source folder to clone. Defaults to current working directory.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--dest&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The destination folder to clone the files to.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--baseurl&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-b&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;The filename to prepend to the files in the source.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--port&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The port number to serve the cloned site on.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--extrasrc&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--sitemap&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-m&lt;/code&gt;&lt;/td&gt;&lt;td&gt;String&lt;/td&gt;&lt;td&gt;Path to the index sitemap. Defaults to &lt;code&gt;sitemap.xml&lt;/code&gt;.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--overwrite&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code&gt;-o&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Boolean&lt;/td&gt;&lt;td&gt;When cleaning &lt;code&gt;--dest&lt;/code&gt;, don't prompt for confirmation.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--split&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The number of partitions to divide files into.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--partition&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Integer&lt;/td&gt;&lt;td&gt;The partition number to process.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;code&gt;--help&lt;/code&gt;&lt;/td&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;Boolean&lt;/td&gt;&lt;td&gt;Show help in the terminal&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
