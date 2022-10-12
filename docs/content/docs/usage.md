@@ -5,19 +5,19 @@ nav_title: Usage
 nav_section: Installing
 weight: 2
 ---
-The Reseed CLI uses the following structure:
 
-```shell
-reseed [command] [options]
-```
+The Reseed CLI is run with **one** command, followed by one or more options in any order.
 
 ## Commands
 
-> All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set. See [Options](#options) for more info.
+> All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. 
+> The [`clean`](#reseed-clean) command only requires the `dest` option set. 
+> See [Options](#options) for more info.
 
 ### reseed
 
-Cleans destination directory, and copies files from `src` to dest`/baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
+Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended.
+Sitemaps
 
 **Example:**
 
