@@ -12,7 +12,7 @@ Say you have a blog that you want to serve on a subdomain of your domain (e.g. `
 * You want your blog to exist on the `/blog/` subdomain of your main site (e.g. `mydomain.com/blog/`)
 * You would like the output of reseed to be placed in a folder named site/
 
-To acheive this, first `cd` to your site files in your terminal. Then, run the following command:
+To achieve this, first `cd` to your site files in your terminal. Then, run the following command:
 
 ```shell
 npx reseed -s public/ -b blog/ -d site/
