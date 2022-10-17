@@ -1,8 +1,8 @@
 ---
 date: 2022-10-12T00:00:00Z
 title: Installing and running Reseed
-nav_title: Usage
-nav_section: Installing
+nav_title: Installation
+nav_section: Usage
 weight: 1
 ---
 Reseed is an open-source tool for integrating static sites into subpaths. In order to keep up to date with your content changes, it should be run as part of your site build process.
