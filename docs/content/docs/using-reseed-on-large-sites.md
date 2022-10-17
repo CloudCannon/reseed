@@ -9,7 +9,7 @@ If your site has a large number of files, you may wish to break up the `reseed` 
 
 This can be achieved using the `--split` and `--partition` options. See the [options documentation](/usage/#options) for extra information.
 
-### Example
+## Example
 
 Consider the following command:
 
