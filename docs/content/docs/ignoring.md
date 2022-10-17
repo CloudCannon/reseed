@@ -7,7 +7,7 @@ weight: 3
 ---
 You can prevent reseed from processing specific URLs in your HTML files.&nbsp;
 
-This is done by adding the `reseed-ignore`&nbsp;attribute to the elements
+This is done by adding the `reseed-ignore`&nbsp;attribute to elements that you would like unchanged.
 
 **Example:**
 
