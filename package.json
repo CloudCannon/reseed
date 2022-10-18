@@ -29,7 +29,7 @@
     "link"
   ],
   "author": "Nathan Kennedy",
-  "license": "ISC",
+  "license": "MIT",
   "bin": {
     "reseed": "./index.js"
   },
