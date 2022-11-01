@@ -1,0 +1,6 @@
+cd docs
+if [ -z "$HUGO_RESEED_VERSION" ]; then
+    export HUGO_RESEED_VERSION="Unversioned"
+fi
+echo "Building documentation for $HUGO_RESEED_VERSION"
+npm i
