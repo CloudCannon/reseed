@@ -612,6 +612,27 @@ describe('rewrite_rss()', function () {
 		});
 	});
 
+	context('specified file is not XML', function () {
+		before(function () {
+			mock({
+				'test/src': {
+					'index.txt': '<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
+				}
+			});
+		});
+
+		it('should return exit code 2', async function () {
+			const options = cloneObject(testOp);
+			options.paths.rss = 'index.txt';
+			const results = await runner.rewrite_rss(options);
+			expect(results).to.equal(2);
+		});
+
+		after(function () {
+			mock.restore();
+		});
+	});
+
 	context('Uses rss file', function () {
 		before(function () {
 			mock({
