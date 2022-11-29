@@ -7,7 +7,9 @@ weight: 2
 ---
 The Reseed CLI is run with **one** command, followed by one or more options in any order.
 
-All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set.
+All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.
+The [`rewrite-rss`](#reseed-rewrite-rss) command also requires the `rss` option set.
+The [`clean`](#reseed-clean) command only requires the `dest` option set.
 
 See [Options](#options) for more info.
 
@@ -17,7 +19,7 @@ See [Options](#options) for more info.
 
 ### reseed
 
-Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended. If the site has a `sitemap.xml`, the urls within that sitemap will also be rewritten.
+Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended. If the site has a `sitemap.xml`, the urls within that sitemap will also be rewritten. If an RSS file is specified with the `-r | --rss` option, that file will be similarly processed.
 
 **Example:**
 
@@ -77,6 +79,18 @@ The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` 
 $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 ```
 
+### reseed rewrite-rss
+
+Copies the specified RSS file from `src` to `dest`/`baseurl`. Rewrites the copied file so that links have baseurl prepended to them.
+
+The RSS file **must** be specified using the `-r | --rss` option. The specified file **must** have the `.xml` extension.
+
+**Example:**
+
+```
+$ reseed rewrite-rss -b baseurl -d path/to/dest -r index.xml
+```
+
 ### reseed serve
 
 Runs [`reseed`](#reseed), then serves the copied files on a local webserver to be viewed in a browser. Then runs [`watch`](#reseed-watch).
@@ -99,4 +113,4 @@ $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 
 ## Options
 
-<table><thead><tr><th>Option</th><th>Alias</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>--source</code></td><td><code>-s</code></td><td>String</td><td>The source folder to clone. Defaults to current working directory.</td></tr><tr><td><code>--dest</code></td><td><code>-d</code></td><td>String</td><td>The destination folder to clone the files to.</td></tr><tr><td><code>--baseurl</code></td><td><code>-b</code></td><td>String</td><td>The filename to prepend to the files in the source.</td></tr><tr><td><code>--port</code></td><td><code>-p</code></td><td>Integer</td><td>The port number to serve the cloned site on.</td></tr><tr><td><code>--extrasrc</code></td><td><code>-e</code></td><td>String</td><td>Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.</td></tr><tr><td><code>--sitemap</code></td><td><code>-m</code></td><td>String</td><td>Path to the index sitemap. Defaults to <code>sitemap.xml</code>.</td></tr><tr><td><code>--overwrite</code></td><td><code>-o</code></td><td>Boolean</td><td>When cleaning <code>--dest</code>, don't prompt for confirmation.</td></tr><tr><td><code>--split</code></td><td>&nbsp;</td><td>Integer</td><td>The number of partitions to divide files into.</td></tr><tr><td><code>--partition</code></td><td>&nbsp;</td><td>Integer</td><td>The partition number to process.</td></tr><tr><td><code>--help</code></td><td>&nbsp;</td><td>Boolean</td><td>Show help in the terminal</td></tr></tbody></table>
+<table><thead><tr><th>Option</th><th>Alias</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>--source</code></td><td><code>-s</code></td><td>String</td><td>The source folder to clone. Defaults to current working directory.</td></tr><tr><td><code>--dest</code></td><td><code>-d</code></td><td>String</td><td>The destination folder to clone the files to.</td></tr><tr><td><code>--baseurl</code></td><td><code>-b</code></td><td>String</td><td>The filename to prepend to the files in the source.</td></tr><tr><td><code>--port</code></td><td><code>-p</code></td><td>Integer</td><td>The port number to serve the cloned site on.</td></tr><tr><td><code>--extrasrc</code></td><td><code>-e</code></td><td>String</td><td>Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.</td></tr><tr><td><code>--sitemap</code></td><td><code>-m</code></td><td>String</td><td>Path to the index sitemap. Defaults to <code>sitemap.xml</code>.</td></tr><tr><td><code>--rss</code></td><td><code>-r</code></td><td>String</td><td>Path to a valid RSS file.</td></tr><tr><td><code>--overwrite</code></td><td><code>-o</code></td><td>Boolean</td><td>When cleaning <code>--dest</code>, don't prompt for confirmation.</td></tr><tr><td><code>--split</code></td><td>&nbsp;</td><td>Integer</td><td>The number of partitions to divide files into.</td></tr><tr><td><code>--partition</code></td><td>&nbsp;</td><td>Integer</td><td>The partition number to process.</td></tr><tr><td><code>--help</code></td><td>&nbsp;</td><td>Boolean</td><td>Show help in the terminal</td></tr></tbody></table>

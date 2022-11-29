@@ -30,6 +30,7 @@ const commands = {
 	'rewrite-css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
 	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
 	'rewrite-sitemap': createCommand(runner.rewrite_sitemap, ['baseurl', 'dest']),
+	'rewrite-rss': createCommand(runner.rewrite_rss, ['baseurl', 'dest', 'rss']),
 	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
 	'watch': createCommand(runner.watch, ['baseurl', 'dest'])
 	/* eslint-enable quote-props */
@@ -98,6 +99,7 @@ module.exports = {
 		const destination = flags.dest.replace(/^\/|\/$/g, '');
 		const baseurl = flags.baseurl.replace(/^\/|\/$/g, '');
 		const sitemap = (flags.sitemap || 'sitemap.xml').replace(/^\/|\/$/g, '');
+		const rss = (flags.rss || '').replace(/^\/|\/$/g, '');
 
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
@@ -112,6 +114,7 @@ module.exports = {
 				dest: destination,
 				baseurl: baseurl,
 				sitemap: sitemap,
+				rss: rss,
 				fullPathToSource: path.resolve(cwd, source),
 				fullPathToDest: path.resolve(cwd, destination, baseurl)
 			},
