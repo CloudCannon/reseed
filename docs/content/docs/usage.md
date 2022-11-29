@@ -83,7 +83,7 @@ $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 
 Copies the specified RSS file from `src` to `dest`/`baseurl`. Rewrites the copied file so that links have baseurl prepended to them.
 
-The RSS **must** be specified using the `-r | --rss` option. The specified **must** have the `.xml` file extension.
+The RSS file **must** be specified using the `-r | --rss` option. The specified file **must** have the `.xml` extension.
 
 **Example:**
 
