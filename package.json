@@ -30,6 +30,11 @@
   ],
   "author": "Nathan Kennedy",
   "license": "MIT",
+  "files": [
+    "lib",
+    "cli.js",
+    "index.js"
+  ],
   "bin": {
     "reseed": "./index.js"
   },
