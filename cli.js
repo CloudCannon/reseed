@@ -98,6 +98,7 @@ module.exports = {
 		const destination = flags.dest.replace(/^\/|\/$/g, '');
 		const baseurl = flags.baseurl.replace(/^\/|\/$/g, '');
 		const sitemap = (flags.sitemap || 'sitemap.xml').replace(/^\/|\/$/g, '');
+		const rss = (flags.rss || '').replace(/^\/|\/$/g, '');
 
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
@@ -112,6 +113,7 @@ module.exports = {
 				dest: destination,
 				baseurl: baseurl,
 				sitemap: sitemap,
+				rss: rss,
 				fullPathToSource: path.resolve(cwd, source),
 				fullPathToDest: path.resolve(cwd, destination, baseurl)
 			},
