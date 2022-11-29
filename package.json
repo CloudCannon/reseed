@@ -1,6 +1,6 @@
 {
   "name": "reseed",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Reseed is an open-source tool for integrating static sites into subpaths.",
   "main": "index.js",
   "scripts": {
