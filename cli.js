@@ -30,6 +30,7 @@ const commands = {
 	'rewrite-css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
 	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
 	'rewrite-sitemap': createCommand(runner.rewrite_sitemap, ['baseurl', 'dest']),
+	'rewrite-rss': createCommand(runner.rewrite_rss, ['baseurl', 'dest', 'rss']),
 	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
 	'watch': createCommand(runner.watch, ['baseurl', 'dest'])
 	/* eslint-enable quote-props */

@@ -12,6 +12,7 @@ Commands:
     rewrite-css       Clones CSS files from src to dest and rewrites urls to include baseurl
     rewrite-html      Clones HTML files from src to dest and rewrites attributes to include baseurl
     rewrite-sitemap   Finds all sitemap files based on index sitemap, and rewrites links to include baseurl
+    rewrite-rss       Clones specified RSS file from src to dest and rewrites links to include baseurl
     serve             Runs 'build' then a local webserver on the dest folder
     watch             Watches the src folder and triggers builds
 

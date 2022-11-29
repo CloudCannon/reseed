@@ -7,7 +7,9 @@ weight: 2
 ---
 The Reseed CLI is run with **one** command, followed by one or more options in any order.
 
-All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set. The [`clean`](#reseed-clean) command only requires the `dest` option set.
+All commands (except [`clean`](#reseed-clean)) require both `baseurl` and `dest` options set.
+The [`rewrite-rss`](#reseed-rewrite-rss) command also requires the `rss` option set.
+The [`clean`](#reseed-clean) command only requires the `dest` option set.
 
 See [Options](#options) for more info.
 
@@ -17,7 +19,7 @@ See [Options](#options) for more info.
 
 ### reseed
 
-Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended. If the site has a `sitemap.xml`, the urls within that sitemap will also be rewritten.
+Cleans destination directory, and copies files from `src` to `dest`/`baseurl`. CSS and HTML files have their hrefs/urls/etc (excluding external links) rewritten so that baseurl is prepended. If the site has a `sitemap.xml`, the urls within that sitemap will also be rewritten. If an RSS file is specified with the `-r | --rss` option, that file will be similarly processed.
 
 **Example:**
 
@@ -75,6 +77,18 @@ The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` 
 
 ```
 $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
+```
+
+### reseed rewrite-rss
+
+Copies the specified RSS file from `src` to `dest`/`baseurl`. Rewrites the copied file so that links have baseurl prepended to them.
+
+The RSS **must** be specified using the `-r | --rss` option. The specified **must** have the `.xml` file extension.
+
+**Example:**
+
+```
+$ reseed rewrite-rss -b baseurl -d path/to/dest -r index.xml
 ```
 
 ### reseed serve
