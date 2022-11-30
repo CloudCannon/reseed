@@ -118,6 +118,18 @@ The sitemap (or sitemap index) file can be specified using the `-m | --sitemap` 
 $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 ```
 
+## ```reseed rewrite-rss```
+Copies the specified RSS file(s) from `src` to `dest`/`baseurl`. Rewrites the copied file(s) so that links have baseurl prepended to them.
+
+The RSS file **must** be specified using the `-r | --rss` option. This option is a glob. The specified file(s) **must** have the `.xml` extension.
+
+> If using a glob with wildcards (`*`) you must wrap the glob in quotes. See the example below.
+
+#### Example:
+```
+$ reseed rewrite-rss -b baseurl -d path/to/dest -r "**/index.xml"
+```
+
 
 ## ```reseed serve```
 Runs [```reseed```](#reseed), then serves the files on a local webserver, so that they may be viewed in a browser. Then runs [```watch```](#reseed-watch).
@@ -153,6 +165,7 @@ Option        | Alias | Type    | Description
 `--port`      | `-p`  | Integer | The port number to serve the cloned site on.
 `--extrasrc`  | `-e`  | String  | Extra src attribute to be rewritten.</br>Can set multiple attributes by specifying the flag multiple times.
 `--sitemap`   | `-m`  | String  | Path to the index sitemap. Defaults to `sitemap.xml`.
+`--rss`       | `-r`  | String  | Glob to rss file or files.
 `--overwrite` | `-o`  | Boolean | When cleaning `--dest`, don't prompt for confirmation.
 `--split`     |       | Integer | The number of partitions to divide files into.
 `--partition` |       | Integer | The partition number to process.

@@ -621,11 +621,11 @@ describe('rewrite_rss()', function () {
 			});
 		});
 
-		it('should return exit code 2', async function () {
+		it('should fail but continue running (exit code 0)', async function () {
 			const options = cloneObject(testOp);
 			options.paths.rss = 'index.txt';
 			const results = await runner.rewrite_rss(options);
-			expect(results).to.equal(2);
+			expect(results).to.equal(0);
 		});
 
 		after(function () {
@@ -633,37 +633,26 @@ describe('rewrite_rss()', function () {
 		});
 	});
 
-	context('Uses rss file', function () {
+	context('Uses rss files', function () {
 		before(function () {
 			mock({
 				'test/src': {
 					'index.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 					<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-						<channel>
-							<title>Site title</title>
-							<link>http://example.org/testBaseurl/</link>
-							<description>Site description</description>
-							<generator>Generator</generator>
-							<language>en-us</language>
-							<lastBuildDate>Fri, 12 Aug 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/testBaseurl/index.xml" rel="self" type="application/rss+xml"/>
-							<item>
-								<title>Advice</title>
-								<link>http://example.org/testBaseurl/advice/</link>
-								<pubDate>Fri, 12 Aug 2016 00:00:00 +0000</pubDate>
-
-								<guid>http://example.org/advice/</guid>
-								<description>Advice</description>
-							</item>
-						</channel>
-					</rss>`
+					</rss>`,
+					blog: {
+						'index.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+						<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+						</rss>`
+					}
 				}
 			});
 		});
 
 		it('should return exit code 0', async function () {
 			const options = cloneObject(testOp);
-			options.paths.rss = 'index.xml';
-			const results = await runner.rewrite_sitemap(options);
+			options.paths.rss = '**/index.xml';
+			const results = await runner.rewrite_rss(options);
 			expect(results).to.equal(0);
 		});
 

@@ -81,14 +81,16 @@ $ reseed rewrite-sitemap -b baseurl -d path/to/dest -m sitemapindex.xml
 
 ### reseed rewrite-rss
 
-Copies the specified RSS file from `src` to `dest`/`baseurl`. Rewrites the copied file so that links have baseurl prepended to them.
+Copies the specified RSS file(s) from `src` to `dest`/`baseurl`. Rewrites the copied file(s) so that links have baseurl prepended to them.
 
-The RSS file **must** be specified using the `-r | --rss` option. The specified file **must** have the `.xml` extension.
+The RSS file **must** be specified using the `-r | --rss` option. This option is a glob. The specified file(s) **must** have the `.xml` extension.
+
+> If using a glob with wildcards (`*`) you must wrap the glob in quotes. See the example below.
 
 **Example:**
 
 ```
-$ reseed rewrite-rss -b baseurl -d path/to/dest -r index.xml
+$ reseed rewrite-rss -b baseurl -d path/to/dest -r "**/index.xml"
 ```
 
 ### reseed serve
@@ -113,4 +115,4 @@ $ reseed watch -s path/to/src -d path/to/dest -b baseurl
 
 ## Options
 
-<table><thead><tr><th>Option</th><th>Alias</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>--source</code></td><td><code>-s</code></td><td>String</td><td>The source folder to clone. Defaults to current working directory.</td></tr><tr><td><code>--dest</code></td><td><code>-d</code></td><td>String</td><td>The destination folder to clone the files to.</td></tr><tr><td><code>--baseurl</code></td><td><code>-b</code></td><td>String</td><td>The filename to prepend to the files in the source.</td></tr><tr><td><code>--port</code></td><td><code>-p</code></td><td>Integer</td><td>The port number to serve the cloned site on.</td></tr><tr><td><code>--extrasrc</code></td><td><code>-e</code></td><td>String</td><td>Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.</td></tr><tr><td><code>--sitemap</code></td><td><code>-m</code></td><td>String</td><td>Path to the index sitemap. Defaults to <code>sitemap.xml</code>.</td></tr><tr><td><code>--rss</code></td><td><code>-r</code></td><td>String</td><td>Path to a valid RSS file.</td></tr><tr><td><code>--overwrite</code></td><td><code>-o</code></td><td>Boolean</td><td>When cleaning <code>--dest</code>, don't prompt for confirmation.</td></tr><tr><td><code>--split</code></td><td>&nbsp;</td><td>Integer</td><td>The number of partitions to divide files into.</td></tr><tr><td><code>--partition</code></td><td>&nbsp;</td><td>Integer</td><td>The partition number to process.</td></tr><tr><td><code>--help</code></td><td>&nbsp;</td><td>Boolean</td><td>Show help in the terminal</td></tr></tbody></table>
+<table><thead><tr><th>Option</th><th>Alias</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>--source</code></td><td><code>-s</code></td><td>String</td><td>The source folder to clone. Defaults to current working directory.</td></tr><tr><td><code>--dest</code></td><td><code>-d</code></td><td>String</td><td>The destination folder to clone the files to.</td></tr><tr><td><code>--baseurl</code></td><td><code>-b</code></td><td>String</td><td>The filename to prepend to the files in the source.</td></tr><tr><td><code>--port</code></td><td><code>-p</code></td><td>Integer</td><td>The port number to serve the cloned site on.</td></tr><tr><td><code>--extrasrc</code></td><td><code>-e</code></td><td>String</td><td>Extra src attribute to be rewritten.&lt;/br&gt;Can set multiple attributes by specifying the flag multiple times.</td></tr><tr><td><code>--sitemap</code></td><td><code>-m</code></td><td>String</td><td>Path to the index sitemap. Defaults to <code>sitemap.xml</code>.</td></tr><tr><td><code>--rss</code></td><td><code>-r</code></td><td>String</td><td>Glob to rss file or files</td></tr><tr><td><code>--overwrite</code></td><td><code>-o</code></td><td>Boolean</td><td>When cleaning <code>--dest</code>, don't prompt for confirmation.</td></tr><tr><td><code>--split</code></td><td>&nbsp;</td><td>Integer</td><td>The number of partitions to divide files into.</td></tr><tr><td><code>--partition</code></td><td>&nbsp;</td><td>Integer</td><td>The partition number to process.</td></tr><tr><td><code>--help</code></td><td>&nbsp;</td><td>Boolean</td><td>Show help in the terminal</td></tr></tbody></table>

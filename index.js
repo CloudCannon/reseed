@@ -26,7 +26,7 @@ Options:
     -p | --port       The portnumber to serve the cloned site on
     -e | --extrasrc   A list of extra src attributes to be rewritten
     -m | --sitemap    A path to a valid sitemap or sitemapindex file
-    -r | --rss        A path to a valid RSS file
+    -r | --rss        A glob to a valid RSS file or files
     -o | --overwrite  When cleaning --dest, don't prompt for confirmation
          --split      The number of partitions to divide files into
          --partition  The partition number to process
