@@ -15,13 +15,13 @@ describe('rewrite html', function () {
 			it('should rewrite the url in each src attribute', function () {
 				const element = `<img src="testImage.jpg">
 				<img poster="testImage.jpg">
-				<img extraAttrOne="testImage.jpg">
-				<img extraAttrTwo="testImage.jpg">`;
+				<img extra-attr-one="testImage.jpg">
+				<img extra-attr-two="testImage.jpg">`;
 				const expectedElement = `<img src="/testBaseurl/testImage.jpg">
 				<img poster="/testBaseurl/testImage.jpg">
-				<img extraAttrOne="/testBaseurl/testImage.jpg">
-				<img extraAttrTwo="/testBaseurl/testImage.jpg">`;
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
+				<img extra-attr-one="/testBaseurl/testImage.jpg">
+				<img extra-attr-two="/testBaseurl/testImage.jpg">`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extra-attr-one', 'extra-attr-two']);
 				expect(rewrittenElement).to.equal(expectedElement);
 			});
 		});
@@ -30,9 +30,9 @@ describe('rewrite html', function () {
 			it('should return each element unchanged', function () {
 				const element = `<img src="https://testImage.jpg">
 				<img poster="https://testImage.jpg">
-				<img extraAttrOne="https://testImage.jpg">
-				<img extraAttrTwo="https://testImage.jpg">`;
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
+				<img extra-attr-one="https://testImage.jpg">
+				<img extra-attr-two="https://testImage.jpg">`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extra-attr-one', 'extra-attr-two']);
 				expect(rewrittenElement).to.equal(element);
 			});
 		});
@@ -41,9 +41,9 @@ describe('rewrite html', function () {
 			it('should return each element unchanged', function () {
 				const element = `<img src="testImage.jpg" reseed-ignore>
 				<img poster="testImage.jpg" reseed-ignore>
-				<img extraAttrOne="testImage.jpg" reseed-ignore>
-				<img extraAttrTwo="testImage.jpg" reseed-ignore>`;
-				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extraAttrOne', 'extraAttrTwo']);
+				<img extra-attr-one="testImage.jpg" reseed-ignore>
+				<img extra-attr-two="testImage.jpg" reseed-ignore>`;
+				const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', ['extra-attr-one', 'extra-attr-two']);
 				expect(rewrittenElement).to.equal(element);
 			});
 		});

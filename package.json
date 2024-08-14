@@ -39,12 +39,12 @@
     "reseed": "./index.js"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=18.17"
   },
   "dependencies": {
     "browser-sync": "^2.26.12",
     "chalk": "^4.1.0",
-    "cheerio": "1.0.0-rc.3",
+    "cheerio": "1.0.0-rc.12",
     "chokidar": "^3.4.2",
     "cssurl": "^1.3.0",
     "del": "^6.0.0",
