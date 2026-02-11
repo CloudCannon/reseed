@@ -97,11 +97,11 @@ describe('_fetchAllFiles', function () {
 		});
 
 		it('should match default behaviour', async function () {
-			const defaultPartitionFiles = getPartitionFiles(this.defaultPartition);
+			const defaultPartitionFiles = getPartitionFiles(this.defaultPartition).sort();
 			const partition1Files = getPartitionFiles(this.partition1);
 			const partition2Files = getPartitionFiles(this.partition2);
 
-			expect(defaultPartitionFiles).to.eql([...partition1Files, ...partition2Files]);
+			expect(defaultPartitionFiles).to.eql([...partition1Files, ...partition2Files].sort());
 		});
 
 		it('should create partitions', async function () {
@@ -221,7 +221,7 @@ describe('build', function () {
 
 	context('fetchFiles fails', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns();
 		});
 
@@ -233,7 +233,7 @@ describe('build', function () {
 
 	context('clone_assets fails', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns(2);
 			rewriteCssStub.returns(0);
@@ -248,7 +248,7 @@ describe('build', function () {
 
 	context('rewrite_css fails', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(2);
@@ -262,7 +262,7 @@ describe('build', function () {
 
 	context('rewrite_html fails', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
@@ -276,7 +276,7 @@ describe('build', function () {
 
 	context('rewrite_sitemap fails', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
@@ -291,7 +291,7 @@ describe('build', function () {
 
 	context('everything works', function () {
 		before(function () {
-			cleanStub.returns([]);
+			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
@@ -341,16 +341,16 @@ describe('clean', async function () {
 			const options = cloneObject(testOp);
 			options.paths.dest = dest;
 			const res = await runner.clean(options);
-			expect(res).to.eql([path.resolve(options.paths.dest)]);
+			expect(res).to.eql(undefined);
 		});
 	});
 
 	context('invalid directory name', function () {
 		const options = cloneObject(testOp);
 		options.paths.dest = 'thisdoesntexist';
-		it('should return an empty array', async function () {
+		it('should return without an error', async function () {
 			const res = await runner.clean(options);
-			expect(res).to.eql([]);
+			expect(res).to.eql(undefined);
 		});
 	});
 
