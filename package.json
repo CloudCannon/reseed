@@ -36,7 +36,7 @@
     "index.js"
   ],
   "bin": {
-    "reseed": "./index.js"
+    "reseed": "index.js"
   },
   "engines": {
     "node": ">=18.17"
