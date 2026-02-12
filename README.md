@@ -1,12 +1,8 @@
 # Reseed
 Reseed is an open-source tool for integrating static sites into subpaths.
 
-Requires node >=10.0.0
-
 [![Build Status](https://travis-ci.com/CloudCannon/reseed.svg?token=PCpTqbePqYxMDyjhMTKF&branch=main)](https://travis-ci.com/CloudCannon/reseed)
 [![codecov](https://codecov.io/gh/CloudCannon/reseed/branch/main/graph/badge.svg?token=Q4yyn9DLZ6)](https://codecov.io/gh/CloudCannon/reseed)
-
-
 
 ## Contents
 - [Installation & Usage](#installation-&-usage)
