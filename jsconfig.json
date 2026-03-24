@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"esModuleInterop": true,
+		"noEmit": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"allowImportingTsExtensions": true
+	},
+	"include": ["lib/**/*.js", "test/**/*.js", "cli.js", "index.js"],
+	"exclude": ["node_modules"]
+}

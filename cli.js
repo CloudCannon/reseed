@@ -1,20 +1,17 @@
 const path = require('path');
 const log = require('fancy-log');
-const chalk = require('chalk');
+const c = require('ansi-colors');
 
 const runner = require('./lib/runner');
 
 /**
-* Factory function for creating commands.
-* @param {function} func The function that calling this command will run. These functions
-* are usually included in the runner class. Implementing new functionality should
-* be done n runner.js.
-* @return {Object} The command.
-*/
-const createCommand = (func, requiredFlags = []) => ({
-	run: func,
-	requiredFlags: requiredFlags
-});
+ * Factory function for creating commands.
+ * @param {function} run The function that calling this command will run. These functions
+ * are usually included in the runner class. Implementing new functionality should
+ * be done n runner.js.
+ * @return {Object} The command.
+ */
+const createCommand = (run, requiredFlags = []) => ({ run, requiredFlags });
 
 /**
  The different commands for operation. New commands can be specified here.
@@ -23,16 +20,16 @@ const createCommand = (func, requiredFlags = []) => ({
 */
 const commands = {
 	/* eslint-disable quote-props */
-	'build': createCommand(runner.build, ['baseurl', 'dest']),
-	'clean': createCommand(runner.clean, ['dest']),
+	build: createCommand(runner.build, ['baseurl', 'dest']),
+	clean: createCommand(runner.clean, ['dest']),
 	'clone-assets': createCommand(runner.clone_assets, ['baseurl', 'dest']),
-	'reseed': createCommand(runner.build, ['baseurl', 'dest']),
+	reseed: createCommand(runner.build, ['baseurl', 'dest']),
 	'rewrite-css': createCommand(runner.rewrite_css, ['baseurl', 'dest']),
 	'rewrite-html': createCommand(runner.rewrite_html, ['baseurl', 'dest']),
 	'rewrite-sitemap': createCommand(runner.rewrite_sitemap, ['baseurl', 'dest']),
 	'rewrite-rss': createCommand(runner.rewrite_rss, ['baseurl', 'dest', 'rss']),
-	'serve': createCommand(runner.buildAndServe, ['baseurl', 'dest']),
-	'watch': createCommand(runner.watch, ['baseurl', 'dest'])
+	serve: createCommand(runner.buildAndServe, ['baseurl', 'dest']),
+	watch: createCommand(runner.watch, ['baseurl', 'dest']),
 	/* eslint-enable quote-props */
 };
 
@@ -50,8 +47,8 @@ module.exports = {
 			return true;
 		}
 
-		log.error(chalk.red('required flags:'));
-		log.error(chalk.red(requiredFlags));
+		log.error(c.red('required flags:'));
+		log.error(c.red(requiredFlags));
 		return false;
 	},
 
@@ -67,18 +64,18 @@ module.exports = {
 			return;
 		}
 
-		const port = parseInt(portString, 10);
+		const port = Number.parseInt(portString, 10);
 		const defaultString = `Reverting to default port (${defaultPort}).`;
 
 		if (!port) {
-			log.error(chalk.yellow(`${portString} is not a valid port number.`));
-			log.error(chalk.yellow(defaultString));
+			log.error(c.yellow(`${portString} is not a valid port number.`));
+			log.error(c.yellow(defaultString));
 			return;
 		}
 
 		if (port < 1024 || port > 65535) {
-			log.error(chalk.yellow('Port number outside of allowed range. (1024 - 65535).'));
-			log.error(chalk.yellow(defaultString));
+			log.error(c.yellow('Port number outside of allowed range. (1024 - 65535).'));
+			log.error(c.yellow(defaultString));
 			return;
 		}
 
@@ -86,52 +83,46 @@ module.exports = {
 	},
 
 	/**
-	* Function that ajusts the options that the cli runs on.
-	*
-	* @param {Object} Flags the flags that were set by the user in the command line.
-	* @return {Object} An object containing information on how to run the given CLI command.
-	*/
+	 * Function that ajusts the options that the cli runs on.
+	 *
+	 * @param {Object} Flags the flags that were set by the user in the command line.
+	 * @return {Object} An object containing information on how to run the given CLI command.
+	 */
 	setOptions: function (flags) {
 		const cwd = process.cwd();
-
-		// trim leading and trailing slashes
 		const source = (flags.source || defaultSrc).replace(/^\/|\/$/g, '');
 		const destination = flags.dest.replace(/^\/|\/$/g, '');
 		const baseurl = flags.baseurl.replace(/^\/|\/$/g, '');
 		const sitemap = (flags.sitemap || 'sitemap.xml').replace(/^\/|\/$/g, '');
 		const rss = (flags.rss || '').replace(/^\/|\/$/g, '');
-
 		const port = this.checkPortNumber(flags.port) || defaultPort;
 		const split = flags.split || 1;
 		const partition = flags.partition || 1;
 		const extraSrcAttrs = flags.extrasrc || [];
 
-		const options = {
-			cwd: cwd,
-
+		return {
+			cwd,
 			paths: {
 				src: source,
 				dest: destination,
-				baseurl: baseurl,
-				sitemap: sitemap,
-				rss: rss,
+				baseurl,
+				sitemap,
+				rss,
 				fullPathToSource: path.resolve(cwd, source),
-				fullPathToDest: path.resolve(cwd, destination, baseurl)
+				fullPathToDest: path.resolve(cwd, destination, baseurl),
 			},
 			serve: {
-				port: port,
+				port,
 				open: true,
-				path: '/'
+				path: '/',
 			},
 			flags: {
-				extraSrcAttrs: extraSrcAttrs,
+				extraSrcAttrs,
 				overwrite: flags.overwrite,
-				split: split,
-				partition: partition
-			}
+				split,
+				partition,
+			},
 		};
-
-		return options;
 	},
 
 	/**
@@ -144,7 +135,7 @@ module.exports = {
 	run: async function (cli) {
 		const cmd = cli.input[0] || 'reseed';
 		if (!commands[cmd]) {
-			log(chalk.red('command not recognized'));
+			log(c.red('command not recognized'));
 			log(cli.help);
 			return 2;
 		}
@@ -167,8 +158,8 @@ module.exports = {
 
 		const end = new Date();
 		const elapsedTime = end.getTime() - startTime;
-		log(chalk.yellow(`⏱  process completed in ${elapsedTime} ms. `));
+		log(c.yellow(`⏱  process completed in ${elapsedTime} ms. `));
 
 		return exitCode;
-	}
+	},
 };

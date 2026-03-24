@@ -1,0 +1,24 @@
+{
+	"formatter": "language_server",
+	"languages": {
+		"YAML": {
+			"tab_size": 2,
+			"hard_tabs": false
+		},
+		"JavaScript": {
+			"language_servers": [
+				"vtsls",
+				"biome"
+			],
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			},
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		}
+	}
+}
