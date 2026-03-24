@@ -36,56 +36,53 @@ Options:
  * Takes input from user via command line and outputs an object containing
  * arguments (in camelCase) and flags.
  */
-const inputs = meow(
-	helpString,
-	{
-		flags: {
-			source: {
-				type: 'string',
-				alias: 's'
-			},
-			dest: {
-				type: 'string',
-				alias: 'd'
-			},
-			baseurl: {
-				type: 'string',
-				alias: 'b'
-			},
-			port: {
-				type: 'string',
-				alias: 'p'
-			},
-			extrasrc: {
-				type: 'string',
-				alias: 'e',
-				isMultiple: true
-			},
-			rss: {
-				type: 'string',
-				alias: 'r'
-			},
-			sitemap: {
-				type: 'string',
-				alias: 'm'
-			},
-			overwrite: {
-				type: 'boolean',
-				alias: 'o'
-			},
-			split: {
-				type: 'number',
-				alias: null,
-				default: 1
-			},
-			partition: {
-				type: 'number',
-				alias: null,
-				default: 1
-			}
-		}
-	}
-);
+const inputs = meow(helpString, {
+	flags: {
+		source: {
+			type: 'string',
+			alias: 's',
+		},
+		dest: {
+			type: 'string',
+			alias: 'd',
+		},
+		baseurl: {
+			type: 'string',
+			alias: 'b',
+		},
+		port: {
+			type: 'string',
+			alias: 'p',
+		},
+		extrasrc: {
+			type: 'string',
+			alias: 'e',
+			isMultiple: true,
+		},
+		rss: {
+			type: 'string',
+			alias: 'r',
+		},
+		sitemap: {
+			type: 'string',
+			alias: 'm',
+		},
+		overwrite: {
+			type: 'boolean',
+			alias: 'o',
+		},
+		split: {
+			type: 'number',
+			alias: null,
+			default: 1,
+		},
+		partition: {
+			type: 'number',
+			alias: null,
+			default: 1,
+		},
+	},
+});
 
 /**
  * Passes inputs to cli.js

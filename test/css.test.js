@@ -1,78 +1,64 @@
-/* eslint-disable prefer-arrow-callback */
 const mock = require('mock-fs');
-const { expect } = require('chai');
 const path = require('path');
-
+const assert = require('node:assert');
+const { test, suite, before, after } = require('node:test');
 const cssRewrite = require('../lib/processors/css');
 
 const filename = 'test/testdir';
 const dest = '/';
 const baseurl = 'testbase';
 
-describe('rewrite css', function () {
-	context('css file rewritable url', function () {
-		it('should rewrite the url in file', function () {
-			const cssCont = 'section.hero { background-image: url(../../testImage.jpg);}';
-			const rewritten = cssRewrite.rewrite(cssCont, '//testcss.css', 'testBaseurl');
-			const testReg = /testBaseurl\/testImage\.jpg/;
-			expect(testReg.test(rewritten)).to.equal(true);
-		});
+suite('rewrite css', () => {
+	test('css file rewritable url should rewrite the url in file', () => {
+		const cssCont = 'section.hero { background-image: url(../../testImage.jpg);}';
+		const rewritten = cssRewrite.rewrite(cssCont, '//testcss.css', 'testBaseurl');
+		const testReg = /testBaseurl\/testImage\.jpg/;
+		assert(testReg.test(rewritten));
 	});
 
-	context('css file with ignorable url', function () {
-		it('should return the url unchanged', function () {
-			const ignoreURL = /https:\/\/testImage.jpg/;
-			const ignorableCss = 'section.hero { background-image: url(https://testImage.jpg);}';
-			const rewritten = cssRewrite.rewrite(ignorableCss, '//testcss.css', 'testBaseurl');
-			expect(ignoreURL.test(rewritten)).to.equal(true);
-		});
+	test('css file with ignorable url should return the url unchanged', () => {
+		const ignoreURL = /https:\/\/testImage.jpg/;
+		const ignorableCss = 'section.hero { background-image: url(https://testImage.jpg);}';
+		const rewritten = cssRewrite.rewrite(ignorableCss, '//testcss.css', 'testBaseurl');
+		assert(ignoreURL.test(rewritten));
 	});
 });
 
-describe('plugin', function () {
-	before(function () {
+suite('plugin', () => {
+	before(() => {
 		mock({
 			'test/testdir': {
 				'testcss.css': 'section.hero { background-image: url(../../testImage.jpg);}',
-				'emptycss.css': ''
-			}
+				'emptycss.css': '',
+			},
 		});
 	});
 
-	context('User supplies a valid css file', function () {
-		it('should return 0', function () {
-			const file = path.resolve('test/testdir/testcss.css');
-			const destTest = path.resolve('test/testdir', 'testbase');
-			expect(cssRewrite.plugin(file, destTest, 'testbase')).to.equal(0);
-		});
-	});
-	context('empty css file', function () {
-		it('Should return 0', function () {
-			const file = path.resolve('test/testdir/emptycss.css');
-			const destTest = path.resolve('test/testdir', 'testbase');
-			expect(cssRewrite.plugin(file, destTest, 'testbase')).to.equal(0);
-		});
+	test('User supplies a valid css file should return 0', () => {
+		const file = path.resolve('test/testdir/testcss.css');
+		const destTest = path.resolve('test/testdir', 'testbase');
+		assert(cssRewrite.plugin(file, destTest, 'testbase') === 0);
 	});
 
-	context('No file specified', function () {
-		it('should return 2', function () {
-			expect(cssRewrite.plugin('', dest, baseurl)).to.equal(2);
-		});
+	test('empty css file should return 0', () => {
+		const file = path.resolve('test/testdir/emptycss.css');
+		const destTest = path.resolve('test/testdir', 'testbase');
+		assert(cssRewrite.plugin(file, destTest, 'testbase') === 0);
 	});
 
-	context('No destination specified', function () {
-		it('Should return 3', function () {
-			expect(cssRewrite.plugin(filename, '', baseurl)).to.equal(3);
-		});
+	test('No file specified should return 2', () => {
+		assert(cssRewrite.plugin('', dest, baseurl) === 2);
 	});
 
-	context('No baseurl', function () {
-		it('should return 3', function () {
-			expect(cssRewrite.plugin(filename, '', null)).to.equal(3);
-		});
+	test('No destination specified should return 3', () => {
+		assert(cssRewrite.plugin(filename, '', baseurl) === 3);
 	});
 
-	after(function () {
+	test('No baseurl should return 3', () => {
+		assert(cssRewrite.plugin(filename, '', null) === 3);
+	});
+
+	after(() => {
 		mock.restore();
 	});
 });

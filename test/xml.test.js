@@ -1,12 +1,11 @@
-/* eslint-disable prefer-arrow-callback */
-const { expect } = require('chai');
+const assert = require('node:assert');
+const { test, suite, before, after } = require('node:test');
 const mock = require('mock-fs');
 const xmlRewrite = require('../lib/processors/xml');
 
-describe('rewrite xml', function () {
-	context('sitemap with "xhtml:link" and "loc" nodes', function () {
-		it('should rewrite the url in each node', function () {
-			const xmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+suite('rewrite xml', () => {
+	test('sitemap with "xhtml:link" and "loc" nodes should rewrite the url in each node', () => {
+		const xmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 			<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 				<url>
@@ -21,7 +20,7 @@ describe('rewrite xml', function () {
 				<lastmod>2016-11-11T00:00:00+13:00</lastmod>
 				</url>
 			</urlset>`;
-			const expectedXmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+		const expectedXmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 			<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 				<url>
@@ -36,14 +35,12 @@ describe('rewrite xml', function () {
 				<lastmod>2016-11-11T00:00:00+13:00</lastmod>
 				</url>
 			</urlset>`;
-			const rewrittenElement = xmlRewrite.rewrite(xmlString, 'testBaseurl');
-			expect(rewrittenElement).to.equal(expectedXmlString);
-		});
+		const rewrittenElement = xmlRewrite.rewrite(xmlString, 'testBaseurl');
+		assert(rewrittenElement === expectedXmlString);
 	});
 
-	context('rss feed with "link" nodes', function () {
-		it('should rewrite the url in each node', function () {
-			const xmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+	test('rss feed with "link" nodes should rewrite the url in each node', () => {
+		const xmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 			<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 				<channel>
 					<title>Site title</title>
@@ -62,7 +59,7 @@ describe('rewrite xml', function () {
 					</item>
 				</channel>
 			</rss>`;
-			const expectedXmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+		const expectedXmlString = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 			<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 				<channel>
 					<title>Site title</title>
@@ -81,14 +78,13 @@ describe('rewrite xml', function () {
 					</item>
 				</channel>
 			</rss>`;
-			const rewrittenElement = xmlRewrite.rewrite(xmlString, 'testBaseurl');
-			expect(rewrittenElement).to.equal(expectedXmlString);
-		});
+		const rewrittenElement = xmlRewrite.rewrite(xmlString, 'testBaseurl');
+		assert(rewrittenElement === expectedXmlString);
 	});
 });
 
-describe('plugin', function () {
-	before(function () {
+suite('plugin', () => {
+	before(() => {
 		mock({
 			'sitemapindex.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 			<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -104,56 +100,47 @@ describe('plugin', function () {
 			</sitemap>
 			</sitemapindex>`,
 			emptySitemap: {
-				'sitemap.xml': ''
+				'sitemap.xml': '',
 			},
 			testDir: {
-				'sitemap.xml': '<sitemap contents>'
-			}
+				'sitemap.xml': '<sitemap contents>',
+			},
 		});
 	});
 
-	context('elements with some src attribute', function () {
-		it('should rewrite the url in each loc node', function () {
-			const fileList = xmlRewrite.plugin('sitemapindex.xml', 'testDir/destTest', 'testbase');
-			expect(fileList).to.deep.equal(['http://example.org/sitemaps/pagelist.xml', 'http://example.org/sitemaps/morepages.xml']);
-		});
+	test('elements with some src attribute should rewrite the url in each loc node', () => {
+		const fileList = xmlRewrite.plugin('sitemapindex.xml', 'testDir/destTest', 'testbase');
+		assert.deepStrictEqual(fileList, [
+			'http://example.org/sitemaps/pagelist.xml',
+			'http://example.org/sitemaps/morepages.xml',
+		]);
 	});
 
-	context('valid sitemap file', function () {
-		it('Should return 0', function () {
-			const file = 'testDir/sitemap.xml';
-			const destTest = 'testDir/destTest';
-			expect(xmlRewrite.plugin(file, destTest, 'testbase')).to.equal(0);
-		});
+	test('valid sitemap file Should return 0', () => {
+		const file = 'testDir/sitemap.xml';
+		const destTest = 'testDir/destTest';
+		assert(xmlRewrite.plugin(file, destTest, 'testbase') === 0);
 	});
 
-	context('empty sitemap file', function () {
-		it('Should return 0', function () {
-			const file = 'emptySitemap/sitemap.xml';
-			const destTest = 'emptySitemap/destTest';
-			expect(xmlRewrite.plugin(file, destTest, 'testbase')).to.equal(0);
-		});
+	test('empty sitemap file Should return 0', () => {
+		const file = 'emptySitemap/sitemap.xml';
+		const destTest = 'emptySitemap/destTest';
+		assert(xmlRewrite.plugin(file, destTest, 'testbase') === 0);
 	});
 
-	context('No file specified', function () {
-		it('should return 1', function () {
-			expect(xmlRewrite.plugin('', 'dest', 'testbase')).to.equal(1);
-		});
+	test('No file specified should return 1', () => {
+		assert(xmlRewrite.plugin('', 'dest', 'testbase') === 1);
 	});
 
-	context('No destination specified', function () {
-		it('Should return 1', function () {
-			expect(xmlRewrite.plugin('filename', '', 'baseurl')).to.equal(1);
-		});
+	test('No destination specified Should return 1', () => {
+		assert(xmlRewrite.plugin('filename', '', 'baseurl') === 1);
 	});
 
-	context('No baseurl', function () {
-		it('should return 1', function () {
-			expect(xmlRewrite.plugin('filename', 'dest', null)).to.equal(1);
-		});
+	test('No baseurl should return 1', () => {
+		assert(xmlRewrite.plugin('filename', 'dest', null) === 1);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });

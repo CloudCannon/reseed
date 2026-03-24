@@ -1,7 +1,6 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable no-underscore-dangle */
 const path = require('path');
-const { expect } = require('chai');
+const assert = require('node:assert');
+const { test, suite, before, after } = require('node:test');
 const mock = require('mock-fs');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -18,23 +17,23 @@ const testOp = {
 	paths: {
 		src: 'test/src',
 		dest: 'test/dest',
-		baseurl: 'baseurl'
+		baseurl: 'baseurl',
 	},
 	serve: {
 		port: 9000,
 		open: true,
-		path: '/'
+		path: '/',
 	},
 	flags: {
-		overwrite: true
-	}
+		overwrite: true,
+	},
 };
 testOp.paths.fullPathToSource = testOp.paths.src;
 testOp.paths.fullPathToDest = path.resolve(testOp.paths.dest, 'baseurl');
 Object.freeze(testOp);
 
-describe('_fetchAllFiles', function () {
-	before(function () {
+suite('_fetchAllFiles', () => {
+	before(() => {
 		mock({
 			testDir: {
 				'image.jpg': 'imgdata',
@@ -42,156 +41,145 @@ describe('_fetchAllFiles', function () {
 				'index.html': 'html',
 				'sitemap.xml': 'sitemap',
 				emptyDir: { emptierDir: {} },
-				assets: {
-					'image2.jpg': 'imgdata'
-				},
-				css: {
-					'style2.css': 'css'
-				},
-				html: {
-					'index2.html': 'html'
-				}
-			}
+				assets: { 'image2.jpg': 'imgdata' },
+				css: { 'style2.css': 'css' },
+				html: { 'index2.html': 'html' },
+			},
 		});
 	});
 
-	context('type = any', function () {
-		it('should retrieve all files', async function () {
-			const results = await runner._fetchAllFiles('testDir');
-			expect(results.css.length).to.equal(2);
-			expect(results.other.length).to.equal(3);
-			expect(results.html.length).to.equal(2);
-		});
+	test('type any should retrieve all files', async () => {
+		const results = await runner._fetchAllFiles('testDir');
+		assert(results.css.length === 2);
+		assert(results.other.length === 3);
+		assert(results.html.length === 2);
 	});
 
-	context('partitions', function () {
-		const getPartitionFiles = (partition) => (
-			Object.keys(partition).reduce((acc, type) => [...acc, ...partition[type]], []).sort()
-		);
+	suite('partitions', () => {
+		const getPartitionFiles = (partition) =>
+			Object.keys(partition)
+				.reduce((acc, type) => acc.concat(partition[type]), [])
+				.sort();
 
-		before(async function () {
+		before(async () => {
 			this.defaultPartition = await runner._fetchAllFiles('testDir');
 			this.partition1 = await runner._fetchAllFiles('testDir', { split: 2, partition: 1 });
 			this.partition2 = await runner._fetchAllFiles('testDir', { split: 2, partition: 2 });
 		});
 
-		it('prevents invalid `split` or `partition` value', async function () {
+		test('prevents invalid `split` or `partition` value', async () => {
 			const partition = await runner._fetchAllFiles('testDir', { split: 0, partition: 0 });
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(7);
+			assert(files.length === 7);
 		});
 
-		it('prevents undefined `split` or `partition` value', async function () {
-			const partition = await runner._fetchAllFiles('testDir', { split: undefined, partition: undefined });
+		test('prevents undefined `split` or `partition` value', async () => {
+			const partition = await runner._fetchAllFiles('testDir', {
+				split: undefined,
+				partition: undefined,
+			});
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(7);
+			assert(files.length === 7);
 		});
 
-		it('ensured `partition` is not greater than `split`', async function () {
+		test('ensured `partition` is not greater than `split`', async () => {
 			const partition = await runner._fetchAllFiles('testDir', { split: 1, partition: 2 });
 			const files = getPartitionFiles(partition);
 
-			expect(files.length).to.equal(7);
+			assert(files.length === 7);
 		});
 
-		it('should match default behaviour', async function () {
+		test('should match default behaviour', async () => {
 			const defaultPartitionFiles = getPartitionFiles(this.defaultPartition).sort();
 			const partition1Files = getPartitionFiles(this.partition1);
 			const partition2Files = getPartitionFiles(this.partition2);
 
-			expect(defaultPartitionFiles).to.eql([...partition1Files, ...partition2Files].sort());
+			assert.deepStrictEqual(
+				defaultPartitionFiles,
+				[...partition1Files, ...partition2Files].sort()
+			);
 		});
 
-		it('should create partitions', async function () {
+		test('should create partitions', async () => {
 			const partition1Files = getPartitionFiles(this.partition1);
 			const partition2Files = getPartitionFiles(this.partition2);
 
-			expect(partition1Files.length).to.equal(3);
-			expect(partition2Files.length).to.equal(4);
+			assert(partition1Files.length === 3);
+			assert(partition2Files.length === 4);
 		});
 
-		it('should not have duplicate files', async function () {
+		test('should not have duplicate files', async () => {
 			const partition1Files = getPartitionFiles(this.partition1);
 			const partition2Files = getPartitionFiles(this.partition2);
 			const duplicateFiles = partition1Files.filter((value) => partition2Files.includes(value));
 
-			expect(duplicateFiles).to.eql([]);
+			assert.deepStrictEqual(duplicateFiles, []);
 		});
 	});
 
-	context('dir doesnt exist', function () {
-		it('should throw an error', async function () {
-			const results = await runner._fetchAllFiles('test/fakeDir');
-			expect(results).to.eq(undefined);
-		});
+	test('dir doesnt exist should throw an error', async () => {
+		const results = await runner._fetchAllFiles('test/fakeDir');
+		assert(results === undefined);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
 
-describe('_copyFiles', function () {
-	before(function () {
+suite('_copyFiles', () => {
+	before(() => {
 		mock({
 			'test/src': {
 				'image.jpg': 'imgdata',
 				'style.css': 'css',
 				'index.html': 'html',
 				emptyDir: { emptierDir: {} },
-				assets: {
-					'image2.jpg': 'imgdata'
-				},
-				css: {
-					'style2.css': 'css'
-				},
-				html: {
-					'index2.html': 'html'
-				}
-			}
+				assets: { 'image2.jpg': 'imgdata' },
+				css: { 'style2.css': 'css' },
+				html: { 'index2.html': 'html' },
+			},
 		});
 	});
 
-	context('copy files from src to dest', function () {
-		it('should return the copied files', async function () {
-			const fileList = ['test/src/image.jpg', 'test/src/assets/image2.jpg', 'test/src/style.css',
-				'test/src/css/style2.css', 'test/src/index.html', 'test/src/html/index2.html'];
-			const results = await runner._copyFiles(fileList, testOp);
-			expect(results.length).to.equal(6);
-		});
+	test('copy files from src to dest should return the copied files', async () => {
+		const fileList = [
+			'test/src/image.jpg',
+			'test/src/assets/image2.jpg',
+			'test/src/style.css',
+			'test/src/css/style2.css',
+			'test/src/index.html',
+			'test/src/html/index2.html',
+		];
+		const results = await runner._copyFiles(fileList, testOp);
+		assert(results.length === 6);
 	});
 
-	context('no files to copy', function () {
-		it('should return undefined', async function () {
-			const results = await runner._copyFiles();
-			expect(results).to.equal(undefined);
-		});
+	test('no files to copy should return undefined', async () => {
+		const results = await runner._copyFiles();
+		assert(results === undefined);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
 
-describe('_askYesNo', function () {
-	context('Response is affirmative', function () {
-		it('should return true', async function () {
-			const response = await runner._askYesNo('question', 'Y');
-			expect(response).to.equal(true);
-		});
+suite('_askYesNo', () => {
+	test('Response is affirmative should return true', async () => {
+		const response = await runner._askYesNo('question', 'Y');
+		assert(response === true);
 	});
 
-	context('Response is negative', function () {
-		it('should return false', async function () {
-			const response = await runner._askYesNo('question', 'N');
-			expect(response).to.equal(false);
-		});
+	test('Response is negative should return false', async () => {
+		const response = await runner._askYesNo('question', 'N');
+		assert(response === false);
 	});
 });
 
-describe('build', function () {
+suite('build', () => {
 	let cleanStub;
 	let fetchStub;
 	let cloneAssetsStub;
@@ -199,7 +187,7 @@ describe('build', function () {
 	let rewriteHtmlStub;
 	let rewriteSitemapStub;
 
-	before(function () {
+	before(() => {
 		cleanStub = sinon.stub(runner, 'clean');
 		fetchStub = sinon.stub(runner, '_fetchAllFiles');
 		cloneAssetsStub = sinon.stub(runner, 'clone_assets');
@@ -208,31 +196,31 @@ describe('build', function () {
 		rewriteSitemapStub = sinon.stub(runner, 'rewrite_sitemap');
 	});
 
-	context('clean fails', function () {
-		before(function () {
+	suite('clean fails', () => {
+		before(() => {
 			cleanStub.returns(1);
 		});
 
-		it('should return with exit code 1', async function () {
+		test('should return with exit code 1', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(1);
+			assert(result === 1);
 		});
 	});
 
-	context('fetchFiles fails', function () {
-		before(function () {
+	suite('fetchFiles fails', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns();
 		});
 
-		it('should return with exit code 1', async function () {
+		test('should return with exit code 1', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(1);
+			assert(result === 1);
 		});
 	});
 
-	context('clone_assets fails', function () {
-		before(function () {
+	suite('clone_assets fails', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns(2);
@@ -240,42 +228,42 @@ describe('build', function () {
 			rewriteHtmlStub.returns(0);
 		});
 
-		it('should return with exit code 1', async function () {
+		test('should return with exit code 1', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(2);
+			assert(result === 2);
 		});
 	});
 
-	context('rewrite_css fails', function () {
-		before(function () {
+	suite('rewrite_css fails', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(2);
 			rewriteHtmlStub.returns(0);
 		});
-		it('should return with exit code 2', async function () {
+		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(2);
+			assert(result === 2);
 		});
 	});
 
-	context('rewrite_html fails', function () {
-		before(function () {
+	suite('rewrite_html fails', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
 			rewriteCssStub.returns(0);
 			rewriteHtmlStub.returns(2);
 		});
-		it('should return with exit code 2', async function () {
+		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(2);
+			assert(result === 2);
 		});
 	});
 
-	context('rewrite_sitemap fails', function () {
-		before(function () {
+	suite('rewrite_sitemap fails', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
@@ -283,14 +271,14 @@ describe('build', function () {
 			rewriteHtmlStub.returns(0);
 			rewriteSitemapStub.returns(2);
 		});
-		it('should return with exit code 2', async function () {
+		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(2);
+			assert(result === 2);
 		});
 	});
 
-	context('everything works', function () {
-		before(function () {
+	suite('everything works', () => {
+		before(() => {
 			cleanStub.returns(undefined);
 			fetchStub.returns([]);
 			cloneAssetsStub.returns([]);
@@ -298,13 +286,13 @@ describe('build', function () {
 			rewriteHtmlStub.returns(0);
 			rewriteSitemapStub.returns(0);
 		});
-		it('should return with exit code 0', async function () {
+		test('should return with exit code 0', async () => {
 			const result = await runner.build(testOp);
-			expect(result).to.equal(0);
+			assert(result === 0);
 		});
 	});
 
-	after(function () {
+	after(() => {
 		cleanStub.restore();
 		fetchStub.restore();
 		cloneAssetsStub.restore();
@@ -314,256 +302,240 @@ describe('build', function () {
 	});
 });
 
-describe('clean', async function () {
+suite('clean', async () => {
 	let yesNoStub;
-	before(function () {
+	before(() => {
 		yesNoStub = sinon.stub(runner, '_askYesNo');
 		mock({ [dest]: {} });
 	});
 
-	context('User answers no to overwrite', function () {
-		before(function () {
+	suite('User answers no to overwrite', () => {
+		before(() => {
 			yesNoStub.returns(false);
 		});
 
-		it('should return exit code 1', async function () {
+		test('should return exit code 1', async () => {
 			const res = await runner.clean({ paths: { dest: dest }, flags: {} });
-			expect(res).to.equal(1);
+			assert(res === 1);
 		});
 
-		after(function () {
+		after(() => {
 			yesNoStub.restore();
 		});
 	});
 
-	context('Removing a file', function () {
-		it('should remove the directory', async function () {
-			const options = cloneObject(testOp);
-			options.paths.dest = dest;
-			const res = await runner.clean(options);
-			expect(res).to.eql(undefined);
-		});
+	test('Removing a file should remove the directory', async () => {
+		const options = cloneObject(testOp);
+		options.paths.dest = dest;
+		const res = await runner.clean(options);
+		assert(res === undefined);
 	});
 
-	context('invalid directory name', function () {
+	test('invalid directory name should return without an error', async () => {
 		const options = cloneObject(testOp);
 		options.paths.dest = 'thisdoesntexist';
-		it('should return without an error', async function () {
-			const res = await runner.clean(options);
-			expect(res).to.eql(undefined);
-		});
+		const res = await runner.clean(options);
+		assert(res === undefined);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
 
-describe('clone-assets', function () {
-	before(function () {
+suite('clone-assets', () => {
+	before(() => {
 		mock({
 			'test/src': {
 				'image.jpg': 'imgdata',
 				assets: {
-					'image2.jpg': 'imgdata'
-				}
-			}
+					'image2.jpg': 'imgdata',
+				},
+			},
 		});
 	});
 
-	context('Cloning from a valid directory', function () {
-		it('should return exit code 0', async function () {
-			const result = await runner.clone_assets(testOp);
-			expect(result).to.equal(0);
-		});
+	test('Cloning from a valid directory should return exit code 0', async () => {
+		const result = await runner.clone_assets(testOp);
+		assert(result === 0);
 	});
 
-	context('Cloning from invalid directory', function () {
-		it('should return undefined', async function () {
-			const options = cloneObject(testOp);
-			options.paths.fullPathToSource = 'thisdoesntexist';
-			const results = await runner.clone_assets(options);
-			expect(results).to.equal(1);
-		});
+	test('Cloning from invalid directory should return undefined', async () => {
+		const options = cloneObject(testOp);
+		options.paths.fullPathToSource = 'thisdoesntexist';
+		const results = await runner.clone_assets(options);
+		assert(results === 1);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
 
-describe('buildAndServe', function () {
+suite('buildAndServe', () => {
 	let buildStub;
 	let serveStub;
 	let watchStub;
 
-	before(function () {
+	before(() => {
 		buildStub = sinon.stub(runner, 'build');
 		serveStub = sinon.stub(runner, 'serve');
 		watchStub = sinon.stub(runner, 'watch');
 	});
 
-	context('build fails', function () {
-		before(function () {
+	suite('build fails', () => {
+		before(() => {
 			buildStub.returns(1);
 		});
 
-		it('should return with exit code 1', async function () {
+		test('should return with exit code 1', async () => {
 			const results = await runner.buildAndServe();
-			expect(results).to.equal(1);
+			assert(results === 1);
 		});
 
-		after(function () {
+		after(() => {
 			buildStub.reset();
 		});
 	});
 
-	context('build succeeds', function () {
-		before(function () {
+	suite('build succeeds', () => {
+		before(() => {
 			serveStub.returns();
 			watchStub.returns();
 		});
 
-		it('should return with exit code 0', async function () {
+		test('should return with exit code 0', async () => {
 			const results = await runner.buildAndServe();
-			expect(results).to.equal(0);
+			assert(results === 0);
 		});
 	});
 
-	after(function () {
+	after(() => {
 		buildStub.restore();
 		serveStub.restore();
 		watchStub.restore();
 	});
 });
 
-describe('rewrite-css', function () {
-	before(function () {
+suite('rewrite-css', () => {
+	before(() => {
 		mock({
 			'test/src': {
 				'style.css': 'css',
 				css: {
-					'style2.css': 'css'
-				}
-			}
+					'style2.css': 'css',
+				},
+			},
 		});
 	});
 
-	context('Cloning from a valid directory', function () {
-		it('should return the cloned files', async function () {
-			const results = await runner.rewrite_css(testOp);
-			expect(results).to.equal(0);
-		});
+	test('Cloning from a valid directory should return the cloned files', async () => {
+		const results = await runner.rewrite_css(testOp);
+		assert(results === 0);
 	});
 
-	context('Cloning from invalid directory', function () {
-		it('should return undefined', async function () {
-			const options = cloneObject(testOp);
-			options.paths.fullPathToSource = 'thisdoesntexist';
-			const results = await runner.rewrite_css(options);
-			expect(results).to.equal(1);
-		});
+	test('Cloning from invalid directory should return undefined', async () => {
+		const options = cloneObject(testOp);
+		options.paths.fullPathToSource = 'thisdoesntexist';
+		const results = await runner.rewrite_css(options);
+		assert(results === 1);
 	});
 
-	context('trying to copy files that dont exist', function () {
-		it('should return 1', async function () {
-			const options = cloneObject(testOp);
-			options.paths.fullPathToSource = 'fake';
-			const results = await runner.rewrite_css(options);
-			expect(results).to.equal(1);
-		});
+	test('trying to copy files that dont exist should return 1', async () => {
+		const options = cloneObject(testOp);
+		options.paths.fullPathToSource = 'fake';
+		const results = await runner.rewrite_css(options);
+		assert(results === 1);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
 
-describe('rewrite_html', function () {
+suite('rewrite_html', () => {
 	let fetchFileStub;
 	let copyFilesStub;
 
-	before(function () {
+	before(() => {
 		fetchFileStub = sinon.stub(runner, '_fetchAllFiles');
 		copyFilesStub = sinon.stub(runner, '_copyFiles');
 	});
 
-	context('No files to copy', function () {
-		context('_fetchAllFiles fails', function () {
-			before(function () {
+	suite('No files to copy', () => {
+		suite('_fetchAllFiles fails', () => {
+			before(() => {
 				fetchFileStub.returns();
 			});
-			it('should return with exit code 1', async function () {
+			test('should return with exit code 1', async () => {
 				const result = await runner.rewrite_html(testOp);
-				expect(result).to.equal(1);
+				assert(result === 1);
 			});
 		});
-		context('fetchFiles succeeds', function () {
-			before(function () {
+		suite('fetchFiles succeeds', () => {
+			before(() => {
 				fetchFileStub.callThrough();
 			});
 		});
 
-		after(function () {
+		after(() => {
 			fetchFileStub.restore();
 		});
 	});
 
-	context('copyFiles errored', function () {
-		before(function () {
+	suite('copyFiles errored', () => {
+		before(() => {
 			copyFilesStub.returns();
 		});
-		it('should return with exit code 4', async function () {
+		test('should return with exit code 4', async () => {
 			const result = await runner.rewrite_html(testOp, ['file1', 'file2']);
-			expect(result).to.equal(4);
+			assert(result === 4);
 		});
-		after(function () {
+		after(() => {
 			copyFilesStub.restore();
 		});
 	});
 
-	context('trying to copy files that dont exist', function () {
-		it('should return 1', async function () {
+	suite('trying to copy files that dont exist', () => {
+		test('should return 1', async () => {
 			const options = cloneObject(testOp);
 			options.paths.fullPathToSource = 'fake';
 			const results = await runner.rewrite_html(options);
-			expect(results).to.equal(1);
+			assert(results === 1);
 		});
 	});
 
-	context('Cloning from a valid directory', function () {
-		before(function () {
+	suite('Cloning from a valid directory', () => {
+		before(() => {
 			mock({
 				'test/src': {
 					'index.html': 'html',
 					html: {
-						'index2.html': 'html'
-					}
-				}
+						'index2.html': 'html',
+					},
+				},
 			});
 		});
 
-		it('should return the cloned files', async function () {
+		test('should return the cloned files', async () => {
 			const results = await runner.rewrite_html(testOp);
-			expect(results).to.equal(0);
+			assert(results === 0);
 		});
 
-		after(function () {
+		after(() => {
 			mock.restore();
 		});
 	});
 });
 
-describe('rewrite_sitemap()', function () {
-	context('no sitemap', function () {
-		it('should return error exit code (1)', async function () {
-			const results = await runner.rewrite_sitemap(testOp);
-			expect(results).to.equal(1);
-		});
+suite('rewrite_sitemap()', () => {
+	test('no sitemap should return error exit code (1)', async () => {
+		const results = await runner.rewrite_sitemap(testOp);
+		assert(results === 1);
 	});
 
-	context('Uses sitemap index', function () {
-		before(function () {
+	suite('Uses sitemap index', () => {
+		before(() => {
 			mock({
 				'test/src': {
 					'sitemapindex.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -585,56 +557,54 @@ describe('rewrite_sitemap()', function () {
 					</sitemapindex>`,
 					sitemaps: {
 						'pagelist.xml': 'xml',
-						'morepages.xml': 'xml'
-					}
-				}
+						'morepages.xml': 'xml',
+					},
+				},
 			});
 		});
 
-		it('should return exit code 0', async function () {
+		test('should return exit code 0', async () => {
 			const options = cloneObject(testOp);
 			options.paths.sitemap = 'sitemapindex.xml';
 			const results = await runner.rewrite_sitemap(options);
-			expect(results).to.equal(0);
+			assert(results === 0);
 		});
 
-		after(function () {
+		after(() => {
 			mock.restore();
 		});
 	});
 });
 
-describe('rewrite_rss()', function () {
-	context('no rss feed', function () {
-		it('should return error exit code (1)', async function () {
-			const results = await runner.rewrite_rss(testOp);
-			expect(results).to.equal(1);
-		});
+suite('rewrite_rss()', () => {
+	test('no rss feed should return error exit code (1)', async () => {
+		const results = await runner.rewrite_rss(testOp);
+		assert(results === 1);
 	});
 
-	context('specified file is not XML', function () {
-		before(function () {
+	suite('specified file is not XML', () => {
+		before(() => {
 			mock({
 				'test/src': {
-					'index.txt': '<?xml version="1.0" encoding="utf-8" standalone="yes"?>'
-				}
+					'index.txt': '<?xml version="1.0" encoding="utf-8" standalone="yes"?>',
+				},
 			});
 		});
 
-		it('should fail but continue running (exit code 0)', async function () {
+		test('should fail but continue running (exit code 0)', async () => {
 			const options = cloneObject(testOp);
 			options.paths.rss = 'index.txt';
 			const results = await runner.rewrite_rss(options);
-			expect(results).to.equal(0);
+			assert(results === 0);
 		});
 
-		after(function () {
+		after(() => {
 			mock.restore();
 		});
 	});
 
-	context('Uses rss files', function () {
-		before(function () {
+	suite('Uses rss files', () => {
+		before(() => {
 			mock({
 				'test/src': {
 					'index.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -643,45 +613,39 @@ describe('rewrite_rss()', function () {
 					blog: {
 						'index.xml': `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 						<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-						</rss>`
-					}
-				}
+						</rss>`,
+					},
+				},
 			});
 		});
 
-		it('should return exit code 0', async function () {
+		test('should return exit code 0', async () => {
 			const options = cloneObject(testOp);
 			options.paths.rss = '**/index.xml';
 			const results = await runner.rewrite_rss(options);
-			expect(results).to.equal(0);
+			assert(results === 0);
 		});
 
-		after(function () {
+		after(() => {
 			mock.restore();
 		});
 	});
 });
 
-describe('serve', function () {
-
-});
-
-describe('watch', function () {
+suite('watch', () => {
 	let runnerWatch;
-	before(function () {
+	before(() => {
 		runnerWatch = proxyquire('../lib/runner', {
 			chokidar: {
 				watch: sinon.stub().returns({
-					on: sinon.stub().yields()
-				})
-			}
+					on: sinon.stub().yields(),
+				}),
+			},
 		});
 	});
 
-	context('nice', function () {
-		it('is cool', function () {
-			const result = runnerWatch.watch(testOp);
-			expect(result).to.equal(0);
-		});
+	test('nice is cool', () => {
+		const result = runnerWatch.watch(testOp);
+		assert(result === 0);
 	});
 });

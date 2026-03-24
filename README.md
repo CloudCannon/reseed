@@ -2,6 +2,8 @@
 
 Reseed is an open-source tool for integrating static sites into subpaths.
 
+[<img src="https://img.shields.io/npm/v/%2Freseed?logo=npm" alt="version badge">](https://www.npmjs.com/package/%2Freseed)
+
 ## Contents
 
 - [Installation & Usage](#installation-&-usage)
