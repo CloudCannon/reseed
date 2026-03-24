@@ -1,118 +1,95 @@
-/* eslint-disable prefer-arrow-callback */
-const { expect } = require('chai');
-const mock = require('mock-fs');
-const cli = require('../cli.js');
+const assert = require("node:assert");
+const { test, suite, before, after } = require("node:test");
+const mock = require("mock-fs");
+const cli = require("../cli.js");
 
-describe('checkPortNumber()', function () {
-	context('User enters a non-numeric string as port number', function () {
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber('sfsd')).to.equal(undefined);
-		});
+suite("checkPortNumber()", () => {
+	test("User enters a non-numeric string as port number should return undefined", () => {
+		assert(cli.checkPortNumber("sfsd") === undefined);
 	});
 
-	context('User enters an out-of-range port number', function () {
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber(211)).to.equal(undefined);
-		});
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber(-1231)).to.equal(undefined);
-		});
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber(65536)).to.equal(undefined);
-		});
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber(999999999)).to.equal(undefined);
-		});
+	test("User enters an out-of-range port number should return undefined", () => {
+		assert(cli.checkPortNumber(211) === undefined);
+		assert(cli.checkPortNumber(-1231) === undefined);
+		assert(cli.checkPortNumber(65536) === undefined);
+		assert(cli.checkPortNumber(999999999) === undefined);
 	});
 
-	context('User enters a valid port number', function () {
-		it('should return a number', function () {
-			expect(cli.checkPortNumber('8000')).to.equal(8000);
-		});
+	test("User enters a valid port number should return a number", () => {
+		assert(cli.checkPortNumber("8000") === 8000);
 	});
 
-	context('User enters no port number', function () {
-		it('should return undefined', function () {
-			expect(cli.checkPortNumber()).to.equal(undefined);
-		});
+	test("User enters no port number should return undefined", () => {
+		assert(cli.checkPortNumber() === undefined);
 	});
 });
 
-describe('checkRequiredFlags()', function () {
-	context('User misses required flag', function () {
-		it('Should return false', async function () {
-			expect(cli.checkRequiredFlags({}, ['baseurl'])).to.equal(false);
-		});
+suite("checkRequiredFlags()", () => {
+	test("User misses required flag should return false", () => {
+		assert(cli.checkRequiredFlags({}, ["baseurl"]) === false);
 	});
 
-	context('User supplies correct flag', function () {
-		it('Should return true', async function () {
-			expect(cli.checkRequiredFlags({ baseurl: 'test' }, ['baseurl'])).to.equal(true);
-		});
+	test("User supplies correct flag should return true", () => {
+		assert(cli.checkRequiredFlags({ baseurl: "test" }, ["baseurl"]) === true);
 	});
 });
 
-describe('setOptions()', function () {
-	context('Receives flags from cli', function () {
+suite("setOptions()", () => {
+	test("Receives flags from cli should return with the correct flags set", () => {
 		const flags = {
-			baseurl: 'testurl', port: 9898, dest: 'testdest', source: 'testsource', overwrite: true
+			baseurl: "testurl",
+			port: 9898,
+			dest: "testdest",
+			source: "testsource",
+			overwrite: true,
 		};
-		it('should return with the correct flags set', function () {
-			const options = cli.setOptions(flags);
-			expect(options.paths.baseurl).to.equal('testurl');
-			expect(options.serve.port).to.equal(9898);
-			expect(options.paths.dest).to.equal('testdest');
-			expect(options.paths.src).to.equal('testsource');
+		const options = cli.setOptions(flags);
+		assert(options.paths.baseurl === "testurl");
+		assert(options.serve.port === 9898);
+		assert(options.paths.dest === "testdest");
+		assert(options.paths.src === "testsource");
 
-			expect(options.flags.split).to.equal(1);
-			expect(options.flags.partition).to.equal(1);
-		});
+		assert(options.flags.split === 1);
+		assert(options.flags.partition === 1);
 	});
 });
 
-describe('run()', function () {
-	before(function () {
-		mock({ 'test/forTesting/image.jpg': 'imgdata' });
-	});
-	context('User enters invalid command', function () {
-		const inputs = { flags: {}, input: ['invalidcommand'] };
-		it('Should exit with code 2', async function () {
-			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(2);
-		});
+suite("run()", () => {
+	before(() => {
+		mock({ "test/forTesting/image.jpg": "imgdata" });
 	});
 
-	context('User enters valid command', function () {
+	test("User enters invalid command should exit with code 2", async () => {
+		const inputs = { flags: {}, input: ["invalidcommand"] };
+		const exitCode = await cli.run(inputs);
+		assert(exitCode === 2);
+	});
+
+	test("User enters valid command should exit with code (0)", async () => {
 		const inputs = {
-			flags: { baseurl: 'test', source: 'test/forTesting', dest: 'test/forTesting' },
-			input: ['clone-assets']
+			flags: { baseurl: "test", source: "test/forTesting", dest: "test/forTesting" },
+			input: ["clone-assets"],
 		};
-		it('Should exit with code (0)', async function () {
-			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(0);
-		});
+		const exitCode = await cli.run(inputs);
+		assert(exitCode === 0);
 	});
 
-	context('Command runs but fails', function () {
+	test("Command runs but fails should exit with code (1)", async () => {
 		const inputs = {
-			flags: { baseurl: 'test', source: 'test/invalidplace', dest: 'test/forTesting' },
-			input: ['clone-assets']
+			flags: { baseurl: "test", source: "test/invalidplace", dest: "test/forTesting" },
+			input: ["clone-assets"],
 		};
-		it('Should exit with code (1)', async function () {
-			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(1);
-		});
+		const exitCode = await cli.run(inputs);
+		assert(exitCode === 1);
 	});
 
-	context('User misses required flag', function () {
-		const inputs = { flags: {}, input: ['build'] };
-		it('Should exit with code 2', async function () {
-			const exitCode = await cli.run(inputs);
-			expect(exitCode).to.equal(2);
-		});
+	test("User misses required flag should exit with code 2", async () => {
+		const inputs = { flags: {}, input: ["build"] };
+		const exitCode = await cli.run(inputs);
+		assert(exitCode === 2);
 	});
 
-	after(function () {
+	after(() => {
 		mock.restore();
 	});
 });
