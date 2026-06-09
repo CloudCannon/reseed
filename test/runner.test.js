@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const assert = require('node:assert');
 const { test, suite, before, after, mock: nodeMock } = require('node:test');
 const mock = require('mock-fs');

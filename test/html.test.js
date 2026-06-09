@@ -1,5 +1,5 @@
 const mock = require('mock-fs');
-const path = require('path');
+const path = require('node:path');
 const assert = require('node:assert');
 const { test, suite, before, after } = require('node:test');
 const htmlRewrite = require('../lib/processors/html');
@@ -158,7 +158,8 @@ suite('rewrite html element with style attribute', () => {
 
 	test('element uses reseed-ignore should return the element unchanged', () => {
 		const element = '<h1 style="background-img: url(testImage.jpg)" reseed-ignore>text</h1>';
-		const expectedElement = '<h1 style="background-img: url(testImage.jpg)" reseed-ignore="">text</h1>';
+		const expectedElement =
+			'<h1 style="background-img: url(testImage.jpg)" reseed-ignore="">text</h1>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 		assert(rewrittenElement === expectedElement);
 	});

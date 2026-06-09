@@ -7,8 +7,8 @@
     "lint": "biome check --fix && tsc --noEmit -p jsconfig.json",
     "lint:report": "biome lint --diagnostic-level=error --reporter=junit > lint-results.xml",
     "lint:staged": "biome check --diagnostic-level=error --staged --no-errors-on-unmatched",
-    "test": "node --experimental-strip-types --test",
-    "test:watch": "node --experimental-strip-types --test --watch",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
     "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info"
   },
   "repository": {
@@ -38,19 +38,15 @@
     "reseed": "index.js"
   },
   "engines": {
-    "node": ">=18.17"
+    "node": ">=22"
   },
   "dependencies": {
-    "ansi-colors": "4.1.3",
     "browser-sync": "3.0.4",
     "cheerio": "1.2.0",
     "chokidar": "5.0.0",
     "cssurl": "1.3.0",
     "fancy-log": "2.0.0",
-    "glob": "13.0.6",
     "meow": "14.1.0",
-    "path": "0.12.7",
-    "readline-sync": "1.4.10",
     "srcset": "5.0.3"
   },
   "devDependencies": {
