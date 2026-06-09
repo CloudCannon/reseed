@@ -14,10 +14,10 @@ suite('rewrite html elements with some src attribute', () => {
 			<img poster="testImage.jpg">
 			<img extra-attr-one="testImage.jpg">
 			<img extra-attr-two="testImage.jpg">`;
-		const expectedElement = `<img src="/testBaseurl/testImage.jpg">
-			<img poster="/testBaseurl/testImage.jpg">
-			<img extra-attr-one="/testBaseurl/testImage.jpg">
-			<img extra-attr-two="/testBaseurl/testImage.jpg">`;
+		const expectedElement = `<img src="/testBaseurl/testImage.jpg"/>
+			<img poster="/testBaseurl/testImage.jpg"/>
+			<img extra-attr-one="/testBaseurl/testImage.jpg"/>
+			<img extra-attr-two="/testBaseurl/testImage.jpg"/>`;
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', [
 			'extra-attr-one',
 			'extra-attr-two',
@@ -30,11 +30,15 @@ suite('rewrite html elements with some src attribute', () => {
 			<img poster="https://testImage.jpg">
 			<img extra-attr-one="https://testImage.jpg">
 			<img extra-attr-two="https://testImage.jpg">`;
+		const expectedElement = `<img src="https://testImage.jpg"/>
+			<img poster="https://testImage.jpg"/>
+			<img extra-attr-one="https://testImage.jpg"/>
+			<img extra-attr-two="https://testImage.jpg"/>`;
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', [
 			'extra-attr-one',
 			'extra-attr-two',
 		]);
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 
 	test('elements use reseed-ignore should return each element unchanged', () => {
@@ -42,32 +46,38 @@ suite('rewrite html elements with some src attribute', () => {
 			<img poster="testImage.jpg" reseed-ignore>
 			<img extra-attr-one="testImage.jpg" reseed-ignore>
 			<img extra-attr-two="testImage.jpg" reseed-ignore>`;
+		const expectedElement = `<img src="testImage.jpg" reseed-ignore=""/>
+			<img poster="testImage.jpg" reseed-ignore=""/>
+			<img extra-attr-one="testImage.jpg" reseed-ignore=""/>
+			<img extra-attr-two="testImage.jpg" reseed-ignore=""/>`;
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl', [
 			'extra-attr-one',
 			'extra-attr-two',
 		]);
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 });
 
 suite('rewrite html element with srcset attribute', () => {
 	test('url is rewritable should rewrite the url in the element', () => {
 		const element = '<img srcset="testImage.jpg">';
-		const expectedElement = '<img srcset="/testBaseurl/testImage.jpg">';
+		const expectedElement = '<img srcset="/testBaseurl/testImage.jpg"/>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 		assert(rewrittenElement === expectedElement);
 	});
 
 	test('url is ignorable should return the url unchanged', () => {
 		const element = '<img srcset="https://testImage.jpg">';
+		const expectedElement = '<img srcset="https://testImage.jpg"/>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 
 	test('element uses reseed-ignore should return the element unchanged', () => {
 		const element = '<img srcset="testImage.jpg" reseed-ignore>';
+		const expectedElement = '<img srcset="testImage.jpg" reseed-ignore=""/>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 });
 
@@ -83,7 +93,7 @@ suite('rewrite html element with href attribute', () => {
 			<a href="/testBaseurl/testPage/noSlash">link</a>
 			<a href="/testBaseurl/testPage/withSlash/">link</a>
 			<a href="/testBaseurl/">link</a>
-			<a href>link</a>
+			<a href="">link</a>
 			<a>link</a>`;
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 		assert(rewrittenElement === expectedElement);
@@ -97,8 +107,9 @@ suite('rewrite html element with href attribute', () => {
 
 	test('element uses reseed-ignore should return the <a> element unchanged', () => {
 		const element = '<a href="testImage.jpg" reseed-ignore>link</a>';
+		const expectedElement = '<a href="testImage.jpg" reseed-ignore="">link</a>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 });
 
@@ -106,7 +117,7 @@ suite('rewrite html element with meta attribute', () => {
 	test('url is rewritable should rewrite the url in the element', () => {
 		const element = '<body><meta http-equiv="refresh" content="0;url=testImage.jpg"></body>';
 		const expectedElement =
-			'<body><meta http-equiv="refresh" content="0;url=/testBaseurl/testImage.jpg"></body>';
+			'<body><meta http-equiv="refresh" content="0;url=/testBaseurl/testImage.jpg"/></body>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
 		assert(rewrittenElement === expectedElement);
 	});
@@ -114,15 +125,19 @@ suite('rewrite html element with meta attribute', () => {
 	test('url is ignorable should return the element unchanged', () => {
 		const element =
 			'<body><meta http-equiv="refresh" content="0;url=https://testImage.jpg"></body>';
+		const expectedElement =
+			'<body><meta http-equiv="refresh" content="0;url=https://testImage.jpg"/></body>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 
 	test('element uses reseed-ignore should return the element unchanged', () => {
 		const element =
 			'<body><meta http-equiv="refresh" content="0;url=testImage.jpg" reseed-ignore></body>';
+		const expectedElement =
+			'<body><meta http-equiv="refresh" content="0;url=testImage.jpg" reseed-ignore=""/></body>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 });
 
@@ -143,8 +158,9 @@ suite('rewrite html element with style attribute', () => {
 
 	test('element uses reseed-ignore should return the element unchanged', () => {
 		const element = '<h1 style="background-img: url(testImage.jpg)" reseed-ignore>text</h1>';
+		const expectedElement = '<h1 style="background-img: url(testImage.jpg)" reseed-ignore="">text</h1>';
 		const rewrittenElement = htmlRewrite.rewrite(element, '//testhtml.html', 'testBaseurl');
-		assert(rewrittenElement === element);
+		assert(rewrittenElement === expectedElement);
 	});
 });
 
