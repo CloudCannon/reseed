@@ -1,5 +1,5 @@
 const mock = require('mock-fs');
-const path = require('path');
+const path = require('node:path');
 const assert = require('node:assert');
 const { test, suite, before, after } = require('node:test');
 const cssRewrite = require('../lib/processors/css');

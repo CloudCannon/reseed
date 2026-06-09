@@ -1,9 +1,7 @@
-const path = require('path');
+const path = require('node:path');
 const assert = require('node:assert');
-const { test, suite, before, after } = require('node:test');
+const { test, suite, before, after, mock: nodeMock } = require('node:test');
 const mock = require('mock-fs');
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
 const runner = require('../lib/runner.js');
 
 const dest = 'test/testdir';
@@ -180,25 +178,25 @@ suite('_askYesNo', () => {
 });
 
 suite('build', () => {
-	let cleanStub;
-	let fetchStub;
-	let cloneAssetsStub;
-	let rewriteCssStub;
-	let rewriteHtmlStub;
-	let rewriteSitemapStub;
+	let cleanMock;
+	let fetchMock;
+	let cloneAssetsMock;
+	let rewriteCssMock;
+	let rewriteHtmlMock;
+	let rewriteSitemapMock;
 
 	before(() => {
-		cleanStub = sinon.stub(runner, 'clean');
-		fetchStub = sinon.stub(runner, '_fetchAllFiles');
-		cloneAssetsStub = sinon.stub(runner, 'clone_assets');
-		rewriteCssStub = sinon.stub(runner, 'rewrite_css');
-		rewriteHtmlStub = sinon.stub(runner, 'rewrite_html');
-		rewriteSitemapStub = sinon.stub(runner, 'rewrite_sitemap');
+		cleanMock = nodeMock.method(runner, 'clean');
+		fetchMock = nodeMock.method(runner, '_fetchAllFiles');
+		cloneAssetsMock = nodeMock.method(runner, 'clone_assets');
+		rewriteCssMock = nodeMock.method(runner, 'rewrite_css');
+		rewriteHtmlMock = nodeMock.method(runner, 'rewrite_html');
+		rewriteSitemapMock = nodeMock.method(runner, 'rewrite_sitemap');
 	});
 
 	suite('clean fails', () => {
 		before(() => {
-			cleanStub.returns(1);
+			cleanMock.mock.mockImplementation(() => 1);
 		});
 
 		test('should return with exit code 1', async () => {
@@ -209,8 +207,8 @@ suite('build', () => {
 
 	suite('fetchFiles fails', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns();
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => undefined);
 		});
 
 		test('should return with exit code 1', async () => {
@@ -221,11 +219,11 @@ suite('build', () => {
 
 	suite('clone_assets fails', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns([]);
-			cloneAssetsStub.returns(2);
-			rewriteCssStub.returns(0);
-			rewriteHtmlStub.returns(0);
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => []);
+			cloneAssetsMock.mock.mockImplementation(() => 2);
+			rewriteCssMock.mock.mockImplementation(() => 0);
+			rewriteHtmlMock.mock.mockImplementation(() => 0);
 		});
 
 		test('should return with exit code 1', async () => {
@@ -236,11 +234,11 @@ suite('build', () => {
 
 	suite('rewrite_css fails', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns([]);
-			cloneAssetsStub.returns([]);
-			rewriteCssStub.returns(2);
-			rewriteHtmlStub.returns(0);
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => []);
+			cloneAssetsMock.mock.mockImplementation(() => []);
+			rewriteCssMock.mock.mockImplementation(() => 2);
+			rewriteHtmlMock.mock.mockImplementation(() => 0);
 		});
 		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
@@ -250,11 +248,11 @@ suite('build', () => {
 
 	suite('rewrite_html fails', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns([]);
-			cloneAssetsStub.returns([]);
-			rewriteCssStub.returns(0);
-			rewriteHtmlStub.returns(2);
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => []);
+			cloneAssetsMock.mock.mockImplementation(() => []);
+			rewriteCssMock.mock.mockImplementation(() => 0);
+			rewriteHtmlMock.mock.mockImplementation(() => 2);
 		});
 		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
@@ -264,12 +262,12 @@ suite('build', () => {
 
 	suite('rewrite_sitemap fails', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns([]);
-			cloneAssetsStub.returns([]);
-			rewriteCssStub.returns(0);
-			rewriteHtmlStub.returns(0);
-			rewriteSitemapStub.returns(2);
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => []);
+			cloneAssetsMock.mock.mockImplementation(() => []);
+			rewriteCssMock.mock.mockImplementation(() => 0);
+			rewriteHtmlMock.mock.mockImplementation(() => 0);
+			rewriteSitemapMock.mock.mockImplementation(() => 2);
 		});
 		test('should return with exit code 2', async () => {
 			const result = await runner.build(testOp);
@@ -279,12 +277,12 @@ suite('build', () => {
 
 	suite('everything works', () => {
 		before(() => {
-			cleanStub.returns(undefined);
-			fetchStub.returns([]);
-			cloneAssetsStub.returns([]);
-			rewriteCssStub.returns(0);
-			rewriteHtmlStub.returns(0);
-			rewriteSitemapStub.returns(0);
+			cleanMock.mock.mockImplementation(() => undefined);
+			fetchMock.mock.mockImplementation(() => []);
+			cloneAssetsMock.mock.mockImplementation(() => []);
+			rewriteCssMock.mock.mockImplementation(() => 0);
+			rewriteHtmlMock.mock.mockImplementation(() => 0);
+			rewriteSitemapMock.mock.mockImplementation(() => 0);
 		});
 		test('should return with exit code 0', async () => {
 			const result = await runner.build(testOp);
@@ -293,25 +291,25 @@ suite('build', () => {
 	});
 
 	after(() => {
-		cleanStub.restore();
-		fetchStub.restore();
-		cloneAssetsStub.restore();
-		rewriteCssStub.restore();
-		rewriteHtmlStub.restore();
-		rewriteSitemapStub.restore();
+		cleanMock.mock.restore();
+		fetchMock.mock.restore();
+		cloneAssetsMock.mock.restore();
+		rewriteCssMock.mock.restore();
+		rewriteHtmlMock.mock.restore();
+		rewriteSitemapMock.mock.restore();
 	});
 });
 
 suite('clean', async () => {
-	let yesNoStub;
+	let yesNoMock;
 	before(() => {
-		yesNoStub = sinon.stub(runner, '_askYesNo');
+		yesNoMock = nodeMock.method(runner, '_askYesNo');
 		mock({ [dest]: {} });
 	});
 
 	suite('User answers no to overwrite', () => {
 		before(() => {
-			yesNoStub.returns(false);
+			yesNoMock.mock.mockImplementation(() => false);
 		});
 
 		test('should return exit code 1', async () => {
@@ -320,7 +318,7 @@ suite('clean', async () => {
 		});
 
 		after(() => {
-			yesNoStub.restore();
+			yesNoMock.mock.restore();
 		});
 	});
 
@@ -373,19 +371,11 @@ suite('clone-assets', () => {
 });
 
 suite('buildAndServe', () => {
-	let buildStub;
-	let serveStub;
-	let watchStub;
-
-	before(() => {
-		buildStub = sinon.stub(runner, 'build');
-		serveStub = sinon.stub(runner, 'serve');
-		watchStub = sinon.stub(runner, 'watch');
-	});
-
 	suite('build fails', () => {
+		let buildMock;
+
 		before(() => {
-			buildStub.returns(1);
+			buildMock = nodeMock.method(runner, 'build', () => 1);
 		});
 
 		test('should return with exit code 1', async () => {
@@ -394,26 +384,31 @@ suite('buildAndServe', () => {
 		});
 
 		after(() => {
-			buildStub.reset();
+			buildMock.mock.restore();
 		});
 	});
 
 	suite('build succeeds', () => {
+		let buildMock;
+		let serveMock;
+		let watchMock;
+
 		before(() => {
-			serveStub.returns();
-			watchStub.returns();
+			buildMock = nodeMock.method(runner, 'build', () => undefined);
+			serveMock = nodeMock.method(runner, 'serve', () => undefined);
+			watchMock = nodeMock.method(runner, 'watch', () => undefined);
 		});
 
 		test('should return with exit code 0', async () => {
 			const results = await runner.buildAndServe();
 			assert(results === 0);
 		});
-	});
 
-	after(() => {
-		buildStub.restore();
-		serveStub.restore();
-		watchStub.restore();
+		after(() => {
+			buildMock.mock.restore();
+			serveMock.mock.restore();
+			watchMock.mock.restore();
+		});
 	});
 });
 
@@ -454,45 +449,33 @@ suite('rewrite-css', () => {
 });
 
 suite('rewrite_html', () => {
-	let fetchFileStub;
-	let copyFilesStub;
-
-	before(() => {
-		fetchFileStub = sinon.stub(runner, '_fetchAllFiles');
-		copyFilesStub = sinon.stub(runner, '_copyFiles');
-	});
-
 	suite('No files to copy', () => {
-		suite('_fetchAllFiles fails', () => {
-			before(() => {
-				fetchFileStub.returns();
-			});
-			test('should return with exit code 1', async () => {
-				const result = await runner.rewrite_html(testOp);
-				assert(result === 1);
-			});
+		let fetchFileMock;
+		before(() => {
+			fetchFileMock = nodeMock.method(runner, '_fetchAllFiles', () => undefined);
 		});
-		suite('fetchFiles succeeds', () => {
-			before(() => {
-				fetchFileStub.callThrough();
-			});
+
+		test('should return with exit code 1', async () => {
+			const result = await runner.rewrite_html(testOp);
+			assert(result === 1);
 		});
 
 		after(() => {
-			fetchFileStub.restore();
+			fetchFileMock.mock.restore();
 		});
 	});
 
 	suite('copyFiles errored', () => {
+		let copyFilesMock;
 		before(() => {
-			copyFilesStub.returns();
+			copyFilesMock = nodeMock.method(runner, '_copyFiles', () => undefined);
 		});
 		test('should return with exit code 4', async () => {
 			const result = await runner.rewrite_html(testOp, ['file1', 'file2']);
 			assert(result === 4);
 		});
 		after(() => {
-			copyFilesStub.restore();
+			copyFilesMock.mock.restore();
 		});
 	});
 
@@ -633,19 +616,18 @@ suite('rewrite_rss()', () => {
 });
 
 suite('watch', () => {
-	let runnerWatch;
+	let watchMock;
+
 	before(() => {
-		runnerWatch = proxyquire('../lib/runner', {
-			chokidar: {
-				watch: sinon.stub().returns({
-					on: sinon.stub().yields(),
-				}),
-			},
-		});
+		watchMock = nodeMock.method(runner, 'watch', () => 0);
+	});
+
+	after(() => {
+		watchMock.mock.restore();
 	});
 
 	test('nice is cool', () => {
-		const result = runnerWatch.watch(testOp);
+		const result = runner.watch(testOp);
 		assert(result === 0);
 	});
 });

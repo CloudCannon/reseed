@@ -1,6 +1,6 @@
-const path = require('path');
+const path = require('node:path');
 const log = require('fancy-log');
-const c = require('ansi-colors');
+const { styleText } = require('node:util');
 
 const runner = require('./lib/runner');
 
@@ -47,8 +47,8 @@ module.exports = {
 			return true;
 		}
 
-		log.error(c.red('required flags:'));
-		log.error(c.red(requiredFlags));
+		log.error(styleText('red', 'required flags:'));
+		log.error(styleText('red', requiredFlags.join(', ')));
 		return false;
 	},
 
@@ -68,14 +68,14 @@ module.exports = {
 		const defaultString = `Reverting to default port (${defaultPort}).`;
 
 		if (!port) {
-			log.error(c.yellow(`${portString} is not a valid port number.`));
-			log.error(c.yellow(defaultString));
+			log.error(styleText('yellow', `${portString} is not a valid port number.`));
+			log.error(styleText('yellow', defaultString));
 			return;
 		}
 
 		if (port < 1024 || port > 65535) {
-			log.error(c.yellow('Port number outside of allowed range. (1024 - 65535).'));
-			log.error(c.yellow(defaultString));
+			log.error(styleText('yellow', 'Port number outside of allowed range. (1024 - 65535).'));
+			log.error(styleText('yellow', defaultString));
 			return;
 		}
 
@@ -135,7 +135,7 @@ module.exports = {
 	run: async function (cli) {
 		const cmd = cli.input[0] || 'reseed';
 		if (!commands[cmd]) {
-			log(c.red('command not recognized'));
+			log(styleText('red', 'command not recognized'));
 			log(cli.help);
 			return 2;
 		}
@@ -158,7 +158,7 @@ module.exports = {
 
 		const end = new Date();
 		const elapsedTime = end.getTime() - startTime;
-		log(c.yellow(`⏱  process completed in ${elapsedTime} ms. `));
+		log(styleText('yellow', `⏱  process completed in ${elapsedTime} ms. `));
 
 		return exitCode;
 	},
