@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -14,7 +14,8 @@
 			"!package-lock.json",
 			"!CHANGELOG.md",
 			"!.github",
-			"!.backstage"
+			"!.backstage",
+			"!docs/static"
 		]
 	},
 	"formatter": {
@@ -44,7 +45,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"style": {
 				"noParameterAssign": "off",
 				"noInferrableTypes": "off",
