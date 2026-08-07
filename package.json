@@ -53,5 +53,8 @@
     "@biomejs/biome": "2.5.7",
     "mock-fs": "5.5.0",
     "typescript": "7.0.2"
+  },
+  "overrides": {
+    "immutable": "4.3.9"
   }
 }
