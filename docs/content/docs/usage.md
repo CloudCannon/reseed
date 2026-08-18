@@ -105,7 +105,7 @@ $ reseed serve -s path/to/src -d path/to/dest -b baseurl
 
 ### reseed watch
 
-Continuously watches the `src` directory to check for changes. If a change occurs, a new build is triggered, and the browser is then reloaded.
+Continuously watches the `src` directory to check for changes. If a change occurs, a new build is triggered.
 
 **Example:**
 

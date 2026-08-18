@@ -19,8 +19,6 @@ const testOp = {
 	},
 	serve: {
 		port: 9000,
-		open: true,
-		path: '/',
 	},
 	flags: {
 		overwrite: true,
