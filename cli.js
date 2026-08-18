@@ -113,8 +113,6 @@ module.exports = {
 			},
 			serve: {
 				port,
-				open: true,
-				path: '/',
 			},
 			flags: {
 				extraSrcAttrs,
