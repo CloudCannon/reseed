@@ -49,7 +49,7 @@
     "srcset": "5.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.9",
+    "@biomejs/biome": "2.5.10",
     "mock-fs": "5.5.0",
     "typescript": "7.0.2"
   }
